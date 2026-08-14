@@ -16,7 +16,7 @@ import org.bukkit.command.TabCompleter;
 import org.jspecify.annotations.NonNull;
 
 /**
- * 命令执行器 & 补全器
+ * 命令执行器/补全器
  * <p>
  * 调度命令的执行与补全
  */
