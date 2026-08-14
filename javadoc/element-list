@@ -1,10 +1,13 @@
 me.qscbm.inlayx
+me.qscbm.inlayx.api
+me.qscbm.inlayx.api.event
 me.qscbm.inlayx.command
 me.qscbm.inlayx.command.sub
 me.qscbm.inlayx.config
 me.qscbm.inlayx.gem
 me.qscbm.inlayx.gui
 me.qscbm.inlayx.integration
+me.qscbm.inlayx.interaction
 me.qscbm.inlayx.listener
 me.qscbm.inlayx.socket
 me.qscbm.inlayx.util
