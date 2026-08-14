@@ -1,6 +1,7 @@
 package me.qscbm.inlayx.listener;
 
 import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.api.event.GemDropEvent;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.integration.MythicMobsBridge;
@@ -35,16 +36,23 @@ public class MobListener implements Listener {
             if (!(entity instanceof Mob)) {
                 return;
             }
-            Gem gem = gm().getDropGem("normal", 1);
-            if (gem != null) {
-                event.getDrops().add(gm().createGemItem(gem.getId()));
-            }
+            dropSelectedGem(event, entity, killer, "normal", 1);
             return;
         }
-        Gem gem = gm().getDropGem("mythic", mythicMobs.getMobLevel(entity));
-        if (gem != null) {
-            event.getDrops().add(gm().createGemItem(gem.getId()));
+        dropSelectedGem(event, entity, killer, "mythic", mythicMobs.getMobLevel(entity));
+    }
+
+    private void dropSelectedGem(
+            EntityDeathEvent event, LivingEntity entity, Player killer, String source, int mobLevel) {
+        Gem gem = gm().getDropGem(source, mobLevel);
+        if (gem == null) {
+            return;
         }
+        GemDropEvent dropEvent = new GemDropEvent(entity, killer, source, mobLevel, gem);
+        if (!dropEvent.callEvent() || dropEvent.getGem() == null) {
+            return;
+        }
+        event.getDrops().add(gm().createGemItem(dropEvent.getGem().getId()));
     }
 
     private GemManager gm() {

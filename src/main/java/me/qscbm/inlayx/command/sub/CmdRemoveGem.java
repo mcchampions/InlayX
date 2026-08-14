@@ -64,7 +64,7 @@ public class CmdRemoveGem extends SubCommand {
         }
         player.getInventory().setItemInMainHand(item);
         player.sendMessage(ChatColor.GREEN + "已从装备上移除宝石「" + gemId + "」");
-        plugin.getConfigManager().getSocketSuccessSound().play(player);
+        plugin.getInteractionFeedback().playSocketSound(player, true);
     }
 
     @Override

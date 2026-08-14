@@ -10,6 +10,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.api.event.GemExtractEvent;
+import me.qscbm.inlayx.api.event.GemExtractedEvent;
+import me.qscbm.inlayx.api.event.GemSocketEvent;
+import me.qscbm.inlayx.api.event.GemSocketedEvent;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemItemFactory;
 import me.qscbm.inlayx.gem.GemTemplate;
@@ -18,11 +22,13 @@ import me.qscbm.inlayx.util.TextUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jspecify.annotations.Nullable;
 
 /**
  * 装备宝石槽位机制
@@ -255,6 +261,10 @@ public class SocketService {
     }
 
     public SocketResult socketGem(ItemStack equipment, ItemStack gemItem) {
+        return socketGem(null, equipment, gemItem);
+    }
+
+    public SocketResult socketGem(@Nullable Player actor, ItemStack equipment, ItemStack gemItem) {
         if (equipment == null
                 || equipment.getType() == Material.AIR
                 || gemItem == null
@@ -275,10 +285,14 @@ public class SocketService {
         if (gem == null) {
             return SocketResult.failure(SocketResult.Status.UNKNOWN_GEM);
         }
-        return socketGem(equipment, gem, true);
+        return socketWithEvent(actor, equipment, gem, gemItem, true);
     }
 
     public SocketResult addGem(ItemStack equipment, String gemId) {
+        return addGem(null, equipment, gemId);
+    }
+
+    public SocketResult addGem(@Nullable Player actor, ItemStack equipment, String gemId) {
         if (equipment == null || equipment.getType() == Material.AIR || gemId == null || gemId.isEmpty()) {
             return SocketResult.failure(SocketResult.Status.INVALID_INPUT);
         }
@@ -286,7 +300,20 @@ public class SocketService {
         if (gem == null) {
             return SocketResult.failure(SocketResult.Status.UNKNOWN_GEM);
         }
-        return socketGem(equipment, gem, false);
+        return socketWithEvent(actor, equipment, gem, null, false);
+    }
+
+    private SocketResult socketWithEvent(
+            @Nullable Player actor, ItemStack equipment, Gem gem, @Nullable ItemStack gemItem, boolean roll) {
+        GemSocketEvent event = new GemSocketEvent(actor, equipment, gem, gemItem);
+        if (!event.callEvent()) {
+            return SocketResult.failure(SocketResult.Status.CANCELLED);
+        }
+        SocketResult result = socketGem(equipment, gem, roll);
+        if (result.isSuccess()) {
+            new GemSocketedEvent(actor, result.getItem(), gem).callEvent();
+        }
+        return result;
     }
 
     private SocketResult socketGem(ItemStack equipment, Gem gem, boolean roll) {
@@ -314,12 +341,40 @@ public class SocketService {
     }
 
     public ExtractResult extractGem(ItemStack item, String gemId) {
+        return extractGem(null, item, gemId);
+    }
+
+    public ExtractResult extractGem(@Nullable Player actor, ItemStack item, String gemId) {
+        if (!hasSocketedGem(item, gemId)) {
+            return ExtractResult.notFound();
+        }
+        GemExtractEvent event = new GemExtractEvent(actor, item, gemId);
+        if (!event.callEvent()) {
+            return ExtractResult.cancelled(gemId);
+        }
         if (!removeSocketedGem(item, gemId)) {
             return ExtractResult.notFound();
         }
         boolean success = ThreadLocalRandom.current().nextDouble()
                 < plugin.getConfigManager().getExtractSuccessRate();
+        new GemExtractedEvent(actor, item, gemId, success).callEvent();
         return success ? ExtractResult.success(gemId) : ExtractResult.failed(gemId);
+    }
+
+    private boolean hasSocketedGem(ItemStack item, String gemId) {
+        if (item == null || item.getType() == Material.AIR || gemId == null || gemId.isEmpty()) {
+            return false;
+        }
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return false;
+        }
+        for (SocketSlot slot : readSlots(meta)) {
+            if (gemId.equals(slot.getGemId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean removeGem(ItemStack item, String gemId) {

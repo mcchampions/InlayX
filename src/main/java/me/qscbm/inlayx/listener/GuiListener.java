@@ -75,37 +75,16 @@ public class GuiListener implements Listener {
 
         GemManager gm = gm();
         Gem gem = gm.getGem(gm.getGemId(gemItem));
-        SocketResult result = gm.socketGem(equipment, gemItem);
-        switch (result.getStatus()) {
-            case SUCCESS -> {
-                inv.setItem(EQUIP_SLOT, result.getItem());
-                consumeOneGem(gemItem, inv);
-                player.sendMessage(ChatColor.GREEN + "宝石镶嵌成功!");
-                playSound(player, true);
-            }
-            case NOT_A_GEM -> player.sendMessage(ChatColor.RED + "这不是一个有效的宝石!");
-            case UNKNOWN_GEM -> player.sendMessage(ChatColor.RED + "无法识别该宝石, 可能已被删除或配置已变更!");
-            case NO_SOCKET ->
-                player.sendMessage(ChatColor.RED + (gm.hasSocketLore(equipment) ? "该装备的宝石槽位已满!" : "该装备没有宝石槽位!"));
-            case TYPE_MISMATCH -> {
-                String typeName = gem == null ? "对应" : gem.getType().getName();
-                player.sendMessage(ChatColor.RED + "该装备没有「" + typeName + "」类型的空槽位!");
-            }
-            case OVER_CAP_LIMIT -> player.sendMessage(ChatColor.RED + "该装备的宝石槽位数量异常, 无法镶嵌!");
-            case FAILED -> handleSocketFailure(gm, gemItem, inv, player);
-            default -> player.sendMessage(ChatColor.RED + "无法镶嵌, 请检查装备与宝石!");
-        }
-    }
-
-    private void handleSocketFailure(GemManager gm, ItemStack gemItem, Inventory inv, Player player) {
-        Gem gem = gm.getGem(gm.getGemId(gemItem));
-        if (gem != null && gem.isDestroyOnFailure()) {
+        SocketResult result = gm.socketGem(player, equipment, gemItem);
+        if (result.isSuccess()) {
+            inv.setItem(EQUIP_SLOT, result.getItem());
             consumeOneGem(gemItem, inv);
-            player.sendMessage(ChatColor.RED + "镶嵌失败!宝石已碎裂.");
-        } else {
-            player.sendMessage(ChatColor.RED + "镶嵌失败!宝石完好无损, 可再次尝试.");
+            plugin.getInteractionFeedback().sendSocketSuccess(player);
+            return;
         }
-        playSound(player, false);
+        if (plugin.getInteractionFeedback().sendSocketFailure(player, result, gem, gm.hasSocketLore(equipment))) {
+            consumeOneGem(gemItem, inv);
+        }
     }
 
     private static void consumeOneGem(ItemStack gemItem, Inventory inv) {
@@ -138,14 +117,6 @@ public class GuiListener implements Listener {
         player.getInventory()
                 .addItem(item)
                 .forEach((idx, leftover) -> player.getWorld().dropItemNaturally(player.getLocation(), leftover));
-    }
-
-    private void playSound(Player player, boolean success) {
-        if (success) {
-            plugin.getConfigManager().getSocketSuccessSound().play(player);
-        } else {
-            plugin.getConfigManager().getSocketFailureSound().play(player);
-        }
     }
 
     private GemManager gm() {

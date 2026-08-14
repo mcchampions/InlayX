@@ -15,19 +15,20 @@ import me.qscbm.inlayx.socket.ExtractResult;
 import me.qscbm.inlayx.socket.SocketResult;
 import me.qscbm.inlayx.socket.SocketService;
 import me.qscbm.inlayx.socket.SocketSlot;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jspecify.annotations.Nullable;
 
 /**
- * 宝石管理
+ * 宝石管理. 第三方插件应通过 {@link me.qscbm.inlayx.api.InlayXApi} 获取它.
  */
 public class GemManager {
     private final InlayX plugin;
 
     private final Map<String, Gem> gems;
 
-    @Getter
     private final GemLoader loader;
 
     @Getter
@@ -59,6 +60,10 @@ public class GemManager {
     public void loadGems() {
         loader.loadAll();
         rebuildDropIndex();
+    }
+
+    GemLoader getLoader() {
+        return loader;
     }
 
     private void rebuildDropIndex() {
@@ -212,12 +217,24 @@ public class GemManager {
         return socketService.socketGem(equipment, gemItem);
     }
 
+    public SocketResult socketGem(@Nullable Player actor, ItemStack equipment, ItemStack gemItem) {
+        return socketService.socketGem(actor, equipment, gemItem);
+    }
+
     public SocketResult addGem(ItemStack equipment, String gemId) {
         return socketService.addGem(equipment, gemId);
     }
 
+    public SocketResult addGem(@Nullable Player actor, ItemStack equipment, String gemId) {
+        return socketService.addGem(actor, equipment, gemId);
+    }
+
     public ExtractResult extractGem(ItemStack item, String gemId) {
         return socketService.extractGem(item, gemId);
+    }
+
+    public ExtractResult extractGem(@Nullable Player actor, ItemStack item, String gemId) {
+        return socketService.extractGem(actor, item, gemId);
     }
 
     public boolean removeGem(ItemStack item, String gemId) {

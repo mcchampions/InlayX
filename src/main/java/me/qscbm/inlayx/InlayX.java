@@ -1,18 +1,25 @@
 package me.qscbm.inlayx;
 
 import lombok.Getter;
+import me.qscbm.inlayx.api.InlayXApi;
 import me.qscbm.inlayx.command.GemCommand;
 import me.qscbm.inlayx.config.ConfigManager;
 import me.qscbm.inlayx.config.ConfigUpdater;
 import me.qscbm.inlayx.gem.GemManager;
+import me.qscbm.inlayx.interaction.InteractionFeedback;
 import me.qscbm.inlayx.listener.ExtractGuiListener;
 import me.qscbm.inlayx.listener.GuiListener;
 import me.qscbm.inlayx.listener.MobListener;
 import me.qscbm.inlayx.listener.PlayerListener;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * 插件主类
+ */
 @Getter
-public class InlayX extends JavaPlugin {
+public class InlayX extends JavaPlugin implements InlayXApi {
     public static InlayX INSTANCE;
 
     private GemManager gemManager;
@@ -21,6 +28,8 @@ public class InlayX extends JavaPlugin {
 
     private ExtractGuiListener extractGuiListener;
 
+    private InteractionFeedback interactionFeedback;
+
     @Override
     public void onEnable() {
         this.getLogger().info("""
@@ -28,9 +37,9 @@ public class InlayX extends JavaPlugin {
                 #############################################
                   ___           _                  __  __ \s
                  |_ _|  _ __   | |   __ _   _   _  \\ \\/ / \s
-                  | |  | '_ \\  | |  / _` | | | | |  \\  /  \s
-                  | |  | | | | | | | (_| | | |_| |  /  \\  \s
-                 |___| |_| |_| |_|  \\__,_|  \\__, | /_/\\_\\ \s
+                   | |  | '_ \\  | |  / _` | | | | |  \\  /  \s
+                   | |  | | | | | | | (_| | | |_| |  /  \\  \s
+                  |___| |_| |_| |_|  \\__,_|  \\__, | /_/\\_\\ \s
                                             |___/         \s
                 ##############################################
                 """);
@@ -45,6 +54,8 @@ public class InlayX extends JavaPlugin {
 
         this.getLogger().info("加载宝石中......");
         this.gemManager = new GemManager(this);
+        this.interactionFeedback = new InteractionFeedback(this);
+        this.getServer().getServicesManager().register(InlayXApi.class, this, this, ServicePriority.Normal);
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new GuiListener(this), this);
         this.extractGuiListener = new ExtractGuiListener(this);
@@ -60,10 +71,18 @@ public class InlayX extends JavaPlugin {
         this.getLogger().info("InlayX 已启用");
     }
 
+    /**
+     * 获取 API 实例
+     */
+    public static InlayXApi getApi() {
+        return Bukkit.getServicesManager().load(InlayXApi.class);
+    }
+
     public void onDisable() {
         if (this.extractGuiListener != null) {
             this.extractGuiListener.cancelTasks();
         }
+        this.getServer().getServicesManager().unregister(this);
         INSTANCE = null;
         this.getLogger().info("InlayX 已禁用");
     }

@@ -13,7 +13,9 @@ public final class ExtractResult {
 
         FAILED,
 
-        NOT_FOUND
+        NOT_FOUND,
+
+        CANCELLED
     }
 
     private final Status status;
@@ -34,5 +36,9 @@ public final class ExtractResult {
 
     public static ExtractResult notFound() {
         return new ExtractResult(Status.NOT_FOUND, null);
+    }
+
+    public static ExtractResult cancelled(String gemId) {
+        return new ExtractResult(Status.CANCELLED, gemId);
     }
 }

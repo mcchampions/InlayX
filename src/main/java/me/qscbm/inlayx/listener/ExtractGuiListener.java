@@ -86,24 +86,25 @@ public class ExtractGuiListener implements Listener {
             }
             inv.setItem(ExtractGuiFactory.EQUIP_SLOT, equipment);
             player.sendMessage(ChatColor.GREEN + "已移除未知宝石「" + gemId + "」(不会返还)");
-            playSound(player, true);
+            plugin.getInteractionFeedback().playExtractSound(player, true);
             refresh(inv, holder);
             return;
         }
 
-        ExtractResult result = gm.extractGem(equipment, gemId);
+        ExtractResult result = gm.extractGem(player, equipment, gemId);
         switch (result.getStatus()) {
             case SUCCESS -> {
                 inv.setItem(ExtractGuiFactory.EQUIP_SLOT, equipment);
                 giveToResultArea(player, inv, gm.createGemItem(gemId));
                 player.sendMessage(ChatColor.GREEN + "宝石提取成功!");
-                playSound(player, true);
+                plugin.getInteractionFeedback().playExtractSound(player, true);
             }
             case FAILED -> {
                 inv.setItem(ExtractGuiFactory.EQUIP_SLOT, equipment);
                 player.sendMessage(ChatColor.RED + "提取失败!宝石已碎裂.");
-                playSound(player, false);
+                plugin.getInteractionFeedback().playExtractSound(player, false);
             }
+            case CANCELLED -> player.sendMessage(ChatColor.RED + "提取已被取消!");
             case NOT_FOUND -> player.sendMessage(ChatColor.RED + "该装备上没有镶嵌「" + gemId + "」宝石!");
         }
         refresh(inv, holder);
@@ -157,14 +158,6 @@ public class ExtractGuiListener implements Listener {
 
     private static boolean isSlotArea(int raw) {
         return slotGridIndex(raw) >= 0;
-    }
-
-    private void playSound(Player player, boolean success) {
-        if (success) {
-            plugin.getConfigManager().getExtractSuccessSound().play(player);
-        } else {
-            plugin.getConfigManager().getExtractFailureSound().play(player);
-        }
     }
 
     public void cancelTasks() {

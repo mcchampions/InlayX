@@ -25,7 +25,9 @@ public final class SocketResult {
         /** 装备槽位总数超过配置上限, 视为异常装备 */
         OVER_CAP_LIMIT,
         /** 镶嵌成功率判定失败 */
-        FAILED
+        FAILED,
+        /** 被插件事件监听器取消 */
+        CANCELLED
     }
 
     private final Status status;

@@ -62,19 +62,14 @@ public class CmdAddGem extends SubCommand {
             return;
         }
 
-        SocketResult result = gm.addGem(item, gemId);
-        switch (result.getStatus()) {
-            case SUCCESS -> {
-                player.getInventory().setItemInMainHand(result.getItem());
-                player.sendMessage(ChatColor.GREEN + "已直接将宝石「" + gem.getName() + "」镶嵌到装备上!");
-                plugin.getConfigManager().getSocketSuccessSound().play(player);
-            }
-            case NO_SOCKET -> player.sendMessage(ChatColor.RED + "该装备没有可用的宝石槽位!");
-            case TYPE_MISMATCH ->
-                player.sendMessage(ChatColor.RED + "该装备没有「" + gem.getType().getName() + "」类型的空槽位!");
-            case OVER_CAP_LIMIT -> player.sendMessage(ChatColor.RED + "该装备的宝石槽位数量异常, 无法镶嵌!");
-            default -> player.sendMessage(ChatColor.RED + "无法镶嵌, 请检查装备与宝石!");
+        SocketResult result = gm.addGem(player, item, gemId);
+        if (result.isSuccess()) {
+            player.getInventory().setItemInMainHand(result.getItem());
+            player.sendMessage(ChatColor.GREEN + "已直接将宝石「" + gem.getName() + "」镶嵌到装备上!");
+            plugin.getInteractionFeedback().playSocketSound(player, true);
+            return;
         }
+        plugin.getInteractionFeedback().sendSocketFailure(player, result, gem, gm.hasSocketLore(item));
     }
 
     @Override
