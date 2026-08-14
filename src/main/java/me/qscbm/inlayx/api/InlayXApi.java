@@ -4,7 +4,7 @@ import me.qscbm.inlayx.gem.GemManager;
 import org.jspecify.annotations.NonNull;
 
 /**
- * InlayX 对第三方插件开放的 API 入口.
+ * API 入口.
  * <p>
  * 通过 Bukkit 的服务注册中心获取它.
  * 或者通过 InlayX.getApi()
