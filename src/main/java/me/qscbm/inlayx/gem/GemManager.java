@@ -22,7 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jspecify.annotations.Nullable;
 
 /**
- * 宝石管理. 第三方插件应通过 {@link me.qscbm.inlayx.api.InlayXApi} 获取它.
+ * 宝石管理.
  */
 public class GemManager {
     private final InlayX plugin;
