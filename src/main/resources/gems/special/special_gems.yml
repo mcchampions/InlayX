@@ -1,0 +1,172 @@
+# 特殊类宝石
+
+special_thornheart:
+  name: "荆棘心核"
+  type: SPECIAL
+  level: 2
+  material: CACTUS
+  attributes:
+    - "反弹几率 +6%"
+    - "荆棘伤害 +12"
+  socket:
+    success_rate: 0.88
+    destroy_on_failure: false
+  drop:
+    chance: 0.01
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+special_natureward:
+  name: "自然壁印"
+  type: SPECIAL
+  level: 3
+  material: MANGROVE_ROOTS
+  attributes:
+    - "生命力 +42"
+    - "PVE防御 +5%"
+    - "反弹几率 +4%"
+  socket:
+    success_rate: 0.75
+    destroy_on_failure: true
+  drop:
+    chance: 0.006
+    sources: [mythic]
+    min_mob_level: 3
+
+special_featherstorm:
+  name: "流羽回响"
+  type: SPECIAL
+  level: 3
+  material: PHANTOM_MEMBRANE
+  attributes:
+    - "攻击速度 +5%"
+    - "暴伤倍率 +8%"
+    - "闪避几率 +4%"
+  socket:
+    success_rate: 0.75
+    destroy_on_failure: true
+  drop:
+    chance: 0.006
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+special_duelist:
+  name: "决斗王印"
+  type: SPECIAL
+  level: 4
+  material: NETHER_STAR
+  attributes:
+    - "暴击几率 +5%"
+    - "暴伤倍率 +12%"
+    - "PVP伤害 +6%"
+  socket:
+    success_rate: 0.60
+    destroy_on_failure: true
+  drop:
+    chance: 0.0025
+    sources: [mythic]
+    min_mob_level: 5
+
+special_titan:
+  name: "泰坦魂髓"
+  type: SPECIAL
+  level: 5
+  material: ECHO_SHARD
+  attributes:
+    - "生命力 +80"
+    - "物理防御 +25"
+    - "击退抗性 +8%"
+  socket:
+    success_rate: 0.45
+    destroy_on_failure: true
+  drop:
+    chance: 0.0008
+    sources: [mythic]
+    min_mob_level: 8
+
+special_bloodmoon:
+  name: "血月异核"
+  type: SPECIAL
+  level: 5
+  material: REDSTONE_BLOCK
+  attributes:
+    - "吸血倍率 +6%"
+    - "暴伤倍率 +15%"
+    - "荆棘伤害 +20"
+  socket:
+    success_rate: 0.45
+    destroy_on_failure: true
+  drop:
+    chance: 0.0008
+    sources: [mythic]
+    min_mob_level: 8
+
+special_boneking:
+  name: "骸王遗印"
+  type: SPECIAL
+  level: 5
+  material: WITHER_SKELETON_SKULL
+  attributes:
+    - "击退抗性 +8%"
+    - "吸血倍率 +5%"
+    - "反弹几率 +6%"
+  socket:
+    success_rate: 0.45
+    destroy_on_failure: true
+  drop:
+    chance: 0.0008
+    sources: [mythic]
+    min_mob_level: 8
+
+special_judgement:
+  name: "裁决圣徽"
+  type: SPECIAL
+  level: 5
+  material: TOTEM_OF_UNDYING
+  attributes:
+    - "暴击几率 +5%"
+    - "暴伤倍率 +14%"
+    - "PVE伤害 +8%"
+  socket:
+    success_rate: 0.45
+    destroy_on_failure: true
+  drop:
+    chance: 0.0008
+    sources: [mythic]
+    min_mob_level: 8
+
+special_sporequeen:
+  name: "孢冠王印"
+  type: SPECIAL
+  level: 5
+  material: CHORUS_FLOWER
+  attributes:
+    - "生命力 +90"
+    - "生命恢复 +10"
+    - "毒素伤害 +18"
+    - "反弹几率 +6%"
+  socket:
+    success_rate: 0.45
+    destroy_on_failure: true
+  drop:
+    chance: 0.0008
+    sources: [mythic]
+    min_mob_level: 8
+
+special_huntmoon:
+  name: "猎心月印"
+  type: SPECIAL
+  level: 5
+  material: ECHO_SHARD
+  attributes:
+    - "暴击几率 +6%"
+    - "暴伤倍率 +16%"
+    - "PVE伤害 +10%"
+    - "移速加成 +5%"
+  socket:
+    success_rate: 0.45
+    destroy_on_failure: true
+  drop:
+    chance: 0.0008
+    sources: [mythic]
+    min_mob_level: 8

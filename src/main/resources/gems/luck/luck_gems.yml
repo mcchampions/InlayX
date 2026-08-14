@@ -1,0 +1,51 @@
+# 幸运类宝石
+
+luck_clover:
+  name: "丰年四叶"
+  type: LUCK
+  level: 1
+  material: WHEAT_SEEDS
+  attributes:
+    - "幸运 +1"
+    - "经验加成 +4%"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+luck_goldcat:
+  name: "淘金猫眼"
+  type: LUCK
+  level: 3
+  material: GOLD_NUGGET
+  attributes:
+    - "幸运 +2"
+    - "物品掉落率 +6%"
+    - "经验加成 +6%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+luck_scholar:
+  name: "博学流金"
+  type: LUCK
+  level: 5
+  material: GOLD_INGOT
+  attributes:
+    - "幸运 +4"
+    - "物品掉落率 +10%"
+    - "经验加成 +12%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8

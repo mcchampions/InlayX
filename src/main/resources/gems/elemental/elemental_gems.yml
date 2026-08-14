@@ -1,0 +1,113 @@
+# 元素类宝石
+
+elemental_ember:
+  name: "炽焰赤晶"
+  type: ELEMENTAL
+  level: 1
+  material: BLAZE_POWDER
+  attributes:
+    - "燃烧伤害 +8"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+elemental_frost:
+  name: "霜寒蓝晶"
+  type: ELEMENTAL
+  level: 1
+  material: SNOWBALL
+  attributes:
+    - "冰冻强度 +8"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+elemental_blight:
+  name: "侵蚀孢核"
+  type: ELEMENTAL
+  level: 2
+  material: RED_MUSHROOM
+  attributes:
+    - "毒素伤害 +12"
+  socket:
+    success_rate: 0.90
+    destroy_on_failure: false
+  drop:
+    chance: 0.012
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+elemental_thunder:
+  name: "雷罚黄晶"
+  type: ELEMENTAL
+  level: 3
+  material: GLOWSTONE_DUST
+  attributes:
+    - "雷击伤害 +18"
+    - "暴击几率 +3%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+elemental_venom:
+  name: "剧毒幽晶"
+  type: ELEMENTAL
+  level: 3
+  material: SPIDER_EYE
+  attributes:
+    - "毒素伤害 +18"
+    - "PVE伤害 +4%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+elemental_decay:
+  name: "腐潮沼核"
+  type: ELEMENTAL
+  level: 4
+  material: BROWN_MUSHROOM
+  attributes:
+    - "毒素伤害 +24"
+    - "冰冻强度 +10"
+    - "PVE伤害 +4%"
+  socket:
+    success_rate: 0.65
+    destroy_on_failure: true
+  drop:
+    chance: 0.003
+    sources: [mythic]
+    min_mob_level: 5
+
+elemental_prism:
+  name: "棱彩天核"
+  type: ELEMENTAL
+  level: 5
+  material: PRISMARINE_CRYSTALS
+  attributes:
+    - "燃烧伤害 +20"
+    - "冰冻强度 +20"
+    - "雷击伤害 +20"
+    - "毒素伤害 +20"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8

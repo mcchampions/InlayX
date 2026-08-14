@@ -1,0 +1,149 @@
+# InlayX 配置文件
+# 宝石定义文件位于 plugins/InlayX/gems/ 目录下
+# 所有宝石参数(属性, 掉落, 镶嵌)均在各自文件中独立配置
+
+# 插件通用设置
+settings:
+  gui_title: "宝石镶嵌"
+  # 宝石槽位有关设置
+  socket:
+    header: "&7------- 宝石槽位 -------"
+    max_sockets: 8
+    # 快捷镶嵌开关
+    quick_socket:
+      # 右键快捷镶嵌(主手持宝石, 副手持装备, 右键镶嵌)
+      right_click: true
+      # 背包拖拽快捷镶嵌(光标持宝石, 点击装备镶嵌)
+      drag: true
+    # 宝石槽位显示模板(仿宝石 display_pattern)
+    # 各模板可用的变量分别标注在对应配置项上
+    display_pattern:
+      # 空槽模板, 可用变量: 
+      #  {gemTypeColor} 宝石类型颜色  {gemTypeName} 宝石类型名称  {gemTypeId} 宝石类型ID
+      # 模板必须保证不同宝石类型渲染出的行互不相同, 默认模板通过 {gemTypeColor}/{gemTypeName}/{gemTypeId} 提供差异;
+      # 若多个类型渲染结果相同, 只会被识别为第一个类型
+      empty: "{gemTypeColor}◇ {gemTypeName}宝石槽位"
+      # 已镶嵌模板(列表, 每项为一行 lore), 可用变量:
+      #  {gemTypeColor} 宝石类型颜色  {gemName} 宝石名称  {gemLevelStars} 宝石等级星星表示(★)  {gemLevel} 宝石等级数字表示(1)
+      #  {gemTypeName} 宝石类型名称   {successRate} 镶嵌成功率(99%)  {destroyOnFailure} 失败是否破坏(是/否)  {gemId} 宝石id
+      #  {gemDisplayName} 解析后的宝石显示名(gem display_pattern 渲染结果)
+      # 专有变量: 
+      #  {attributeLores} 宝石属性 lore(只在一行中单独存在该变量时解析)
+      filled:
+        - "{gemTypeColor}◆ {gemDisplayName}"
+        - "{attributeLores}"
+      # 属性行模板(filled 中 {attributeLores} 展开时逐行应用), 可用变量: 
+      #  {gemTypeColor} 宝石类型颜色  {gemName} 宝石名称  {gemLevelStars} 宝石等级星星表示(★)  {gemLevel} 宝石等级数字表示(1)
+      #  {gemTypeName} 宝石类型名称   {successRate} 镶嵌成功率(99%)  {destroyOnFailure} 失败是否破坏(是/否)  {gemId} 宝石id
+      # 专有变量: 
+      #  {attributeLore} 当行对应的属性 lore
+      per_line_attribute_lore: "{gemTypeColor}  {attributeLore}"
+  # 宝石设置
+  gem:
+    # 宝石 displayName 与 lore 显示模板
+    # 可用变量: 
+    #  {gemTypeColor} 宝石类型颜色  {gemName} 宝石名称  {gemLevelStars} 宝石等级星星表示(★)  {gemLevel} 宝石等级数字表示(1)
+    #  {gemTypeName} 宝石类型名称   {successRate} 镶嵌成功率(99%)  {destroyOnFailure} 失败是否破坏(是/否)  {gemId} 宝石id
+    display_pattern:
+      display_name: "{gemTypeColor}{gemName} {gemLevelStars}"
+      # 专有变量:
+      #  {attributeLores} 属性 lore(只在一行中单独存在该变量时解析)
+      lore:
+        - "&7类型: {gemTypeName} 宝石"
+        - "&7等级: {gemLevel}"
+        - "&7成功率: {successRate}"
+        - "&7失败时损坏: {destroyOnFailure}"
+        - ""
+        - "{attributeLores}"
+        - ""
+        - "&e右键点击装备可直接镶嵌"
+        - "&e或使用 /gem socket 打开镶嵌界面"
+      # 每一行属性 lore 的显示模板
+      # {attributeLore} 当行对应的属性 lore, 在宝石配置文件中, 该变量仅对当前配置有效
+      per_line_attribute_lore: "{gemTypeColor}{attributeLore}"
+    # 掉落系统
+    drop:
+      # 是否启用本插件自带的 掉落物系统
+      enable: false
+    # 提取设置
+    extract:
+      # 宝石提取成功率 (0.0 - 1.0), 失败时宝石将碎裂消失
+      success_rate: 1
+    # 给予设置
+    give:
+      # 玩家背包已满时的处理方式: drop(掉落在玩家旁边) / deny(不予发放)
+      full_inventory: drop
+  # 宝石类型配置: 键为宝石类型 ID(宝石定义文件中的 type 字段), 
+  # name 为显示名称, color 为槽位与提示颜色(支持 ChatColor 颜色名)
+  gem_types:
+    ATTACK:
+      name: "攻击"
+      color: RED
+    DEFENSE:
+      name: "防御"
+      color: BLUE
+    HEALTH:
+      name: "生命"
+      color: GREEN
+    SPEED:
+      name: "速度"
+      color: AQUA
+    LUCK:
+      name: "幸运"
+      color: GOLD
+    MAGIC:
+      name: "魔法"
+      color: LIGHT_PURPLE
+    ELEMENTAL:
+      name: "元素"
+      color: YELLOW
+    UTILITY:
+      name: "实用"
+      color: GRAY
+    SPECIAL:
+      name: "特殊"
+      color: DARK_PURPLE
+  # 播放声音设置
+  sounds:
+    # 镶嵌声音
+    socket:
+      success:
+        enable: true
+        sound: ENTITY_PLAYER_LEVELUP
+        volume: 1.0
+        pitch: 1.0
+      failure:
+        enable: true
+        sound: BLOCK_ANVIL_BREAK
+        volume: 1.0
+        pitch: 1.0
+    # 提取声音
+    extract:
+      success:
+        enable: true
+        sound: ENTITY_PLAYER_LEVELUP
+        volume: 1.0
+        pitch: 1.0
+      failure:
+        enable: true
+        sound: BLOCK_ANVIL_BREAK
+        volume: 1.0
+        pitch: 1.0
+
+config-version: 1
+# 自定义宝石(不建议在此处配置除非只有几种宝石, 或许更方便)
+# gems:
+#   example_gem:
+#     name: "示例宝石"
+#     type: SPECIAL
+#     level: 3
+#     material: EMERALD
+#     attributes:
+#       - "物理伤害 +10"
+#     socket:
+#       success_rate: 0.80
+#       destroy_on_failure: true
+#     drop:
+#       chance: 0.01
+#       sources: [normal, mythic]
+#       min_mob_level: 1

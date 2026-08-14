@@ -1,0 +1,85 @@
+# 魔法类宝石
+
+magic_arcane:
+  name: "奥术蓝晶"
+  type: MAGIC
+  level: 1
+  material: LAPIS_LAZULI
+  attributes:
+    - "最大魔法值 +30"
+    - "魔法恢复 +3"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+magic_sporegrimoire:
+  name: "孢雾秘页"
+  type: MAGIC
+  level: 2
+  material: GLOW_LICHEN
+  attributes:
+    - "最大魔法值 +40"
+    - "魔法恢复 +4"
+    - "毒素伤害 +8"
+  socket:
+    success_rate: 0.90
+    destroy_on_failure: false
+  drop:
+    chance: 0.012
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+magic_tide:
+  name: "潮汐秘核"
+  type: MAGIC
+  level: 3
+  material: AMETHYST_SHARD
+  attributes:
+    - "最大魔法值 +70"
+    - "魔法恢复 +6"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+magic_motherfungus:
+  name: "母后菌髓"
+  type: MAGIC
+  level: 5
+  material: RED_MUSHROOM_BLOCK
+  attributes:
+    - "最大魔法值 +120"
+    - "魔法恢复 +10"
+    - "毒素伤害 +24"
+    - "PVE伤害 +6%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8
+
+magic_sage:
+  name: "贤者月核"
+  type: MAGIC
+  level: 5
+  material: ENDER_EYE
+  attributes:
+    - "最大魔法值 +150"
+    - "魔法恢复 +12"
+    - "攻击速度 +4%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8

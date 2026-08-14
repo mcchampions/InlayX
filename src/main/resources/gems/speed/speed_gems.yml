@@ -1,0 +1,85 @@
+# 速度类宝石
+
+speed_galefeather:
+  name: "疾风羽石"
+  type: SPEED
+  level: 1
+  material: FEATHER
+  attributes:
+    - "移速加成 +3%"
+    - "闪避几率 +2%"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+speed_quickdraw:
+  name: "疾羽风砂"
+  type: SPEED
+  level: 2
+  material: STRING
+  attributes:
+    - "移速加成 +4%"
+    - "攻击速度 +3%"
+    - "闪避几率 +2%"
+  socket:
+    success_rate: 0.90
+    destroy_on_failure: false
+  drop:
+    chance: 0.012
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+speed_flashstep:
+  name: "逐电星砂"
+  type: SPEED
+  level: 3
+  material: SUGAR
+  attributes:
+    - "移速加成 +6%"
+    - "攻击速度 +5%"
+    - "闪避几率 +4%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+speed_rangerstep:
+  name: "巡林迅痕"
+  type: SPEED
+  level: 4
+  material: RABBIT_HIDE
+  attributes:
+    - "移速加成 +8%"
+    - "攻击速度 +6%"
+    - "闪避几率 +5%"
+  socket:
+    success_rate: 0.65
+    destroy_on_failure: true
+  drop:
+    chance: 0.003
+    sources: [mythic]
+    min_mob_level: 5
+
+speed_phantom:
+  name: "幻步风精"
+  type: SPEED
+  level: 5
+  material: PHANTOM_MEMBRANE
+  attributes:
+    - "移速加成 +10%"
+    - "攻击速度 +8%"
+    - "闪避几率 +6%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8

@@ -1,0 +1,102 @@
+# 防御类宝石
+
+defense_guardscale:
+  name: "守御青晶"
+  type: DEFENSE
+  level: 1
+  material: PRISMARINE_SHARD
+  attributes:
+    - "物理防御 +10"
+    - "PVE防御 +3%"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+defense_mossguard:
+  name: "苔壁结晶"
+  type: DEFENSE
+  level: 2
+  material: MOSS_BLOCK
+  attributes:
+    - "物理防御 +14"
+    - "生命力 +24"
+  socket:
+    success_rate: 0.90
+    destroy_on_failure: false
+  drop:
+    chance: 0.012
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+defense_bastion:
+  name: "壁垒玄核"
+  type: DEFENSE
+  level: 3
+  material: IRON_INGOT
+  attributes:
+    - "物理防御 +20"
+    - "击退抗性 +6%"
+    - "反弹几率 +4%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+defense_crownwall:
+  name: "王陵壁芯"
+  type: DEFENSE
+  level: 4
+  material: BONE_BLOCK
+  attributes:
+    - "物理防御 +26"
+    - "生命力 +55"
+    - "PVE防御 +6%"
+  socket:
+    success_rate: 0.65
+    destroy_on_failure: true
+  drop:
+    chance: 0.003
+    sources: [mythic]
+    min_mob_level: 5
+
+defense_sporebark:
+  name: "孢树护芯"
+  type: DEFENSE
+  level: 4
+  material: BROWN_MUSHROOM_BLOCK
+  attributes:
+    - "物理防御 +28"
+    - "生命力 +48"
+    - "PVE防御 +6%"
+  socket:
+    success_rate: 0.65
+    destroy_on_failure: true
+  drop:
+    chance: 0.003
+    sources: [mythic]
+    min_mob_level: 5
+
+defense_duelward:
+  name: "决斗铠印"
+  type: DEFENSE
+  level: 5
+  material: RESIN_BRICK
+  attributes:
+    - "物理防御 +35"
+    - "PVP防御 +8%"
+    - "PVE防御 +6%"
+    - "击退抗性 +10%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8

@@ -1,0 +1,104 @@
+# 宝石示例文件
+# 仅供参考
+
+# id
+gem_id_1:
+  # 名称(不建议重复)
+  name: "名称"
+  # 宝石类型
+  type: UTILITY
+  # 宝石等级
+  level: 1
+  # 宝石物品材质
+  material: BONE
+  # 属性 lore
+  attributes:
+    - "&e物品掉落率 +5%"
+    - "&e经验加成 +4%"
+  # (可选)  
+  socket:
+    # (可选) 成功率, 默认 1
+    success_rate: 0.95
+    # (可选) 失败时损坏宝石, 默认 false
+    destroy_on_failure: false
+  # (可选) 默认关闭掉落系统
+  drop:
+    # 掉落概率
+    chance: 0.02
+    # 掉落来源
+    # 目前支持:
+    #  normal  - 原版怪物
+    #  mythic  - MythicMobs 的怪物
+    sources: [normal, mythic]
+    # 最小怪物等级
+    # 对于 原版怪物, 默认其等级为 1.
+    min_mob_level: 1
+    # (可选) 怪物每级提升的概率, 默认为0
+    per_level_rate: 0.001
+gem_id_2:
+  name: "名称2"
+  type: UTILITY
+  level: 1
+  material: BONE
+  attributes:
+    - "物品掉落率 +5%"
+    - "经验加成 +4%"
+
+gem_id_3:
+  name: "名称3"
+  type: UTILITY
+  level: 1
+  material: BONE
+  attributes:
+    - "经验加成 +4%"
+  # (可选)
+  overrides:
+    # 宝石 displayName 与 lore 显示模板
+    # 可用变量: 
+    #  {gemTypeColor} 宝石类型颜色  {gemName} 宝石名称  {gemLevelStars} 宝石等级星星表示(★)  {gemLevel} 宝石等级数字表示(1)
+    #  {gemTypeName} 宝石类型名称   {successRate} 镶嵌成功率(99%)  {destroyOnFailure} 失败是否破坏(是/否)  {gemId} 宝石id
+    # 可选
+    display_pattern:
+      # (可选)
+      display_name: "测试宝石3"
+      # (可选)
+      # 专有变量:
+      #  {attributeLores} 属性 lore(只在一行中单独存在该变量时解析)
+      lore:
+        - "&7不过1个普普通通的小宝石罢了"
+        - ""
+        - "&e可提供增幅:"
+        - "{attributeLores}"
+        - ""
+        - "&e右键点击装备可直接镶嵌"
+        - "&e或使用 /gem socket 打开镶嵌界面"
+      # 每一行属性 lore 的显示模板
+      # {attributeLore} 当行对应的属性 lore, 在宝石配置文件中, 该变量仅对当前配置有效
+      # (可选)
+      per_line_attribute_lore: "&7  - &b{attributeLore}"
+
+gem_id_4:
+  name: "Name 4"
+  type: UTILITY
+  level: 1
+  material: BONE
+  attributes:
+    - "物品掉落率 +5%"
+  # (可选)
+  overrides:
+    display_pattern:
+      lore: []
+      per_line_attribute_lore: "&7  - &b{attributeLore}"
+
+gem_id_5:
+  name: "Name 5"
+  type: UTILITY
+  level: 1
+  material: BONE
+  attributes:
+    - "物品掉落率 +5%"
+  # (可选)
+  overrides:
+    display_pattern:
+      display_name: "测试宝石 5"
+      per_line_attribute_lore: "&7  - &b{attributeLore}"

@@ -1,0 +1,194 @@
+package me.qscbm.inlayx.config;
+
+import io.papermc.paper.registry.TypedKey;
+import io.papermc.paper.registry.keys.SoundEventKeys;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import lombok.AccessLevel;
+import lombok.Getter;
+import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.gem.GemType;
+import me.qscbm.inlayx.util.ReflectionUtils;
+import me.qscbm.inlayx.util.TextUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.Registry;
+import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+
+/**
+ * 配置管理
+ */
+@Getter
+public class ConfigManager {
+    private final InlayX plugin;
+
+    private String guiTitle;
+    private String socketHeader;
+    private int maxSockets;
+    private boolean rightClickSocketEnabled;
+    private boolean dragSocketEnabled;
+    private String socketEmptyPattern;
+    private List<String> socketFilledPattern;
+    private String socketAttributeLorePattern;
+
+    @Getter(AccessLevel.NONE)
+    private final Map<String, GemType> gemTypes = new LinkedHashMap<>();
+
+    private SoundConfig socketSuccessSound;
+    private SoundConfig socketFailureSound;
+    private SoundConfig extractSuccessSound;
+    private SoundConfig extractFailureSound;
+
+    private String gemDisplayNamePattern;
+    private List<String> gemLorePattern;
+    private String attributeLorePattern;
+
+    private boolean dropSystemEnabled;
+    private double extractSuccessRate;
+    private boolean dropGemOnFullInventory;
+
+    public ConfigManager(InlayX plugin) {
+        this.plugin = plugin;
+        loadSettings();
+    }
+
+    public void loadSettings() {
+        var cfg = plugin.getConfig();
+        guiTitle = TextUtils.translateAlternateColorCodes(cfg.getString("settings.gui_title", "&5宝石镶嵌"));
+        socketHeader = TextUtils.translateAlternateColorCodes(
+                cfg.getString("settings.socket.header", "&7------- 宝石槽位 -------"));
+        maxSockets = cfg.getInt("settings.socket.max_sockets", 8);
+        rightClickSocketEnabled = cfg.getBoolean("settings.socket.quick_socket.right_click", true);
+        dragSocketEnabled = cfg.getBoolean("settings.socket.quick_socket.drag", true);
+        socketEmptyPattern =
+                cfg.getString("settings.socket.display_pattern.empty", "{gemTypeColor}◇ {gemTypeName}宝石槽位");
+        socketFilledPattern = cfg.getStringList("settings.socket.display_pattern.filled");
+        if (socketFilledPattern.isEmpty()) {
+            socketFilledPattern = List.of("{gemTypeColor}◆ {gemDisplayName}", "{attributeLores}");
+        }
+        socketAttributeLorePattern = cfg.getString(
+                "settings.socket.display_pattern.per_line_attribute_lore", "{gemTypeColor}  {attributeLore}");
+
+        gemTypes.clear();
+        ConfigurationSection typesSec = cfg.getConfigurationSection("settings.gem_types");
+        if (typesSec != null) {
+            for (String id : typesSec.getKeys(false)) {
+                ConfigurationSection sec = typesSec.getConfigurationSection(id);
+                if (sec == null) {
+                    continue;
+                }
+                String name = sec.getString("name", id);
+                ChatColor color = parseColor(sec.getString("color"), ChatColor.WHITE);
+                gemTypes.put(id, new GemType(id, name, color));
+            }
+        }
+
+        socketSuccessSound = SoundConfig.load(
+                cfg.getConfigurationSection("settings.sounds.socket.success"),
+                "ENTITY_PLAYER_LEVELUP",
+                Sound.ENTITY_PLAYER_LEVELUP);
+        socketFailureSound = SoundConfig.load(
+                cfg.getConfigurationSection("settings.sounds.socket.failure"),
+                "BLOCK_ANVIL_BREAK",
+                Sound.BLOCK_ANVIL_BREAK);
+        extractSuccessSound = SoundConfig.load(
+                cfg.getConfigurationSection("settings.sounds.extract.success"),
+                "ENTITY_PLAYER_LEVELUP",
+                Sound.ENTITY_PLAYER_LEVELUP);
+        extractFailureSound = SoundConfig.load(
+                cfg.getConfigurationSection("settings.sounds.extract.failure"),
+                "BLOCK_ANVIL_BREAK",
+                Sound.BLOCK_ANVIL_BREAK);
+
+        gemDisplayNamePattern =
+                cfg.getString("settings.gem.display_pattern.display_name", "{gemTypeColor}{gemName} {gemLevelStars}");
+        gemLorePattern = cfg.getStringList("settings.gem.display_pattern.lore");
+        attributeLorePattern =
+                cfg.getString("settings.gem.display_pattern.per_line_attribute_lore", "{gemTypeColor}{attributeLore}");
+
+        dropSystemEnabled = cfg.getBoolean("settings.gem.drop.enable", true);
+        extractSuccessRate = Math.clamp(cfg.getDouble("settings.gem.extract.success_rate", 1.0), 0.0, 1.0);
+        dropGemOnFullInventory = "drop".equalsIgnoreCase(cfg.getString("settings.gem.give.full_inventory", "drop"));
+    }
+
+    //  ==================== Getter ====================
+
+    public GemType getGemType(String id) {
+        if (id == null) {
+            return null;
+        }
+        return gemTypes.get(id);
+    }
+
+    public Map<String, GemType> getGemTypes() {
+        return Collections.unmodifiableMap(gemTypes);
+    }
+
+    public GemType getDefaultGemType() {
+        return gemTypes.isEmpty() ? null : gemTypes.values().iterator().next();
+    }
+
+    private static ChatColor parseColor(String name, ChatColor def) {
+        if (name == null) return def;
+        try {
+            return ChatColor.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return def;
+        }
+    }
+
+    private static TypedKey<?> getSoundKey(String fieldName) {
+        Object value = ReflectionUtils.getFieldValue(SoundEventKeys.class, fieldName.toUpperCase());
+        if (value instanceof TypedKey<?> key) {
+            return key;
+        }
+        return null;
+    }
+
+    private static Sound loadSound(String name, Sound fallback) {
+        TypedKey<?> key = getSoundKey(name);
+        if (key == null) {
+            return fallback;
+        }
+        Sound sound = Registry.SOUNDS.get(key);
+        return sound != null ? sound : fallback;
+    }
+
+    /**
+     * 单组声音配置(开关, 声音, 音量, 音调).
+     */
+    @Getter
+    public static final class SoundConfig {
+        private final boolean enable;
+        private final Sound sound;
+        private final float volume;
+        private final float pitch;
+
+        private SoundConfig(boolean enable, Sound sound, float volume, float pitch) {
+            this.enable = enable;
+            this.sound = sound;
+            this.volume = volume;
+            this.pitch = pitch;
+        }
+
+        public void play(Player player) {
+            if (enable && sound != null) {
+                player.playSound(player.getLocation(), sound, volume, pitch);
+            }
+        }
+
+        static SoundConfig load(ConfigurationSection section, String defaultSoundName, Sound fallback) {
+            if (section == null) {
+                return new SoundConfig(true, fallback, 1.0f, 1.0f);
+            }
+            return new SoundConfig(
+                    section.getBoolean("enable", true),
+                    loadSound(section.getString("sound", defaultSoundName), fallback),
+                    (float) section.getDouble("volume", 1.0d),
+                    (float) section.getDouble("pitch", 1.0d));
+        }
+    }
+}

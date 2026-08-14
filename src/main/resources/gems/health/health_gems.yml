@@ -1,0 +1,83 @@
+# 生命类宝石
+
+health_lifebud:
+  name: "活源心玉"
+  type: HEALTH
+  level: 1
+  material: MELON_SLICE
+  attributes:
+    - "生命力 +20"
+    - "生命恢复 +2"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+health_rotheart:
+  name: "腐殖心核"
+  type: HEALTH
+  level: 2
+  material: VINE
+  attributes:
+    - "生命力 +28"
+    - "生命恢复 +3"
+  socket:
+    success_rate: 0.90
+    destroy_on_failure: false
+  drop:
+    chance: 0.012
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+health_giantblood:
+  name: "巨灵血玉"
+  type: HEALTH
+  level: 3
+  material: HEART_OF_THE_SEA
+  attributes:
+    - "生命力 +50"
+    - "生命恢复 +5"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+health_bloomcore:
+  name: "孢母命核"
+  type: HEALTH
+  level: 4
+  material: SHROOMLIGHT
+  attributes:
+    - "生命力 +72"
+    - "生命恢复 +8"
+    - "吸血倍率 +3%"
+  socket:
+    success_rate: 0.65
+    destroy_on_failure: true
+  drop:
+    chance: 0.003
+    sources: [mythic]
+    min_mob_level: 5
+
+health_immortal:
+  name: "不息命核"
+  type: HEALTH
+  level: 5
+  material: GHAST_TEAR
+  attributes:
+    - "生命力 +120"
+    - "生命恢复 +10"
+    - "吸血倍率 +3%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8

@@ -1,0 +1,76 @@
+name: InlayX
+version: '${version}'
+
+main: me.qscbm.inlayx.InlayX
+api-version: '1.21'
+folia-supported: true
+load: POSTWORLD
+
+authors: [ qscbm187531 ]
+
+softdepend: [MythicMobs]
+
+commands:
+  gem:
+    description: InlayX 主命令
+    usage: /gem help
+    aliases: [baoshi, bs, inlayx]
+
+permissions:
+  inlayx.use:
+    description: 基础使用权限
+    default: true
+    children:
+      inlayx.help: true
+      inlayx.list: true
+      inlayx.socket: true
+      inlayx.extract: true
+      inlayx.info: true
+  inlayx.help:
+    description: 允许查看帮助
+    default: true
+  inlayx.list:
+    description: 允许查看宝石列表
+    default: true
+  inlayx.socket:
+    description: 允许打开宝石镶嵌界面
+    default: true
+  inlayx.extract:
+    description: 允许提取宝石
+    default: true
+  inlayx.info:
+    description: 允许查看宝石或装备信息
+    default: true
+  inlayx.admin:
+    description: 管理员权限
+    default: op
+    children:
+      inlayx.help: true
+      inlayx.list: true
+      inlayx.socket: true
+      inlayx.extract: true
+      inlayx.info: true
+      inlayx.give: true
+      inlayx.addgem: true
+      inlayx.reload: true
+      inlayx.addslot: true
+      inlayx.removeslot: true
+      inlayx.removegem: true
+  inlayx.give:
+    description: 允许给予宝石
+    default: op
+  inlayx.addgem:
+    description: 允许直接向装备添加宝石
+    default: op
+  inlayx.reload:
+    description: 允许重载插件配置
+    default: op
+  inlayx.addslot:
+    description: 允许添加宝石槽位
+    default: op
+  inlayx.removeslot:
+    description: 允许移除宝石槽位
+    default: op
+  inlayx.removegem:
+    description: 允许直接移除装备上的宝石
+    default: op

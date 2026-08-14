@@ -1,0 +1,171 @@
+# 攻击类宝石
+
+attack_bloodfang:
+  name: "血锋尖晶"
+  type: ATTACK
+  level: 1
+  material: REDSTONE
+  attributes:
+    - "物理伤害 +8"
+    - "暴击几率 +2.5%"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+attack_mirefang:
+  name: "沼牙蚀晶"
+  type: ATTACK
+  level: 2
+  material: SLIME_BALL
+  attributes:
+    - "物理伤害 +10"
+    - "吸血倍率 +2%"
+  socket:
+    success_rate: 0.90
+    destroy_on_failure: false
+  drop:
+    chance: 0.012
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+attack_berserker:
+  name: "狂袭赤髓"
+  type: ATTACK
+  level: 3
+  material: RUBY
+  attributes:
+    - "物理伤害 +16"
+    - "攻击速度 +4%"
+    - "暴伤倍率 +8%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+attack_executionseal:
+  name: "处决赤印"
+  type: ATTACK
+  level: 4
+  material: REDSTONE_BLOCK
+  attributes:
+    - "物理伤害 +18"
+    - "暴伤倍率 +10%"
+    - "PVE伤害 +6%"
+  socket:
+    success_rate: 0.65
+    destroy_on_failure: true
+  drop:
+    chance: 0.003
+    sources: [mythic]
+    min_mob_level: 5
+
+attack_sporeedge:
+  name: "孢锋毒芒"
+  type: ATTACK
+  level: 4
+  material: FERMENTED_SPIDER_EYE
+  attributes:
+    - "物理伤害 +22"
+    - "毒素伤害 +18"
+    - "PVE伤害 +5%"
+  socket:
+    success_rate: 0.65
+    destroy_on_failure: true
+  drop:
+    chance: 0.003
+    sources: [mythic]
+    min_mob_level: 5
+
+attack_voidbreaker:
+  name: "破界黑曜"
+  type: ATTACK
+  level: 5
+  material: NETHERITE_SCRAP
+  attributes:
+    - "物理伤害 +30"
+    - "暴击几率 +6%"
+    - "PVE伤害 +8%"
+    - "PVP伤害 +5%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8
+
+attack_finalrot:
+  name: "终腐王核"
+  type: ATTACK
+  level: 5
+  material: ECHO_SHARD
+  attributes:
+    - "物理伤害 +34"
+    - "毒素伤害 +26"
+    - "暴伤倍率 +10%"
+    - "PVE伤害 +10%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8
+
+attack_fletching:
+  name: "羽矢棱晶"
+  type: ATTACK
+  level: 1
+  material: FLINT
+  attributes:
+    - "物理伤害 +8"
+    - "暴击几率 +2%"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+attack_hawkeye:
+  name: "鹰眼锋核"
+  type: ATTACK
+  level: 3
+  material: FEATHER
+  attributes:
+    - "物理伤害 +16"
+    - "暴击几率 +4%"
+    - "PVE伤害 +5%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+attack_moonpiercer:
+  name: "裂月穿锋"
+  type: ATTACK
+  level: 5
+  material: AMETHYST_SHARD
+  attributes:
+    - "物理伤害 +28"
+    - "暴击几率 +6%"
+    - "暴伤倍率 +12%"
+    - "PVE伤害 +8%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8

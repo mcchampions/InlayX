@@ -1,0 +1,101 @@
+# 实用类宝石
+
+utility_harvest:
+  name: "丰收牙玉"
+  type: UTILITY
+  level: 1
+  material: BONE
+  attributes:
+    - "物品掉落率 +5%"
+    - "经验加成 +4%"
+  socket:
+    success_rate: 0.95
+    destroy_on_failure: false
+  drop:
+    chance: 0.02
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+utility_trueflight:
+  name: "真飞箭符"
+  type: UTILITY
+  level: 2
+  material: ARROW
+  attributes:
+    - "经验加成 +4%"
+    - "物品掉落率 +4%"
+    - "暴击几率 +2%"
+  socket:
+    success_rate: 0.90
+    destroy_on_failure: false
+  drop:
+    chance: 0.012
+    sources: [normal, mythic]
+    min_mob_level: 1
+
+utility_runner:
+  name: "远行徽石"
+  type: UTILITY
+  level: 3
+  material: RABBIT_FOOT
+  attributes:
+    - "移速加成 +4%"
+    - "经验加成 +6%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+utility_bogwalker:
+  name: "泥行枝符"
+  type: UTILITY
+  level: 3
+  material: HANGING_ROOTS
+  attributes:
+    - "移速加成 +4%"
+    - "生命恢复 +4"
+    - "物品掉落率 +5%"
+  socket:
+    success_rate: 0.80
+    destroy_on_failure: true
+  drop:
+    chance: 0.007
+    sources: [mythic]
+    min_mob_level: 3
+
+utility_huntsign:
+  name: "猎程铭羽"
+  type: UTILITY
+  level: 4
+  material: SPECTRAL_ARROW
+  attributes:
+    - "物品掉落率 +8%"
+    - "经验加成 +8%"
+    - "PVE伤害 +6%"
+  socket:
+    success_rate: 0.65
+    destroy_on_failure: true
+  drop:
+    chance: 0.003
+    sources: [mythic]
+    min_mob_level: 5
+
+utility_hunter:
+  name: "猎获勋章"
+  type: UTILITY
+  level: 5
+  material: COMPASS
+  attributes:
+    - "物品掉落率 +12%"
+    - "经验加成 +10%"
+    - "吸血倍率 +4%"
+  socket:
+    success_rate: 0.50
+    destroy_on_failure: true
+  drop:
+    chance: 0.001
+    sources: [mythic]
+    min_mob_level: 8
