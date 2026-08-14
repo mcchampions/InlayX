@@ -52,8 +52,7 @@ class GemLoader {
         int count = 0;
         for (String id : section.getKeys(false)) {
             ConfigurationSection gemSec = section.getConfigurationSection(id);
-            if (gemSec != null) {
-                parseAndRegister(id, gemSec);
+            if (gemSec != null && parseAndRegister(id, gemSec)) {
                 count++;
             }
         }
@@ -78,6 +77,7 @@ class GemLoader {
         if (files == null) {
             return 0;
         }
+        Arrays.sort(files, Comparator.comparing(File::getAbsolutePath));
         for (File f : files) {
             if (f.isDirectory()) {
                 count += scanDir(f);
@@ -93,8 +93,7 @@ class GemLoader {
         int count = 0;
         for (String id : config.getKeys(false)) {
             ConfigurationSection section = config.getConfigurationSection(id);
-            if (section != null) {
-                parseAndRegister(id, section);
+            if (section != null && parseAndRegister(id, section)) {
                 count++;
             }
         }
@@ -160,13 +159,19 @@ class GemLoader {
 
     // -- 解析 --
 
-    void parseAndRegister(String gemId, ConfigurationSection section) {
+    boolean parseAndRegister(String gemId, ConfigurationSection section) {
+        if (gems.containsKey(gemId)) {
+            plugin.getLogger().severe("检测到重复的宝石ID: " + gemId + ", 本次定义已被忽略, 请检查 gems/ 目录与 config.yml 的 gems 配置");
+            return false;
+        }
         try {
             String name = section.getString("name", "未命名宝石");
             int level = section.getInt("level", 1);
             GemType type = parseType(section.getString("type", "ATTACK"));
-            Material material = Material.getMaterial(section.getString("material", "EMERALD"));
+            String materialName = section.getString("material", "EMERALD");
+            Material material = Material.getMaterial(materialName);
             if (material == null) {
+                plugin.getLogger().warning("宝石 " + gemId + " 使用了无效的材质: " + materialName + ", 已回退为 EMERALD");
                 material = Material.EMERALD;
             }
 
@@ -205,8 +210,10 @@ class GemLoader {
                 loadOverride(gem, overrideSec);
             }
             gems.put(gemId, gem);
+            return true;
         } catch (Exception e) {
             plugin.getLogger().warning("解析宝石 " + gemId + " 时出错: " + e.getMessage());
+            return false;
         }
     }
 

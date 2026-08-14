@@ -86,4 +86,40 @@ class GemLoaderTest extends InlayXTestBase {
         assertTrue(gem.getLore().get(0).contains("普普通通"));
         assertTrue(gem.getLore().get(1).contains("经验加成 +4%"));
     }
+
+    @Test
+    void duplicateGemIdKeepsFirstDefinition() {
+        registerFromText("dup_gem", """
+                        dup_gem:
+                          name: "第一个"
+                          type: UTILITY
+                          level: 1
+                          material: BONE
+                        """);
+        registerFromText("dup_gem", """
+                        dup_gem:
+                          name: "第二个"
+                          type: UTILITY
+                          level: 2
+                          material: BONE
+                        """);
+        Gem gem = plugin.getGemManager().getGem("dup_gem");
+        assertNotNull(gem);
+        assertEquals("第一个", gem.getName());
+        assertEquals(1, gem.getLevel());
+    }
+
+    @Test
+    void invalidMaterialFallsBackToEmerald() {
+        registerFromText("bad_material", """
+                        bad_material:
+                          name: "坏材质"
+                          type: UTILITY
+                          level: 1
+                          material: RUBY
+                        """);
+        Gem gem = plugin.getGemManager().getGem("bad_material");
+        assertNotNull(gem);
+        assertEquals(Material.EMERALD, gem.getMaterial());
+    }
 }

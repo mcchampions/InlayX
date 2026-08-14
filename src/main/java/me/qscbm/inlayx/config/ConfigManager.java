@@ -60,7 +60,13 @@ public class ConfigManager {
         guiTitle = TextUtils.translateAlternateColorCodes(cfg.getString("settings.gui_title", "&5宝石镶嵌"));
         socketHeader = TextUtils.translateAlternateColorCodes(
                 cfg.getString("settings.socket.header", "&7------- 宝石槽位 -------"));
-        maxSockets = cfg.getInt("settings.socket.max_sockets", 8);
+        int configuredMaxSockets = cfg.getInt("settings.socket.max_sockets", 8);
+        if (configuredMaxSockets < 0) {
+            plugin.getLogger().warning("settings.socket.max_sockets 不能为负数, 已回退为默认值 8");
+            maxSockets = 8;
+        } else {
+            maxSockets = configuredMaxSockets;
+        }
         rightClickSocketEnabled = cfg.getBoolean("settings.socket.quick_socket.right_click", true);
         dragSocketEnabled = cfg.getBoolean("settings.socket.quick_socket.drag", true);
         socketEmptyPattern =
@@ -109,7 +115,7 @@ public class ConfigManager {
         attributeLorePattern =
                 cfg.getString("settings.gem.display_pattern.per_line_attribute_lore", "{gemTypeColor}{attributeLore}");
 
-        dropSystemEnabled = cfg.getBoolean("settings.gem.drop.enable", true);
+        dropSystemEnabled = cfg.getBoolean("settings.gem.drop.enable", false);
         extractSuccessRate = Math.clamp(cfg.getDouble("settings.gem.extract.success_rate", 1.0), 0.0, 1.0);
         dropGemOnFullInventory = "drop".equalsIgnoreCase(cfg.getString("settings.gem.give.full_inventory", "drop"));
     }

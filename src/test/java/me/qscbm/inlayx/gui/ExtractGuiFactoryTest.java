@@ -1,6 +1,8 @@
 package me.qscbm.inlayx.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import me.qscbm.inlayx.InlayXTestBase;
@@ -68,5 +70,25 @@ class ExtractGuiFactoryTest extends InlayXTestBase {
         assertEquals(
                 Material.GREEN_STAINED_GLASS_PANE,
                 inv.getItem(ExtractGuiFactory.SLOT_SLOTS[1]).getType());
+    }
+
+    @Test
+    void rendersUnknownSocketedGemAsUnknownMarker() {
+        registerGem("t1", "ATTACK", 1.0);
+        ExtractGuiFactory factory = plugin.getGemManager().getExtractGuiFactory();
+        Inventory inv = newGui();
+        GemExtractHolder holder = (GemExtractHolder) inv.getHolder();
+        GemType attack = plugin.getConfigManager().getGemType("ATTACK");
+        ItemStack sword = socketableSword(attack, 1);
+        plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t1"));
+        plugin.getGemManager().unregisterGem("t1");
+        inv.setItem(ExtractGuiFactory.EQUIP_SLOT, sword);
+        factory.refresh(inv, holder);
+
+        ItemStack marker = inv.getItem(ExtractGuiFactory.SLOT_SLOTS[0]);
+        assertNotNull(marker);
+        assertTrue(plugin.getGemManager().isGem(marker));
+        assertEquals("t1", plugin.getGemManager().getGemId(marker));
+        assertNull(plugin.getGemManager().getGem("t1"));
     }
 }

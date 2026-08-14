@@ -54,18 +54,30 @@ public class CmdExtract extends SubCommand {
             return;
         }
         if (gm.getGem(gemId) == null) {
-            player.sendMessage(ChatColor.RED + "找不到宝石: " + gemId);
+            if (!gm.getSocketedGems(item).contains(gemId)) {
+                player.sendMessage(ChatColor.RED + "该装备上没有镶嵌「" + gemId + "」宝石!");
+                return;
+            }
+            if (!gm.removeGem(item, gemId)) {
+                player.sendMessage(ChatColor.RED + "移除未知宝石失败!");
+                return;
+            }
+            player.getInventory().setItemInMainHand(item);
+            player.sendMessage(ChatColor.GREEN + "已移除未知宝石「" + gemId + "」(不会返还)");
+            playSound(player, true);
             return;
         }
 
         ExtractResult result = gm.extractGem(item, gemId);
         switch (result.getStatus()) {
             case SUCCESS -> {
+                player.getInventory().setItemInMainHand(item);
                 giveOrDrop(player, gm.createGemItem(result.getGemId()));
                 player.sendMessage(ChatColor.GREEN + "宝石提取成功!");
                 playSound(player, true);
             }
             case FAILED -> {
+                player.getInventory().setItemInMainHand(item);
                 player.sendMessage(ChatColor.RED + "提取失败!宝石已碎裂.");
                 playSound(player, false);
             }

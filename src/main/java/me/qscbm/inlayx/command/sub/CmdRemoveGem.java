@@ -53,10 +53,6 @@ public class CmdRemoveGem extends SubCommand {
             player.sendMessage(ChatColor.RED + "你手中的装备没有镶嵌宝石!");
             return;
         }
-        if (gm.getGem(gemId) == null) {
-            player.sendMessage(ChatColor.RED + "找不到宝石: " + gemId);
-            return;
-        }
         if (!gm.getSocketedGems(item).contains(gemId)) {
             player.sendMessage(ChatColor.RED + "该装备上没有镶嵌「" + gemId + "」宝石!");
             return;
@@ -66,6 +62,7 @@ public class CmdRemoveGem extends SubCommand {
             player.sendMessage(ChatColor.RED + "宝石移除失败!");
             return;
         }
+        player.getInventory().setItemInMainHand(item);
         player.sendMessage(ChatColor.GREEN + "已从装备上移除宝石「" + gemId + "」");
         plugin.getConfigManager().getSocketSuccessSound().play(player);
     }

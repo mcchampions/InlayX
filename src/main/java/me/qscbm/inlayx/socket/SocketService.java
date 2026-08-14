@@ -90,7 +90,11 @@ public class SocketService {
             }
             String line = lore.get(headerIdx + 1 + offset);
             GemType type = matchEmptyType(line);
-            slots.add(new SocketSlot(index, type == null ? null : type.getId(), null, offset, offset));
+            // 未知行 -> 宝石区域结束
+            if (type == null) {
+                break;
+            }
+            slots.add(new SocketSlot(index, type.getId(), null, offset, offset));
             offset++;
             index++;
         }
@@ -453,11 +457,12 @@ public class SocketService {
         for (String line : plugin.getConfigManager().getSocketFilledPattern()) {
             if ("{attributeLores}".equals(line)) {
                 for (String attr : gem.getAttributeLore()) {
-                    lines.add(GemTemplate.parse(
-                            plugin.getConfigManager().getSocketAttributeLorePattern(), gem, "{attributeLore}", attr));
+                    lines.add(TextUtils.translateAlternateColorCodes(GemTemplate.parse(
+                            plugin.getConfigManager().getSocketAttributeLorePattern(), gem, "{attributeLore}", attr)));
                 }
             } else {
-                lines.add(GemTemplate.parse(line, gem, "{gemDisplayName}", gem.getDisplayName()));
+                lines.add(TextUtils.translateAlternateColorCodes(
+                        GemTemplate.parse(line, gem, "{gemDisplayName}", gem.getDisplayName())));
             }
         }
         return lines;

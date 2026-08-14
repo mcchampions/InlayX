@@ -1,7 +1,9 @@
 package me.qscbm.inlayx.gem;
 
+import java.util.List;
 import java.util.Map;
 import me.qscbm.inlayx.InlayX;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
@@ -60,6 +62,19 @@ public class GemItemFactory {
         meta.setDisplayName(gem.getDisplayName());
         meta.setLore(gem.getLore());
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+        meta.getPersistentDataContainer().set(gemIdKey(), PersistentDataType.STRING, gemId);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    /**
+     * 生成配置已不存在的宝石的占位物品(仅用于 GUI 展示, 携带原 gem_id 以供点击移除).
+     */
+    public ItemStack createUnknownGemItem(String gemId) {
+        ItemStack item = new ItemStack(Material.BARRIER);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.RED + "未知宝石");
+        meta.setLore(List.of(ChatColor.GRAY + "宝石ID: " + gemId, ChatColor.RED + "该宝石的配置已不存在, 点击将直接移除(不会返还)"));
         meta.getPersistentDataContainer().set(gemIdKey(), PersistentDataType.STRING, gemId);
         item.setItemMeta(meta);
         return item;

@@ -33,7 +33,7 @@ public abstract class InlayXTestBase {
         gem.setDisplayName("测试宝石");
         gem.setLore(List.of());
         gem.addAttributeLore("物理伤害 +1");
-        plugin.getGemManager().getGems().put(id, gem);
+        plugin.getGemManager().registerGem(gem);
         return gem;
     }
 

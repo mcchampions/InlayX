@@ -79,6 +79,18 @@ public class ExtractGuiListener implements Listener {
             return;
         }
 
+        if (gm.getGem(gemId) == null) {
+            if (!gm.removeGem(equipment, gemId)) {
+                player.sendMessage(ChatColor.RED + "移除未知宝石失败!");
+                return;
+            }
+            inv.setItem(ExtractGuiFactory.EQUIP_SLOT, equipment);
+            player.sendMessage(ChatColor.GREEN + "已移除未知宝石「" + gemId + "」(不会返还)");
+            playSound(player, true);
+            refresh(inv, holder);
+            return;
+        }
+
         ExtractResult result = gm.extractGem(equipment, gemId);
         switch (result.getStatus()) {
             case SUCCESS -> {

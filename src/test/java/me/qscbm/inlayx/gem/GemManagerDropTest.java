@@ -3,12 +3,16 @@ package me.qscbm.inlayx.gem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.Set;
 import me.qscbm.inlayx.InlayXTestBase;
+import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
 
 class GemManagerDropTest extends InlayXTestBase {
@@ -67,5 +71,58 @@ class GemManagerDropTest extends InlayXTestBase {
                         """);
         plugin.getGemManager().loadGems();
         assertNull(plugin.getGemManager().getDropGem("normal", 1));
+    }
+
+    @Test
+    void weightedDropNeverSelectsZeroChanceGem() throws IOException {
+        writeGemFile("test_mixed.yml", """
+                        drop_zero:
+                          name: "零概率"
+                          type: ATTACK
+                          level: 1
+                          material: EMERALD
+                          drop:
+                            chance: 0.0
+                            sources: [normal]
+                        drop_certain:
+                          name: "必掉"
+                          type: ATTACK
+                          level: 1
+                          material: DIAMOND
+                          drop:
+                            chance: 1.0
+                            sources: [normal]
+                        """);
+        plugin.getGemManager().loadGems();
+        for (int i = 0; i < 20; i++) {
+            assertEquals(
+                    "drop_certain",
+                    plugin.getGemManager().getDropGem("normal", 1).getId());
+        }
+    }
+
+    @Test
+    void registerAndUnregisterRebuildsDropIndex() {
+        GemType type = plugin.getConfigManager().getGemType("ATTACK");
+        Gem gem = new Gem("api_gem", "API宝石", type, 1, Material.EMERALD);
+        gem.setDropChance(1.0);
+        gem.setDropSources(new HashSet<>(Set.of("normal")));
+
+        plugin.getGemManager().registerGem(gem);
+        assertEquals("api_gem", plugin.getGemManager().getDropGem("normal", 1).getId());
+
+        plugin.getGemManager().unregisterGem("api_gem");
+        assertNull(plugin.getGemManager().getDropGem("normal", 1));
+    }
+
+    @Test
+    void gemCollectionsAreUnmodifiable() {
+        GemType type = plugin.getConfigManager().getGemType("ATTACK");
+        Gem gem = new Gem("api_gem", "API宝石", type, 1, Material.EMERALD);
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> plugin.getGemManager().getGems().put("other", gem));
+        assertThrows(
+                UnsupportedOperationException.class, () -> gem.getDropSources().add("normal"));
     }
 }

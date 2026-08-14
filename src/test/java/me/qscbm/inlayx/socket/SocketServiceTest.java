@@ -64,6 +64,19 @@ class SocketServiceTest extends InlayXTestBase {
     }
 
     @Test
+    void socketGemTranslatesColorCodesInAttributeLore() {
+        registerGem("t_color", "ATTACK", 1.0);
+        plugin.getGemManager().getGems().get("t_color").addAttributeLore("&e测试属性");
+        ItemStack sword = socketableSword(attackType(), 1);
+        SocketResult result =
+                plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t_color"));
+        assertEquals(SocketResult.Status.SUCCESS, result.getStatus());
+        List<String> lore = sword.getItemMeta().getLore();
+        assertTrue(lore.stream().anyMatch(l -> l.contains("§e测试属性")));
+        assertFalse(lore.stream().anyMatch(l -> l.contains("&e测试属性")));
+    }
+
+    @Test
     void socketGemRejectsTypeMismatch() {
         registerGem("t2", "DEFENSE", 1.0);
         ItemStack sword = socketableSword(attackType(), 1);
@@ -115,6 +128,24 @@ class SocketServiceTest extends InlayXTestBase {
         SocketResult result =
                 plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t1"));
         assertEquals(SocketResult.Status.OVER_CAP_LIMIT, result.getStatus());
+    }
+
+    @Test
+    void unrecognizedLoreLineEndsSocketArea() {
+        ItemStack sword = socketableSword(attackType(), 2);
+        String extraEmpty = plugin.getConfigManager()
+                .getSocketEmptyPattern()
+                .replace("{gemTypeColor}", ChatColor.RED.toString())
+                .replace("{gemTypeName}", "攻击")
+                .replace("{gemTypeId}", "ATTACK");
+        ItemMeta meta = sword.getItemMeta();
+        List<String> lore = new ArrayList<>(meta.getLore());
+        lore.add("&7外部插件写入的文本");
+        lore.add(extraEmpty);
+        meta.setLore(lore);
+        sword.setItemMeta(meta);
+
+        assertEquals(2, plugin.getGemManager().getSocketCount(sword));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package me.qscbm.inlayx.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import me.qscbm.inlayx.command.sub.CmdExtract;
 import me.qscbm.inlayx.command.sub.CmdGive;
 import me.qscbm.inlayx.command.sub.CmdHelp;
 import me.qscbm.inlayx.command.sub.CmdList;
+import me.qscbm.inlayx.command.sub.CmdRemoveGem;
 import me.qscbm.inlayx.command.sub.CmdRemoveSlot;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -74,5 +76,36 @@ class CommandTest extends InlayXTestBase {
                 .isEmpty());
         assertTrue(Arrays.stream(player.getInventory().getContents())
                 .anyMatch(i -> i != null && plugin.getGemManager().isGem(i)));
+    }
+
+    @Test
+    void extractUnknownGemRemovesWithoutRoll() {
+        registerGem("t1", "ATTACK", 1.0);
+        setExtractRate(0.0);
+        ItemStack sword = socketableSword(plugin.getConfigManager().getGemType("ATTACK"), 1);
+        plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t1"));
+        plugin.getGemManager().unregisterGem("t1");
+        player.getInventory().setItemInMainHand(sword);
+
+        new CmdExtract(plugin).tryExecute(player, new String[] {"t1"});
+
+        assertFalse(plugin.getGemManager()
+                .getSocketedGems(player.getInventory().getItemInMainHand())
+                .contains("t1"));
+    }
+
+    @Test
+    void removeUnknownGem() {
+        registerGem("t1", "ATTACK", 1.0);
+        ItemStack sword = socketableSword(plugin.getConfigManager().getGemType("ATTACK"), 1);
+        plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t1"));
+        plugin.getGemManager().unregisterGem("t1");
+        player.getInventory().setItemInMainHand(sword);
+
+        new CmdRemoveGem(plugin).tryExecute(player, new String[] {"t1"});
+
+        assertFalse(plugin.getGemManager()
+                .getSocketedGems(player.getInventory().getItemInMainHand())
+                .contains("t1"));
     }
 }

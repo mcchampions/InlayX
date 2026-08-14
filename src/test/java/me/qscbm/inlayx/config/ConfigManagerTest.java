@@ -44,4 +44,18 @@ class ConfigManagerTest extends InlayXTestBase {
                 Sound.ENTITY_PLAYER_LEVELUP,
                 plugin.getConfigManager().getSocketSuccessSound().getSound());
     }
+
+    @Test
+    void negativeMaxSocketsFallsBackToDefault() {
+        plugin.getConfig().set("settings.socket.max_sockets", -5);
+        plugin.getConfigManager().loadSettings();
+        assertEquals(8, plugin.getConfigManager().getMaxSockets());
+    }
+
+    @Test
+    void dropSystemDefaultsToDisabledWhenMissing() {
+        plugin.getConfig().set("settings.gem.drop.enable", null);
+        plugin.getConfigManager().loadSettings();
+        assertFalse(plugin.getConfigManager().isDropSystemEnabled());
+    }
 }

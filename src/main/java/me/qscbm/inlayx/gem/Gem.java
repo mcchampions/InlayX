@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
@@ -30,7 +31,10 @@ public class Gem {
      * 掉落配置
      */
     private double dropChance = 0;
+
+    @Getter(AccessLevel.NONE)
     private Set<String> dropSources = new HashSet<>();
+
     private int minMobLevel = 1;
     private double levelBonus = 0;
 
@@ -59,6 +63,10 @@ public class Gem {
 
     public List<String> getAttributeLore() {
         return Collections.unmodifiableList(attributeLore);
+    }
+
+    public Set<String> getDropSources() {
+        return Collections.unmodifiableSet(dropSources);
     }
 
     public void addAttributeLore(String lore) {

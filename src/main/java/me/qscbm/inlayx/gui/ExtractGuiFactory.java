@@ -95,7 +95,7 @@ public class ExtractGuiFactory {
                 } else {
                     Gem gem = gemManager.getGem(slot.getGemId());
                     if (gem == null) {
-                        inv.setItem(SLOT_SLOTS[i], emptySlotItem(slot.getIndex() + 1, slot.getType()));
+                        inv.setItem(SLOT_SLOTS[i], gemManager.getItemFactory().createUnknownGemItem(slot.getGemId()));
                     } else {
                         inv.setItem(
                                 SLOT_SLOTS[i],
