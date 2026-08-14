@@ -99,6 +99,68 @@ InlayX 是一个简约的宝石镶嵌插件, 基于 Paper 1.21.11 开发
 
 ## 开发
 
+### 引入依赖
+
+#### Maven
+
+```xml
+    <repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+```
+
+```xml
+	<dependency>
+	    <groupId>com.github.mcchampions</groupId>
+	    <artifactId>InlayX</artifactId>
+	    <version>9d9f913abe</version>
+        <scope>provided</scope>
+	</dependency>
+```
+
+#### Gradle
+
+##### Groovy
+
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
+
+```groovy
+dependencies {
+    compileOnly 'com.github.mcchampions:InlayX:9d9f913abe'
+}
+```
+
+##### Kotlin
+
+```ktolin
+repositories {
+    maven("https://jitpack.io")
+}
+```
+
+```ktolin
+dependencies {
+    compileOnly("com.github.mcchampions:InlayX:9d9f913abe")
+}
+```
+
+### API 入口
+
+```java
+import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.gem.GemManager;
+
+final InlayX INLAYX_INSTANCE = InlayX.INSTANCE;
+GemManager gemManager = INLAYX_INSTANCE.getGemManager();
+```
+
 ### 克隆到本地
 
 输入 `git clone https://github.com/mcchampions/InlayX.git` 即可
