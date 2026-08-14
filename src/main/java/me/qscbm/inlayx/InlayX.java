@@ -64,6 +64,7 @@ public class InlayX extends JavaPlugin {
         if (this.extractGuiListener != null) {
             this.extractGuiListener.cancelTasks();
         }
+        INSTANCE = null;
         this.getLogger().info("InlayX 已禁用");
     }
 }
