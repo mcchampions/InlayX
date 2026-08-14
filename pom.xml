@@ -122,8 +122,6 @@
                 <version>3.11.2</version>
 
                 <configuration>
-                    <outputDirectory>${project.basedir}/javadocs</outputDirectory>
-
                     <doctitle>InlayX - Javadocs</doctitle>
                     <windowtitle>InlayX - Javadocs</windowtitle>
                     <detectOfflineLinks>false</detectOfflineLinks>
