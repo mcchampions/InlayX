@@ -21,6 +21,11 @@ gem_id_1:
     success_rate: 0.95
     # (可选) 失败时损坏宝石, 默认 false
     destroy_on_failure: false
+    # (可选) 装备材质过滤, 不配置时不限制
+    # mode 可选 NONE, WHITELIST, BLACKLIST
+    equipment_materials:
+       mode: WHITELIST
+       list: [DIAMOND_SWORD, NETHERITE_SWORD]
   # (可选) 默认关闭掉落系统
   drop:
     # 掉落概率

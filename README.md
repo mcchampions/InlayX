@@ -139,13 +139,13 @@ dependencies {
 
 ##### Kotlin
 
-```ktolin
+```kotlin
 repositories {
     maven("https://jitpack.io")
 }
 ```
 
-```ktolin
+```kotlin
 dependencies {
     compileOnly("com.github.mcchampions:InlayX:9d9f913abe")
 }

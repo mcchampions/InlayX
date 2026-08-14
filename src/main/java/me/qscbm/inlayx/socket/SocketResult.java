@@ -22,6 +22,8 @@ public final class SocketResult {
         NO_SOCKET,
         /** 存在空槽位, 但没有与宝石类型匹配的槽位 */
         TYPE_MISMATCH,
+        /** 宝石配置的允许材质列表不包含当前装备 */
+        MATERIAL_MISMATCH,
         /** 装备槽位总数超过配置上限, 视为异常装备 */
         OVER_CAP_LIMIT,
         /** 镶嵌成功率判定失败 */

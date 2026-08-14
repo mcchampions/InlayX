@@ -122,4 +122,45 @@ class GemLoaderTest extends InlayXTestBase {
         assertNotNull(gem);
         assertEquals(Material.EMERALD, gem.getMaterial());
     }
+
+    @Test
+    void parsesWhitelistMaterialFilter() {
+        registerFromText("whitelist_gem", """
+                        whitelist_gem:
+                          name: "白名单"
+                          type: UTILITY
+                          level: 1
+                          material: BONE
+                          socket:
+                            equipment_materials:
+                              mode: WHITELIST
+                              list: [DIAMOND_SWORD]
+                        """);
+        Gem gem = plugin.getGemManager().getGem("whitelist_gem");
+        assertNotNull(gem);
+        assertEquals(Gem.MaterialFilterMode.WHITELIST, gem.getMaterialFilterMode());
+        assertEquals(Set.of(Material.DIAMOND_SWORD), gem.getFilterMaterials());
+        assertTrue(gem.canSocketTo(Material.DIAMOND_SWORD));
+        assertFalse(gem.canSocketTo(Material.STONE));
+    }
+
+    @Test
+    void parsesBlacklistMaterialFilter() {
+        registerFromText("blacklist_gem", """
+                        blacklist_gem:
+                          name: "黑名单"
+                          type: UTILITY
+                          level: 1
+                          material: BONE
+                          socket:
+                            equipment_materials:
+                              mode: BLACKLIST
+                              list: [DIAMOND_SWORD]
+                        """);
+        Gem gem = plugin.getGemManager().getGem("blacklist_gem");
+        assertNotNull(gem);
+        assertEquals(Gem.MaterialFilterMode.BLACKLIST, gem.getMaterialFilterMode());
+        assertFalse(gem.canSocketTo(Material.DIAMOND_SWORD));
+        assertTrue(gem.canSocketTo(Material.STONE));
+    }
 }

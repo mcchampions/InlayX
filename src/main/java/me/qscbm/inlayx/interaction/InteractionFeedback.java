@@ -55,6 +55,7 @@ public final class InteractionFeedback {
                 String typeName = gem == null ? "对应" : gem.getType().getName();
                 player.sendMessage(ChatColor.RED + "该装备没有「" + typeName + "」类型的空槽位!");
             }
+            case MATERIAL_MISMATCH -> player.sendMessage(ChatColor.RED + "该宝石不能镶嵌到这种装备上!");
             case OVER_CAP_LIMIT -> player.sendMessage(ChatColor.RED + "该装备的宝石槽位数量异常, 无法镶嵌!");
             case CANCELLED -> player.sendMessage(ChatColor.RED + "镶嵌已被取消!");
             default -> player.sendMessage(ChatColor.RED + "无法镶嵌, 请检查装备与宝石!");

@@ -45,6 +45,15 @@ public class Gem {
     private boolean destroyOnFailure = false;
 
     /*
+     * 装备材质过滤
+     */
+    private Gem.MaterialFilterMode materialFilterMode = Gem.MaterialFilterMode.NONE;
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private Set<Material> filterMaterials = new HashSet<>();
+
+    /*
      * 显示样式
      */
     private String displayName;
@@ -81,5 +90,38 @@ public class Gem {
 
     public boolean canDropFrom(String source, int mobLevel) {
         return dropSources.contains(source) && mobLevel >= minMobLevel;
+    }
+
+    // ==================== 镶嵌限制 ====================
+
+    /**
+     * 装备材质过滤模式. NONE 不限制, WHITELIST 只允许列表中的材质, BLACKLIST 禁止列表中的材质.
+     */
+    public enum MaterialFilterMode {
+        NONE,
+        WHITELIST,
+        BLACKLIST
+    }
+
+    public Set<Material> getFilterMaterials() {
+        return Collections.unmodifiableSet(filterMaterials);
+    }
+
+    public void setFilterMaterials(Set<Material> filterMaterials) {
+        this.filterMaterials.clear();
+        if (filterMaterials != null) {
+            this.filterMaterials.addAll(filterMaterials);
+        }
+    }
+
+    /**
+     * 判断宝石能否镶嵌到指定材质的装备上. 过滤模式为 NONE 时任何装备都可以.
+     */
+    public boolean canSocketTo(Material material) {
+        return switch (materialFilterMode) {
+            case NONE -> true;
+            case WHITELIST -> filterMaterials.contains(material);
+            case BLACKLIST -> !filterMaterials.contains(material);
+        };
     }
 }

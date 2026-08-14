@@ -186,6 +186,33 @@ class GemLoader {
             if (socketSec != null) {
                 gem.setSocketSuccessRate(socketSec.getDouble("success_rate", 1));
                 gem.setDestroyOnFailure(socketSec.getBoolean("destroy_on_failure", false));
+                ConfigurationSection filterSec = socketSec.getConfigurationSection("equipment_materials");
+                if (filterSec != null) {
+                    Gem.MaterialFilterMode mode = Gem.MaterialFilterMode.NONE;
+                    String modeName = filterSec.getString("mode", "NONE");
+                    if (modeName != null) {
+                        try {
+                            mode = Gem.MaterialFilterMode.valueOf(modeName.toUpperCase());
+                        } catch (IllegalArgumentException e) {
+                            plugin.getLogger()
+                                    .warning("宝石 " + gemId + " 的 socket.equipment_materials.mode 无效: " + modeName
+                                            + ", 已按 NONE 处理");
+                        }
+                    }
+                    Set<Material> filterMaterials = new HashSet<>();
+                    for (String materialEntry : filterSec.getStringList("list")) {
+                        Material filtered = Material.getMaterial(materialEntry);
+                        if (filtered == null) {
+                            plugin.getLogger()
+                                    .warning("宝石 " + gemId + " 的 socket.equipment_materials.list 含有无效材质: "
+                                            + materialEntry + ", 已忽略该项");
+                        } else {
+                            filterMaterials.add(filtered);
+                        }
+                    }
+                    gem.setMaterialFilterMode(mode);
+                    gem.setFilterMaterials(filterMaterials);
+                }
             }
 
             ConfigurationSection dropSec = section.getConfigurationSection("drop");

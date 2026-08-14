@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import me.qscbm.inlayx.InlayXTestBase;
+import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -83,6 +85,45 @@ class SocketServiceTest extends InlayXTestBase {
         SocketResult result =
                 plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t2"));
         assertEquals(SocketResult.Status.TYPE_MISMATCH, result.getStatus());
+        assertTrue(plugin.getGemManager().getSocketedGems(sword).isEmpty());
+    }
+
+    @Test
+    void socketGemRejectsWhitelistedEquipmentMaterial() {
+        registerGem("t_material", "ATTACK", 1.0);
+        Gem filtered = plugin.getGemManager().getGems().get("t_material");
+        filtered.setMaterialFilterMode(Gem.MaterialFilterMode.WHITELIST);
+        filtered.setFilterMaterials(Set.of(Material.NETHERITE_SWORD));
+        ItemStack sword = socketableSword(attackType(), 1);
+        SocketResult result =
+                plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t_material"));
+        assertEquals(SocketResult.Status.MATERIAL_MISMATCH, result.getStatus());
+        assertTrue(plugin.getGemManager().getSocketedGems(sword).isEmpty());
+    }
+
+    @Test
+    void socketGemAllowsWhitelistedEquipmentMaterial() {
+        registerGem("t_material", "ATTACK", 1.0);
+        Gem filtered = plugin.getGemManager().getGems().get("t_material");
+        filtered.setMaterialFilterMode(Gem.MaterialFilterMode.WHITELIST);
+        filtered.setFilterMaterials(Set.of(Material.DIAMOND_SWORD));
+        ItemStack sword = socketableSword(attackType(), 1);
+        SocketResult result =
+                plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t_material"));
+        assertEquals(SocketResult.Status.SUCCESS, result.getStatus());
+        assertTrue(plugin.getGemManager().getSocketedGems(sword).contains("t_material"));
+    }
+
+    @Test
+    void socketGemRejectsBlacklistedEquipmentMaterial() {
+        registerGem("t_material", "ATTACK", 1.0);
+        Gem filtered = plugin.getGemManager().getGems().get("t_material");
+        filtered.setMaterialFilterMode(Gem.MaterialFilterMode.BLACKLIST);
+        filtered.setFilterMaterials(Set.of(Material.DIAMOND_SWORD));
+        ItemStack sword = socketableSword(attackType(), 1);
+        SocketResult result =
+                plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t_material"));
+        assertEquals(SocketResult.Status.MATERIAL_MISMATCH, result.getStatus());
         assertTrue(plugin.getGemManager().getSocketedGems(sword).isEmpty());
     }
 

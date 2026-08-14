@@ -328,6 +328,9 @@ public class SocketService {
         if (slots.isEmpty() || slots.stream().noneMatch(slot -> slot.getGemId() == null)) {
             return SocketResult.failure(SocketResult.Status.NO_SOCKET);
         }
+        if (!gem.canSocketTo(equipment.getType())) {
+            return SocketResult.failure(SocketResult.Status.MATERIAL_MISMATCH);
+        }
         int idx = findEmptySlotIndex(slots, gem.getType());
         if (idx < 0) {
             return SocketResult.failure(SocketResult.Status.TYPE_MISMATCH);
