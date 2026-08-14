@@ -1,0 +1,22 @@
+name: Deploy Javadoc
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Deploy JavaDoc 🚀
+        uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          javadoc-branch: javadoc
+          java-version: 21
+          target-folder: javadoc
+          project: maven
