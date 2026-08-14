@@ -99,7 +99,7 @@ InlayX 是一个简约的宝石镶嵌插件, 基于 Paper 1.21.11 开发
 
 ## 开发
 
-### 引入依赖
+### 引入依赖 [![](https://jitpack.io/v/mcchampions/InlayX.svg)](https://jitpack.io/#mcchampions/InlayX)
 
 #### Maven
 
@@ -160,6 +160,10 @@ import me.qscbm.inlayx.gem.GemManager;
 final InlayX INLAYX_INSTANCE = InlayX.INSTANCE;
 GemManager gemManager = INLAYX_INSTANCE.getGemManager();
 ```
+
+### Javadoc [![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://mcchampions.github.io/InlayX/javadoc/)
+
+[Javadoc](https://mcchampions.github.io/InlayX/javadoc/)
 
 ### 克隆到本地
 
