@@ -136,18 +136,19 @@ gem_id_3:
       # 说明: ambient, particles, icon 默认值为 true
       # 默认和自定义二选一
       # 格式-1: 默认药水参数
-      #   Potion: JUMP
+      #   Potion: JUMP_BOOST
       # 格式-2: 自定义药水
       #   Potion:
-      #     JUMP:
+      #     JUMP_BOOST:
       #       duration: 20
       #       amplifier: 1
       #       ambient: true
       #       particles: true
       #       icon: true
+      # 参考: https://jd.papermc.io/paper/1.21.11/org/bukkit/potion/PotionEffectType.html
       # (可选)
       Potion:
-        JUMP:
+        JUMP_BOOST:
           duration: 20
           amplifier: 1
           # (可选)
