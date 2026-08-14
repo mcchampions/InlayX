@@ -37,4 +37,4 @@ jobs:
           name: InlayX Build
           path: target
       - name: Deploy jitpack
-        run:  curl -s -m 30 https://jitpack.io/com/github/mcchampions/dough/${{ env.sha_short }}/ || true
+        run:  curl -s -m 30 https://jitpack.io/com/github/mcchampions/InlayX/${{ env.sha_short }}/ || true
