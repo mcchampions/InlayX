@@ -116,7 +116,7 @@ InlayX 是一个简约的宝石镶嵌插件, 基于 Paper 1.21.11 开发
 	<dependency>
 	    <groupId>com.github.mcchampions</groupId>
 	    <artifactId>InlayX</artifactId>
-	    <version>9d9f913abe</version>
+	    <version>3340dd206c</version>
         <scope>provided</scope>
 	</dependency>
 ```
@@ -133,7 +133,7 @@ repositories {
 
 ```groovy
 dependencies {
-    compileOnly 'com.github.mcchampions:InlayX:9d9f913abe'
+    compileOnly 'com.github.mcchampions:InlayX:3340dd206c'
 }
 ```
 
@@ -147,7 +147,7 @@ repositories {
 
 ```kotlin
 dependencies {
-    compileOnly("com.github.mcchampions:InlayX:9d9f913abe")
+    compileOnly("com.github.mcchampions:InlayX:3340dd206c")
 }
 ```
 
