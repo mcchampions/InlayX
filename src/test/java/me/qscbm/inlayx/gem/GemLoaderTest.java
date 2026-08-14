@@ -10,9 +10,17 @@ import java.util.List;
 import java.util.Set;
 import me.qscbm.inlayx.InlayXTestBase;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.junit.jupiter.api.Test;
 
 class GemLoaderTest extends InlayXTestBase {
@@ -162,5 +170,56 @@ class GemLoaderTest extends InlayXTestBase {
         assertEquals(Gem.MaterialFilterMode.BLACKLIST, gem.getMaterialFilterMode());
         assertFalse(gem.canSocketTo(Material.DIAMOND_SWORD));
         assertTrue(gem.canSocketTo(Material.STONE));
+    }
+
+    @Test
+    void parsesItemOverrides() {
+        registerFromText("item_gem", """
+                        item_gem:
+                          name: "带物品属性"
+                          type: UTILITY
+                          level: 1
+                          material: LEATHER_HELMET
+                          overrides:
+                            item:
+                              Durability: "20"
+                              EnchantList:
+                                - "SHARPNESS:5"
+                              ItemFlagList:
+                                - "HIDE_ENCHANTS"
+                              Color: "FF0000"
+                              Attributes:
+                                - "GENERIC_ATTACK_DAMAGE:10:0:MAINHAND"
+                              CustomModelData: 42
+                              Potion:
+                                SPEED:
+                                  duration: 200
+                                  amplifier: 1
+                                  ambient: true
+                                  particles: true
+                                  icon: true
+                        """);
+        Gem gem = plugin.getGemManager().getGem("item_gem");
+        assertNotNull(gem);
+        assertEquals(Gem.DurabilityMode.DAMAGE, gem.getDurability().mode());
+        assertEquals(20, gem.getDurability().value());
+        Enchantment sharpness = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("sharpness"));
+        assertEquals(5, gem.getEnchantments().get(sharpness));
+        assertTrue(gem.getItemFlags().contains(ItemFlag.HIDE_ENCHANTS));
+        assertEquals(Color.fromRGB(255, 0, 0), gem.getLeatherColor());
+        assertEquals(1, gem.getAttributes().size());
+        Gem.AttributeEntry attribute = gem.getAttributes().get(0);
+        assertEquals(Attribute.ATTACK_DAMAGE, attribute.attribute());
+        assertEquals(10, attribute.amount());
+        assertEquals(AttributeModifier.Operation.ADD_NUMBER, attribute.operation());
+        assertEquals(EquipmentSlot.HAND, attribute.slot());
+        assertEquals(42, gem.getCustomModelData());
+        assertEquals(1, gem.getPotionEffects().size());
+        Gem.PotionEntry potion = gem.getPotionEffects().get(0);
+        assertEquals(200, potion.duration());
+        assertEquals(1, potion.amplifier());
+        assertTrue(potion.ambient());
+        assertTrue(potion.particles());
+        assertTrue(potion.icon());
     }
 }

@@ -81,6 +81,81 @@ gem_id_3:
       # {attributeLore} 当行对应的属性 lore, 在宝石配置文件中, 该变量仅对当前配置有效
       # (可选)
       per_line_attribute_lore: "&7  - &b{attributeLore}"
+    # (可选) 宝石物品本身的属性
+    item:
+      # 物品耐久
+      # 格式-1: 20    原版耐久, "20" 相当于 "该物品耐久只剩(该材质最大耐久-20)"
+      # 格式-2: <20   反算耐久, "<20" 效果是 "该物品耐久只剩20"
+      # 格式-3: 20%   百分比耐久, 与耐久条相同
+      # (可选)
+      Durability: "20"
+      #
+      # 附魔列表
+      # 格式:
+      # - "附魔名称:等级"
+      # (可选)
+      EnchantList:
+        - "SHARPNESS:5"
+      # 隐藏选项
+      # 格式:
+      # - "HIDE_ENCHANTS"
+      # - "HIDE_ATTRIBUTES"
+      # - "HIDE_UNBREAKABLE"
+      # - "HIDE_ADDITIONAL_TOOLTIP"
+      # 参考: https://jd.papermc.io/paper/1.21.11/org/bukkit/inventory/ItemFlag.html
+      # (可选)
+      ItemFlagList:
+        - "HIDE_ENCHANTS"
+      # 物品染色
+      # (可选)
+      Color: "FF0000"
+      # 物品属性
+      # 格式:
+      # - "属性名:数字:模式:生效位置"    # 生效当前位置
+      # - "属性名:数字:模式"           # 生效所有位置
+      # 模式:
+      #   0   ADD_NUMBER          属性增量
+      #   1   ADD_SCALAR          倍率增量
+      #   2   MULTIPLY_SCALAR_1   最终倍乘
+      # 生效位置: 不填写生效位置则生效在所有部位上
+      #   HAND      主手
+      #   OFF_HAND  副手
+      #   HEAD      头
+      #   CHEST     身
+      #   LEGS      腿
+      #   FEET      脚
+      # 参考WIKI: https://minecraft.fandom.com/zh/wiki/%E5%B1%9E%E6%80%A7
+      # 参考: https://jd.papermc.io/paper/1.21.11/org/bukkit/attribute/Attribute.html
+      # (可选)
+      Attributes:
+        - "ATTACK_DAMAGE:10:0:HAND"
+      #自定义材质ID CustomModelData: 1000
+      # (可选)
+      CustomModelData: 1000
+      # 药水系统
+      # 说明: ambient, particles, icon 默认值为 true
+      # 默认和自定义二选一
+      # 格式-1: 默认药水参数
+      #   Potion: JUMP
+      # 格式-2: 自定义药水
+      #   Potion:
+      #     JUMP:
+      #       duration: 20
+      #       amplifier: 1
+      #       ambient: true
+      #       particles: true
+      #       icon: true
+      # (可选)
+      Potion:
+        JUMP:
+          duration: 20
+          amplifier: 1
+          # (可选)
+          ambient: true
+          # (可选)
+          particles: true
+          # (可选)
+          icon: true
 
 gem_id_4:
   name: "Name 4"
@@ -99,7 +174,7 @@ gem_id_5:
   name: "Name 5"
   type: UTILITY
   level: 1
-  material: BONE
+  material: STONE
   attributes:
     - "物品掉落率 +5%"
   # (可选)
