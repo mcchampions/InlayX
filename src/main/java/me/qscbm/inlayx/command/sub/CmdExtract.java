@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemManager;
@@ -103,9 +102,13 @@ public class CmdExtract extends SubCommand {
                 return future.get(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                return plugin.getGemManager().getAllGems().stream().map(Gem::getId).collect(Collectors.toList());
+                return plugin.getGemManager().getAllGems().stream()
+                        .map(Gem::getId)
+                        .collect(Collectors.toList());
             } catch (Exception e) {
-                return plugin.getGemManager().getAllGems().stream().map(Gem::getId).collect(Collectors.toList());
+                return plugin.getGemManager().getAllGems().stream()
+                        .map(Gem::getId)
+                        .collect(Collectors.toList());
             }
         }
         return plugin.getGemManager().getAllGems().stream().map(Gem::getId).collect(Collectors.toList());
