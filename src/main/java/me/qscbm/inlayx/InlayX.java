@@ -47,7 +47,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
                | |  | | | | | | | (_| | | |_| |  /  \\  \s
               |___| |_| |_| |_|  \\__,_|  \\__, | /_/\\_\\ \s
                                         |___/         \s
-            ##############################################
+            #############################################
             """);
         this.getLogger().info("InlayX 正在启动中");
         this.saveDefaultConfig();
