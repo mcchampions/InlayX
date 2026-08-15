@@ -9,8 +9,8 @@ import org.bukkit.command.CommandSender;
 public class GemTabCompleter {
 
     public static List<String> onTabComplete(CommandSender sender, List<String> args) {
-        if (args.size() == 1) {
-            String prefix = args.getFirst().toLowerCase();
+        if (args.size() <= 1) {
+            String prefix = args.isEmpty() ? "" : args.getFirst().toLowerCase();
             List<String> visible = new ArrayList<>();
             for (SubCommand cmd : GemCommand.COMMANDS.values()) {
                 if (cmd.permission() == null || SubCommand.hasAny(sender, cmd.permission())) {

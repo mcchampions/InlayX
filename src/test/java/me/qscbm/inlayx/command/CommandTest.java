@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent;
 import java.util.Arrays;
 import java.util.List;
 import me.qscbm.inlayx.InlayXTestBase;
@@ -16,6 +17,7 @@ import me.qscbm.inlayx.command.sub.CmdInfo;
 import me.qscbm.inlayx.command.sub.CmdList;
 import me.qscbm.inlayx.command.sub.CmdRemoveGem;
 import me.qscbm.inlayx.command.sub.CmdRemoveSlot;
+import me.qscbm.inlayx.listener.AsyncTabCompleteListener;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +41,33 @@ class CommandTest extends InlayXTestBase {
         ConsoleCommandSenderMock sender = server.getConsoleSender();
         new CmdHelp(plugin, List.of(new CmdList(plugin), new CmdGive(plugin))).tryExecute(sender, new String[0]);
         assertEquals(ChatColor.GOLD + "===== InlayX 帮助 =====", sender.nextMessage());
+    }
+
+    @Test
+    void tabCompleteWithEmptyArgsDoesNotThrow() {
+        List<String> completions = GemTabCompleter.onTabComplete(player, List.of());
+        assertFalse(completions.isEmpty());
+        assertTrue(completions.contains("help"));
+    }
+
+    @Test
+    void asyncTabCompleteHandlesTrailingSpaceWithoutSubCommand() {
+        AsyncTabCompleteListener listener = new AsyncTabCompleteListener();
+        AsyncTabCompleteEvent event = new AsyncTabCompleteEvent(player, List.of(), "/gem ", true, null);
+        listener.onAsyncTabCompleteEvent(event);
+        assertTrue(event.isHandled());
+        assertFalse(event.getCompletions().isEmpty());
+        assertTrue(event.getCompletions().contains("help"));
+    }
+
+    @Test
+    void asyncTabCompleteHandlesNamespacedCommandLabel() {
+        AsyncTabCompleteListener listener = new AsyncTabCompleteListener();
+        AsyncTabCompleteEvent event = new AsyncTabCompleteEvent(player, List.of(), "/inlayx:gem ", true, null);
+        listener.onAsyncTabCompleteEvent(event);
+        assertTrue(event.isHandled());
+        assertFalse(event.getCompletions().isEmpty());
+        assertTrue(event.getCompletions().contains("help"));
     }
 
     @Test

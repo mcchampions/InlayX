@@ -29,11 +29,10 @@ public class AsyncTabCompleteListener implements Listener {
         }
         String commandLabel = buffer.substring(0, firstPlace).toLowerCase();
         if (!GemCommand.COMMAND_ALIASES.contains(commandLabel) && !"gem".equals(commandLabel)) {
-            int index = commandLabel.indexOf("inlayx:");
-            if (index != 0) {
+            if (!commandLabel.startsWith("inlayx:")) {
                 return;
             }
-            commandLabel = commandLabel.substring(9);
+            commandLabel = commandLabel.substring(7);
             if (!GemCommand.COMMAND_ALIASES.contains(commandLabel) && !"gem".equals(commandLabel)) {
                 return;
             }
