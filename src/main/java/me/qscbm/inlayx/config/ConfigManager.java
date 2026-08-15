@@ -27,6 +27,7 @@ public class ConfigManager {
 
     private String guiTitle;
     private String socketHeader;
+    private String socketFooter;
     private int maxSockets;
     private boolean rightClickSocketEnabled;
     private boolean dragSocketEnabled;
@@ -60,6 +61,8 @@ public class ConfigManager {
         guiTitle = TextUtils.translateAlternateColorCodes(cfg.getString("settings.gui_title", "&5宝石镶嵌"));
         socketHeader = TextUtils.translateAlternateColorCodes(
                 cfg.getString("settings.socket.header", "&7------- 宝石槽位 -------"));
+        socketFooter = TextUtils.translateAlternateColorCodes(
+                cfg.getString("settings.socket.footer", "&7==----<>----<>----=="));
         int configuredMaxSockets = cfg.getInt("settings.socket.max_sockets", 8);
         if (configuredMaxSockets < 0) {
             plugin.getLogger().warning("settings.socket.max_sockets 不能为负数, 已回退为默认值 8");

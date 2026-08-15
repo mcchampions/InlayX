@@ -64,23 +64,36 @@ public class SocketService {
         if (lore == null || lore.isEmpty()) {
             return slots;
         }
-        Map<Integer, SocketSlot> filledByStart = readFilledSlots(meta);
-        String header = plugin.getConfigManager().getSocketHeader();
-        int headerIdx = -1;
-        for (int i = 0; i < lore.size(); i++) {
-            if (lore.get(i).equals(header)) {
-                headerIdx = i;
-                break;
-            }
+        List<SocketSlot> filledSlots = readFilledSlots(meta);
+        int headerIdx = findIndex(lore, plugin.getConfigManager().getSocketHeader(), 0);
+        if (headerIdx >= 0) {
+            return readSlotsWithHeader(lore, headerIdx, filledSlots);
         }
-        if (headerIdx < 0) {
-            return new ArrayList<>(filledByStart.values());
+        if (filledSlots.isEmpty()) {
+            return slots;
         }
+        HeaderlessRecovery recovery = recoverHeaderlessArea(lore, filledSlots);
+        return recovery == null ? new ArrayList<>(filledSlots) : recovery.slots;
+    }
 
-        int areaSize = lore.size() - headerIdx - 1;
+    private List<SocketSlot> readSlotsWithHeader(List<String> lore, int headerIdx, List<SocketSlot> filledSlots) {
+        int footerIdx = findIndex(lore, plugin.getConfigManager().getSocketFooter(), headerIdx + 1);
+        int areaSize = footerIdx >= 0
+                ? footerIdx - headerIdx - 1
+                : recoverAreaSizeAfterLastFilled(lore, headerIdx, filledSlots);
+        return parseBoundedArea(lore, headerIdx, areaSize, filledSlots);
+    }
+
+    private List<SocketSlot> parseBoundedArea(
+            List<String> lore, int headerIdx, int areaSize, List<SocketSlot> filledSlots) {
+        List<SocketSlot> slots = new ArrayList<>();
+        Map<Integer, SocketSlot> filledByStart = new HashMap<>();
+        for (SocketSlot filled : filledSlots) {
+            filledByStart.put(filled.getStart(), filled);
+        }
+        Set<Integer> usedStarts = new HashSet<>();
         int offset = 0;
         int index = 0;
-        Set<Integer> usedStarts = new HashSet<>();
         while (offset < areaSize) {
             SocketSlot filled = filledByStart.get(offset);
             if (filled != null) {
@@ -94,9 +107,7 @@ public class SocketService {
                 }
                 break;
             }
-            String line = lore.get(headerIdx + 1 + offset);
-            GemType type = matchEmptyType(line);
-            // 未知行 -> 宝石区域结束
+            GemType type = matchEmptyType(lore.get(headerIdx + 1 + offset));
             if (type == null) {
                 break;
             }
@@ -105,21 +116,154 @@ public class SocketService {
             index++;
         }
         List<SocketSlot> orphans = new ArrayList<>();
-        for (Map.Entry<Integer, SocketSlot> entry : filledByStart.entrySet()) {
-            if (!usedStarts.contains(entry.getKey())) {
-                orphans.add(entry.getValue());
+        for (SocketSlot filled : filledSlots) {
+            if (!usedStarts.contains(filled.getStart())) {
+                orphans.add(filled);
             }
         }
         if (!orphans.isEmpty()) {
             plugin.getLogger().warning("装备宝石 PDC 与 lore 不一致, 已保留 " + orphans.size() + " 条已镶嵌记录, 下次操作时会重新对齐");
-            orphans.sort(Comparator.comparingInt(SocketSlot::getStart));
             slots.addAll(orphans);
         }
         return slots;
     }
 
-    private Map<Integer, SocketSlot> readFilledSlots(ItemMeta meta) {
-        Map<Integer, SocketSlot> filled = new HashMap<>();
+    private int recoverAreaSizeAfterLastFilled(List<String> lore, int headerIdx, List<SocketSlot> filledSlots) {
+        int maxEnd = -1;
+        for (SocketSlot filled : filledSlots) {
+            maxEnd = Math.max(maxEnd, filled.getEnd());
+        }
+        int offset = Math.min(Math.max(maxEnd + 1, 0), lore.size() - headerIdx - 1);
+        while (offset < lore.size() - headerIdx - 1) {
+            if (matchEmptyType(lore.get(headerIdx + 1 + offset)) == null) {
+                break;
+            }
+            offset++;
+        }
+        return offset;
+    }
+
+    private HeaderlessRecovery recoverHeaderlessArea(List<String> lore, List<SocketSlot> filledSlots) {
+        String footer = plugin.getConfigManager().getSocketFooter();
+        for (SocketSlot candidate : filledSlots) {
+            List<String> block = renderedFilledBlock(candidate);
+            if (block.isEmpty()) {
+                continue;
+            }
+            int anchor = findBlock(lore, 0, block);
+            if (anchor < 0) {
+                continue;
+            }
+
+            List<SocketSlot> leadingEmpties = new ArrayList<>();
+            int up = anchor - 1;
+            while (up >= 0) {
+                GemType type = matchEmptyType(lore.get(up));
+                if (type == null) {
+                    break;
+                }
+                leadingEmpties.add(new SocketSlot(-1, type.getId(), null, up, up));
+                up--;
+            }
+            int headerInsertIndex = up + 1;
+
+            Set<SocketSlot> used = new HashSet<>();
+            used.add(candidate);
+            List<SocketSlot> trailingSlots = new ArrayList<>();
+            trailingSlots.add(candidate);
+            int cursor = anchor + block.size();
+            int areaEndIndex = cursor;
+            boolean footerFound = false;
+            while (cursor < lore.size()) {
+                if (lore.get(cursor).equals(footer)) {
+                    footerFound = true;
+                    areaEndIndex = cursor;
+                    break;
+                }
+                GemType type = matchEmptyType(lore.get(cursor));
+                if (type != null) {
+                    trailingSlots.add(new SocketSlot(-1, type.getId(), null, cursor, cursor));
+                    cursor++;
+                    areaEndIndex = cursor;
+                    continue;
+                }
+                SocketSlot next = findMatchingFilledAt(lore, cursor, filledSlots, used, candidate.getStart());
+                if (next == null) {
+                    areaEndIndex = cursor;
+                    break;
+                }
+                used.add(next);
+                trailingSlots.add(next);
+                cursor += renderedFilledBlock(next).size();
+                areaEndIndex = cursor;
+            }
+
+            List<SocketSlot> slots = new ArrayList<>();
+            for (int i = leadingEmpties.size() - 1; i >= 0; i--) {
+                slots.add(leadingEmpties.get(i));
+            }
+            slots.addAll(trailingSlots);
+            for (SocketSlot filled : filledSlots) {
+                if (!used.contains(filled)) {
+                    slots.add(filled);
+                }
+            }
+            for (int i = 0; i < slots.size(); i++) {
+                slots.get(i).setIndex(i);
+            }
+            return new HeaderlessRecovery(headerInsertIndex, areaEndIndex, footerFound, slots);
+        }
+        return null;
+    }
+
+    private SocketSlot findMatchingFilledAt(
+            List<String> lore, int pos, List<SocketSlot> filledSlots, Set<SocketSlot> used, int minStart) {
+        for (SocketSlot candidate : filledSlots) {
+            if (used.contains(candidate) || candidate.getStart() < minStart) {
+                continue;
+            }
+            List<String> block = renderedFilledBlock(candidate);
+            if (block.isEmpty() || pos + block.size() > lore.size()) {
+                continue;
+            }
+            if (matchesAt(lore, pos, block)) {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+    private List<String> renderedFilledBlock(SocketSlot slot) {
+        if (slot == null || slot.getGemId() == null) {
+            return List.of();
+        }
+        Gem gem = gems.get(slot.getGemId());
+        return gem == null ? List.of() : renderFilledBlock(gem);
+    }
+
+    private int findBlock(List<String> lore, int from, List<String> block) {
+        if (block.isEmpty()) {
+            return -1;
+        }
+        for (int i = from; i + block.size() <= lore.size(); i++) {
+            if (matchesAt(lore, i, block)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private boolean matchesAt(List<String> lore, int pos, List<String> block) {
+        for (int i = 0; i < block.size(); i++) {
+            if (!block.get(i).equals(lore.get(pos + i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<SocketSlot> readFilledSlots(ItemMeta meta) {
+        List<SocketSlot> filled = new ArrayList<>();
         String stored = meta.getPersistentDataContainer().get(socketedGemsKey(), PersistentDataType.STRING);
         if (stored == null || stored.isEmpty()) {
             return filled;
@@ -132,11 +276,12 @@ public class SocketService {
                 String type = o.isNull("type") ? null : o.getString("type");
                 int start = o.optInt("start", 0);
                 int end = o.optInt("end", 0);
-                filled.put(start, new SocketSlot(-1, type, gemId, start, end));
+                filled.add(new SocketSlot(-1, type, gemId, start, end));
             }
         } catch (Exception e) {
             plugin.getLogger().warning("解析宝石槽位数据失败: " + e.getMessage());
         }
+        filled.sort(Comparator.comparingInt(SocketSlot::getStart).thenComparingInt(SocketSlot::getEnd));
         return filled;
     }
 
@@ -426,35 +571,80 @@ public class SocketService {
         if (lore == null) {
             lore = new ArrayList<>();
         }
+        List<SocketSlot> oldFilledSlots = readFilledSlots(meta);
         String header = plugin.getConfigManager().getSocketHeader();
-        int headerIdx = -1;
-        for (int i = 0; i < lore.size(); i++) {
-            if (lore.get(i).equals(header)) {
-                headerIdx = i;
-                break;
-            }
-        }
+        String footer = plugin.getConfigManager().getSocketFooter();
+        int headerIdx = findIndex(lore, header, 0);
+        int footerIdx = headerIdx >= 0 ? findIndex(lore, footer, headerIdx + 1) : -1;
+        List<String> newLore = new ArrayList<>();
+
         if (slots.isEmpty()) {
             if (headerIdx >= 0) {
-                while (lore.size() > headerIdx) {
-                    lore.remove(lore.size() - 1);
-                }
+                newLore.addAll(lore.subList(0, headerIdx));
+                int suffixStart =
+                        footerIdx >= 0 ? footerIdx + 1 : recoverFooterInsertionIndex(lore, headerIdx, oldFilledSlots);
+                newLore.addAll(lore.subList(suffixStart, lore.size()));
+            } else {
+                newLore.addAll(lore);
             }
             writeSlots(meta, slots);
-            meta.setLore(lore);
+            meta.setLore(newLore);
             item.setItemMeta(meta);
             return item;
         }
-        if (headerIdx < 0) {
-            if (!lore.isEmpty()) {
-                lore.add("");
+
+        if (headerIdx >= 0) {
+            newLore.addAll(lore.subList(0, headerIdx + 1));
+            appendRenderedSlots(newLore, slots);
+            newLore.add(footer);
+            int suffixStart =
+                    footerIdx >= 0 ? footerIdx + 1 : recoverFooterInsertionIndex(lore, headerIdx, oldFilledSlots);
+            newLore.addAll(lore.subList(suffixStart, lore.size()));
+        } else {
+            HeaderlessRecovery recovery = recoverHeaderlessArea(lore, oldFilledSlots);
+            if (recovery == null) {
+                newLore.addAll(lore);
+                if (!newLore.isEmpty()) {
+                    newLore.add("");
+                }
+                newLore.add(header);
+                appendRenderedSlots(newLore, slots);
+                newLore.add(footer);
+            } else {
+                newLore.addAll(lore.subList(0, recovery.headerInsertIndex));
+                newLore.add(header);
+                appendRenderedSlots(newLore, slots);
+                newLore.add(footer);
+                int suffixStart = recovery.footerFound ? recovery.areaEndIndex + 1 : recovery.areaEndIndex;
+                newLore.addAll(lore.subList(suffixStart, lore.size()));
             }
-            lore.add(header);
-            headerIdx = lore.size() - 1;
         }
-        while (lore.size() > headerIdx + 1) {
-            lore.remove(lore.size() - 1);
+        writeSlots(meta, slots);
+        meta.setLore(newLore);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private int recoverFooterInsertionIndex(List<String> lore, int headerIdx, List<SocketSlot> filledSlots) {
+        int maxEnd = -1;
+        for (SocketSlot filled : filledSlots) {
+            maxEnd = Math.max(maxEnd, filled.getEnd());
         }
+        int cursor = Math.min(headerIdx + 1 + Math.max(maxEnd + 1, 0), lore.size());
+        while (cursor < lore.size()) {
+            if (matchEmptyType(lore.get(cursor)) == null) {
+                break;
+            }
+            cursor++;
+        }
+        if (cursor < lore.size()
+                && lore.get(cursor).equals(plugin.getConfigManager().getSocketFooter())) {
+            return cursor + 1;
+        }
+        return cursor;
+    }
+
+    private void appendRenderedSlots(List<String> lore, List<SocketSlot> slots) {
         int offset = 0;
         for (int i = 0; i < slots.size(); i++) {
             SocketSlot slot = slots.get(i);
@@ -465,10 +655,15 @@ public class SocketService {
             lore.addAll(block);
             offset += block.size();
         }
-        writeSlots(meta, slots);
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
+    }
+
+    private int findIndex(List<String> lore, String target, int from) {
+        for (int i = from; i < lore.size(); i++) {
+            if (target.equals(lore.get(i))) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private List<String> renderBlock(SocketSlot slot) {
@@ -525,6 +720,9 @@ public class SocketService {
         }
         return lines;
     }
+
+    private record HeaderlessRecovery(
+            int headerInsertIndex, int areaEndIndex, boolean footerFound, List<SocketSlot> slots) {}
 
     // ==================== 内部工具方法 ====================
 
