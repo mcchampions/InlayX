@@ -62,7 +62,7 @@ public class ConfigManager {
         socketHeader = TextUtils.translateAlternateColorCodes(
                 cfg.getString("settings.socket.header", "&7------- 宝石槽位 -------"));
         socketFooter = TextUtils.translateAlternateColorCodes(
-                cfg.getString("settings.socket.footer", "&7==----<>----<>----=="));
+                cfg.getString("settings.socket.footer", "&7======================="));
         int configuredMaxSockets = cfg.getInt("settings.socket.max_sockets", 8);
         if (configuredMaxSockets < 0) {
             plugin.getLogger().warning("settings.socket.max_sockets 不能为负数, 已回退为默认值 8");
