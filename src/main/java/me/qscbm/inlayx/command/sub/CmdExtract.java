@@ -111,7 +111,7 @@ public class CmdExtract extends SubCommand {
                         .collect(Collectors.toList());
             }
         }
-        return plugin.getGemManager().getAllGems().stream().map(Gem::getId).collect(Collectors.toList());
+        return List.of();
     }
 
     private static void giveOrDrop(Player player, ItemStack item) {
