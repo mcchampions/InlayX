@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jspecify.annotations.NonNull;
@@ -90,6 +91,49 @@ public class CommentConfiguration extends YamlConfiguration {
             savcontent.append("\n");
         }
         return savcontent.toString();
+    }
+
+    /**
+     * 获取指定 key 同级且位于其上方的注释.
+     */
+    public String getComment(String key) {
+        List<String> comments = collectCommentLines(key);
+        return comments.isEmpty() ? null : String.join("\n", comments);
+    }
+
+    private List<String> collectCommentLines(String key) {
+        if (key == null || key.isEmpty()) {
+            return List.of();
+        }
+        int lastDot = key.lastIndexOf('.');
+        ConfigurationSection section;
+        String keyName;
+        if (lastDot < 0) {
+            section = this;
+            keyName = key;
+        } else {
+            section = getConfigurationSection(key.substring(0, lastDot));
+            keyName = key.substring(lastDot + 1);
+        }
+        if (section == null) {
+            return List.of();
+        }
+        String loadedCommentPrefix = commentPrefixSymbol.substring(1);
+        List<String> comments = new ArrayList<>();
+        for (String name : section.getKeys(false)) {
+            if (name.equals(keyName)) {
+                return comments;
+            }
+            if (name.startsWith(loadedCommentPrefix) && "comment".equals(section.get(name))) {
+                comments.add(name.substring(loadedCommentPrefix.length())
+                        .replace("．", ".")
+                        .replace("＇", "'")
+                        .replace("：", ":"));
+            } else {
+                comments.clear();
+            }
+        }
+        return List.of();
     }
 
     private String checkNull(String string) {
