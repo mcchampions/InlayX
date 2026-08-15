@@ -7,6 +7,7 @@ import me.qscbm.inlayx.config.ConfigManager;
 import me.qscbm.inlayx.config.ConfigUpdater;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.interaction.InteractionFeedback;
+import me.qscbm.inlayx.listener.AsyncTabCompleteListener;
 import me.qscbm.inlayx.listener.ExtractGuiListener;
 import me.qscbm.inlayx.listener.GuiListener;
 import me.qscbm.inlayx.listener.MobListener;
@@ -58,6 +59,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         this.getServer().getServicesManager().register(InlayXApi.class, this, this, ServicePriority.Normal);
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new GuiListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new AsyncTabCompleteListener(), this);
         this.extractGuiListener = new ExtractGuiListener(this);
         this.getServer().getPluginManager().registerEvents(this.extractGuiListener, this);
         this.getServer().getPluginManager().registerEvents(new MobListener(this), this);
