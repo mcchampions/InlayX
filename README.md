@@ -163,7 +163,7 @@ InlayXApi api = Bukkit.getServicesManager().load(InlayXApi.class);
 GemManager gemManager = api.getGemManager();
 ```
 
-可监听的事件位于 `me.qscbm.inlayx.api.event` 包.
+可监听的事件位于 `me.qscbm.inlayx.api.event` 包
 
 ### Javadoc [![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://mcchampions.github.io/InlayX/javadoc/)
 
