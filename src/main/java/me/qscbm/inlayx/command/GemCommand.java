@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import me.qscbm.inlayx.InlayX;
@@ -27,6 +28,13 @@ public class GemCommand implements CommandExecutor {
         return COMMANDS;
     }
 
+    /**
+     * 注册子命令.
+     */
+    public static boolean registerSubCommand(@NonNull SubCommand subCommand) {
+        return COMMANDS.putIfAbsent(subCommand.name().toLowerCase(), subCommand) == null;
+    }
+
     public GemCommand(InlayX plugin) {
         List<SubCommand> others = List.of(
                 new CmdList(plugin),
@@ -40,8 +48,13 @@ public class GemCommand implements CommandExecutor {
                 new CmdRemoveSlot(plugin),
                 new CmdReload(plugin));
         List<SubCommand> all = new ArrayList<>(others);
-        all.addFirst(new CmdHelp(plugin, others));
-        COMMANDS = all.stream().collect(Collectors.toMap(SubCommand::name, Function.identity()));
+        all.addFirst(new CmdHelp(plugin));
+        COMMANDS = all.stream()
+                .collect(Collectors.toMap(
+                        SubCommand::name,
+                        Function.identity(),
+                        (existing, replacement) -> existing,
+                        ConcurrentHashMap::new));
         COMMAND_ALIASES = plugin.getServer().getPluginCommand("gem").getAliases().stream()
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());

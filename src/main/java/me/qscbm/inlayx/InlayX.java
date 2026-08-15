@@ -4,6 +4,7 @@ import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
 import me.qscbm.inlayx.api.InlayXApi;
 import me.qscbm.inlayx.command.GemCommand;
+import me.qscbm.inlayx.command.sub.SubCommand;
 import me.qscbm.inlayx.config.ConfigManager;
 import me.qscbm.inlayx.config.ConfigUpdater;
 import me.qscbm.inlayx.gem.GemManager;
@@ -16,6 +17,7 @@ import me.qscbm.inlayx.listener.PlayerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 插件主类
@@ -60,6 +62,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         this.getLogger().info("加载宝石中......");
         this.gemManager = new GemManager(this);
         this.interactionFeedback = new InteractionFeedback(this);
+        this.getCommand("gem").setExecutor(new GemCommand(this));
         this.getServer().getServicesManager().register(InlayXApi.class, this, this, ServicePriority.Normal);
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         this.getServer().getPluginManager().registerEvents(new GuiListener(this), this);
@@ -70,11 +73,15 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         if (this.getServer().getPluginManager().getPlugin("MythicMobs") != null) {
             this.getLogger().info("已检测到MythicMobs插件, 启用MythicMobs支持");
         }
-        this.getCommand("gem").setExecutor(new GemCommand(this));
 
         INSTANCE = this;
 
         this.getLogger().info("InlayX 已启用");
+    }
+
+    @Override
+    public boolean registerSubCommand(@NonNull SubCommand subCommand) {
+        return GemCommand.registerSubCommand(subCommand);
     }
 
     /**

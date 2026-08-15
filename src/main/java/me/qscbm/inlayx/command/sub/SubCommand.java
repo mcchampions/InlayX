@@ -19,6 +19,8 @@ public abstract class SubCommand {
 
     public abstract String name();
 
+    public abstract String description();
+
     protected abstract void execute(CommandSender sender, String[] args);
 
     public String permission() {
@@ -68,11 +70,12 @@ public abstract class SubCommand {
     }
 
     public static boolean noneOf(CommandSender sender, String perm) {
+        if (perm == null) return false;
         return !sender.hasPermission("inlayx.admin") && !sender.hasPermission(perm);
     }
 
     public static boolean hasAny(CommandSender sender, String perm) {
-        return sender.hasPermission("inlayx.admin") || sender.hasPermission(perm);
+        return sender.hasPermission("inlayx.admin") || perm == null || sender.hasPermission(perm);
     }
 
     protected static int argInt(String[] args, int idx, int min, int max) {

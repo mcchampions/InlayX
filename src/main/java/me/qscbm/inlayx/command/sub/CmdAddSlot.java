@@ -26,6 +26,11 @@ public class CmdAddSlot extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "为手持装备添加空槽位";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.addslot";
     }

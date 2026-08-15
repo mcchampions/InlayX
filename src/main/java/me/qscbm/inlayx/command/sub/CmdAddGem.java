@@ -26,6 +26,11 @@ public class CmdAddGem extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "直接向装备添加指定宝石";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.addgem";
     }

@@ -28,6 +28,11 @@ public class CmdExtract extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "从手持装备提取指定宝石";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.extract";
     }

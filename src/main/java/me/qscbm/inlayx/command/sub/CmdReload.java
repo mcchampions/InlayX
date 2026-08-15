@@ -18,6 +18,11 @@ public class CmdReload extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "重载插件配置";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.reload";
     }

@@ -23,6 +23,11 @@ public class CmdRemoveGem extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "直接移除装备上的指定宝石";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.removegem";
     }

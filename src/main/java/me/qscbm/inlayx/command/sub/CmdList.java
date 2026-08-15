@@ -19,6 +19,11 @@ public class CmdList extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "列出所有宝石";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.list";
     }

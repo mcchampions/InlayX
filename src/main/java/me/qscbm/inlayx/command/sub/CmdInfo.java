@@ -26,6 +26,11 @@ public class CmdInfo extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "查看手持宝石或装备信息";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.info";
     }

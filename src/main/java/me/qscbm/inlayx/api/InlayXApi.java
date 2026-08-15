@@ -1,5 +1,6 @@
 package me.qscbm.inlayx.api;
 
+import me.qscbm.inlayx.command.sub.SubCommand;
 import me.qscbm.inlayx.gem.GemManager;
 import org.jspecify.annotations.NonNull;
 
@@ -12,9 +13,12 @@ import org.jspecify.annotations.NonNull;
 public interface InlayXApi {
 
     /**
-     * 拿到负责宝石定义, 槽位和掉落逻辑的管理器.
-     *
-     * @return 插件当前的宝石管理器, 永远不会为空
+     * 获取宝石管理器.
      */
     @NonNull GemManager getGemManager();
+
+    /**
+     * 注册子命令.
+     */
+    boolean registerSubCommand(@NonNull SubCommand subCommand);
 }

@@ -26,6 +26,11 @@ public class CmdGive extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "给予宝石";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.give";
     }

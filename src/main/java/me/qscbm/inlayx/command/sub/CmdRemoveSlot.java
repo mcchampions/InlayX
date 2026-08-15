@@ -26,6 +26,11 @@ public class CmdRemoveSlot extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "为手持装备移除空槽位";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.removeslot";
     }

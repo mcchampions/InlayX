@@ -18,6 +18,11 @@ public class CmdSocket extends SubCommand {
     }
 
     @Override
+    public String description() {
+        return "打开宝石镶嵌界面";
+    }
+
+    @Override
     public String permission() {
         return "inlayx.socket";
     }

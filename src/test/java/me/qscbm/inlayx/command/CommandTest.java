@@ -14,7 +14,6 @@ import me.qscbm.inlayx.command.sub.CmdExtract;
 import me.qscbm.inlayx.command.sub.CmdGive;
 import me.qscbm.inlayx.command.sub.CmdHelp;
 import me.qscbm.inlayx.command.sub.CmdInfo;
-import me.qscbm.inlayx.command.sub.CmdList;
 import me.qscbm.inlayx.command.sub.CmdRemoveGem;
 import me.qscbm.inlayx.command.sub.CmdRemoveSlot;
 import me.qscbm.inlayx.listener.AsyncTabCompleteListener;
@@ -39,7 +38,7 @@ class CommandTest extends InlayXTestBase {
     @Test
     void helpListsCommands() {
         ConsoleCommandSenderMock sender = server.getConsoleSender();
-        new CmdHelp(plugin, List.of(new CmdList(plugin), new CmdGive(plugin))).tryExecute(sender, new String[0]);
+        new CmdHelp(plugin).tryExecute(sender, new String[0]);
         assertEquals(ChatColor.GOLD + "===== InlayX 帮助 =====", sender.nextMessage());
     }
 
