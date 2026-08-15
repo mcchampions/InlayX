@@ -26,11 +26,10 @@ import org.junit.jupiter.api.Test;
 
 class GemItemFactoryTest extends InlayXTestBase {
 
-    private Gem registerItemGem(String id, Material material) {
+    private Gem itemGem(String id, Material material) {
         Gem gem = new Gem(id, "物品宝石", plugin.getConfigManager().getGemType("ATTACK"), 1, material);
         gem.setDisplayName("物品宝石");
         gem.setLore(List.of());
-        plugin.getGemManager().registerGem(gem);
         return gem;
     }
 
@@ -48,12 +47,13 @@ class GemItemFactoryTest extends InlayXTestBase {
 
     @Test
     void appliesEnchantmentsFlagsAttributesAndModelData() {
-        Gem gem = registerItemGem("item_1", Material.DIAMOND_SWORD);
+        Gem gem = itemGem("item_1", Material.DIAMOND_SWORD);
         Enchantment sharpness = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("sharpness"));
         gem.addEnchantment(sharpness, 5);
         gem.addItemFlag(ItemFlag.HIDE_ENCHANTS);
         gem.addAttribute(Attribute.ATTACK_DAMAGE, 10, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
         gem.setCustomModelData(42);
+        plugin.getGemManager().registerGem(gem);
 
         ItemStack item = plugin.getGemManager().createGemItem("item_1");
         ItemMeta meta = item.getItemMeta();
@@ -65,14 +65,16 @@ class GemItemFactoryTest extends InlayXTestBase {
 
     @Test
     void appliesLeatherColorAndPotionEffects() {
-        Gem leather = registerItemGem("item_leather", Material.LEATHER_HELMET);
+        Gem leather = itemGem("item_leather", Material.LEATHER_HELMET);
         leather.setLeatherColor(Color.fromRGB(255, 0, 0));
+        plugin.getGemManager().registerGem(leather);
         ItemStack leatherItem = plugin.getGemManager().createGemItem("item_leather");
         assertTrue(leatherItem.getItemMeta() instanceof LeatherArmorMeta);
         assertEquals(Color.fromRGB(255, 0, 0), ((LeatherArmorMeta) leatherItem.getItemMeta()).getColor());
 
-        Gem potion = registerItemGem("item_potion", Material.LINGERING_POTION);
+        Gem potion = itemGem("item_potion", Material.LINGERING_POTION);
         potion.addPotionEffect(Registry.MOB_EFFECT.get(NamespacedKey.minecraft("speed")), 200, 1, false, true, false);
+        plugin.getGemManager().registerGem(potion);
         ItemStack potionItem = plugin.getGemManager().createGemItem("item_potion");
         assertTrue(potionItem.getItemMeta() instanceof PotionMeta);
         PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
@@ -83,19 +85,22 @@ class GemItemFactoryTest extends InlayXTestBase {
 
     @Test
     void appliesDurabilityFormats() {
-        Gem damageGem = registerItemGem("item_damage", Material.DIAMOND_SWORD);
+        Gem damageGem = itemGem("item_damage", Material.DIAMOND_SWORD);
         damageGem.setDurability(new Gem.DurabilityEntry(Gem.DurabilityMode.DAMAGE, 20));
+        plugin.getGemManager().registerGem(damageGem);
         ItemStack damageItem = plugin.getGemManager().createGemItem("item_damage");
         assertEquals(20, ((Damageable) damageItem.getItemMeta()).getDamage());
 
-        Gem remainingGem = registerItemGem("item_remaining", Material.DIAMOND_SWORD);
+        Gem remainingGem = itemGem("item_remaining", Material.DIAMOND_SWORD);
         remainingGem.setDurability(new Gem.DurabilityEntry(Gem.DurabilityMode.REMAINING, 20));
+        plugin.getGemManager().registerGem(remainingGem);
         ItemStack remainingItem = plugin.getGemManager().createGemItem("item_remaining");
         int maxDamage = Material.DIAMOND_SWORD.getMaxDurability();
         assertEquals(maxDamage - 20, ((Damageable) remainingItem.getItemMeta()).getDamage());
 
-        Gem percentGem = registerItemGem("item_percent", Material.DIAMOND_SWORD);
+        Gem percentGem = itemGem("item_percent", Material.DIAMOND_SWORD);
         percentGem.setDurability(new Gem.DurabilityEntry(Gem.DurabilityMode.PERCENT, 50));
+        plugin.getGemManager().registerGem(percentGem);
         ItemStack percentItem = plugin.getGemManager().createGemItem("item_percent");
         int percentMax = Material.DIAMOND_SWORD.getMaxDurability();
         assertEquals(

@@ -1,9 +1,9 @@
 package me.qscbm.inlayx.gui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemManager;
@@ -44,7 +44,7 @@ public class ExtractGuiFactory {
     private final ItemStack prevButton;
     private final ItemStack nextButton;
 
-    private final Map<String, ItemStack> gemItemCache = new HashMap<>();
+    private final Map<String, ItemStack> gemItemCache = new ConcurrentHashMap<>();
 
     public ExtractGuiFactory(InlayX plugin, GemManager gemManager) {
         this.plugin = plugin;

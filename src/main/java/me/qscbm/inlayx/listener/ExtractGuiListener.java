@@ -23,7 +23,7 @@ public class ExtractGuiListener implements Listener {
 
     public ExtractGuiListener(InlayX plugin) {
         this.plugin = plugin;
-        this.foliaLib = new FoliaLib(plugin);
+        this.foliaLib = plugin.getFoliaLib();
     }
 
     @EventHandler

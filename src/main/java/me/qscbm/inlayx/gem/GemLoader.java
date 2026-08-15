@@ -29,26 +29,37 @@ import org.bukkit.potion.PotionEffectType;
  */
 class GemLoader {
     private final InlayX plugin;
+    private final GemItemFactory itemFactory;
+    private final Runnable onGemsChanged;
+
+    private boolean loading;
 
     @Getter
     private final Map<String, Gem> gems;
 
-    GemLoader(InlayX plugin, Map<String, Gem> gems) {
+    GemLoader(InlayX plugin, Map<String, Gem> gems, GemItemFactory itemFactory, Runnable onGemsChanged) {
         this.plugin = plugin;
         this.gems = gems;
+        this.itemFactory = itemFactory;
+        this.onGemsChanged = onGemsChanged;
     }
 
     void loadAll() {
-        gems.clear();
-        int fromConfig = loadFromConfigSection();
-        if (fromConfig > 0) {
-            plugin.getLogger().info("从 config.yml 加载了 " + fromConfig + " 个宝石");
+        loading = true;
+        try {
+            gems.clear();
+            int fromConfig = loadFromConfigSection();
+            if (fromConfig > 0) {
+                plugin.getLogger().info("从 config.yml 加载了 " + fromConfig + " 个宝石");
+            }
+            int fromDir = loadFromDirectory(gemsDir());
+            if (fromDir > 0) {
+                plugin.getLogger().info("从 gems/ 目录加载了 " + fromDir + " 个宝石");
+            }
+            plugin.getLogger().info("共加载 " + gems.size() + " 个宝石");
+        } finally {
+            loading = false;
         }
-        int fromDir = loadFromDirectory(gemsDir());
-        if (fromDir > 0) {
-            plugin.getLogger().info("从 gems/ 目录加载了 " + fromDir + " 个宝石");
-        }
-        plugin.getLogger().info("共加载 " + gems.size() + " 个宝石");
     }
 
     // -- config.yml --
@@ -245,7 +256,13 @@ class GemLoader {
             if (overrideSec != null) {
                 loadOverride(gem, overrideSec);
             }
+            if (!itemFactory.initializeItemMetaTemplate(gem)) {
+                return false;
+            }
             gems.put(gemId, gem);
+            if (!loading) {
+                onGemsChanged.run();
+            }
             return true;
         } catch (Exception e) {
             plugin.getLogger().warning("解析宝石 " + gemId + " 时出错: " + e.getMessage());

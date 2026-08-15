@@ -2,6 +2,7 @@ package me.qscbm.inlayx.gem;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import me.qscbm.inlayx.InlayX;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,11 +27,11 @@ public class GemItemFactory {
     static final String GEM_ID_KEY = "gem_id";
 
     private final InlayX plugin;
-    private final Map<String, Gem> gems;
+    private final AtomicReference<GemManager.GemRegistry> registry;
 
-    public GemItemFactory(InlayX plugin, Map<String, Gem> gems) {
+    public GemItemFactory(InlayX plugin, AtomicReference<GemManager.GemRegistry> registry) {
         this.plugin = plugin;
-        this.gems = gems;
+        this.registry = registry;
     }
 
     NamespacedKey gemIdKey() {
@@ -59,29 +60,29 @@ public class GemItemFactory {
     }
 
     public ItemStack createGemItem(String gemId) {
-        Gem gem = gems.get(gemId);
-        if (gem == null) {
+        Gem gem = registry.get().gems().get(gemId);
+        if (gem == null || gem.getItemMetaTemplate() == null) {
             return null;
         }
         ItemStack item = new ItemStack(gem.getMaterial());
-        item.setItemMeta(getOrCreateItemMetaTemplate(gem).clone());
+        item.setItemMeta(gem.getItemMetaTemplate().clone());
         return item;
     }
 
-    private ItemMeta getOrCreateItemMetaTemplate(Gem gem) {
-        ItemMeta template = gem.getItemMetaTemplate();
-        if (template != null) {
-            return template;
-        }
+    boolean initializeItemMetaTemplate(Gem gem) {
         ItemStack item = new ItemStack(gem.getMaterial());
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            plugin.getLogger().severe("宝石 " + gem.getId() + " 的材质无法创建 ItemMeta: " + gem.getMaterial());
+            return false;
+        }
         meta.setDisplayName(gem.getDisplayName());
         meta.setLore(gem.getLore());
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         applyItemOverrides(gem, meta);
         meta.getPersistentDataContainer().set(gemIdKey(), PersistentDataType.STRING, gem.getId());
         gem.setItemMetaTemplate(meta);
-        return meta;
+        return true;
     }
 
     private void applyItemOverrides(Gem gem, ItemMeta meta) {

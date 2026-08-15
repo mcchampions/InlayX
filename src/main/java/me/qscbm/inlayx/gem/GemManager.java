@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gui.ExtractGuiFactory;
@@ -27,7 +28,9 @@ import org.jspecify.annotations.Nullable;
 public class GemManager {
     private final InlayX plugin;
 
-    private final Map<String, Gem> gems;
+    private final Map<String, Gem> loadingGems;
+
+    private final AtomicReference<GemRegistry> registry;
 
     private final GemLoader loader;
 
@@ -43,15 +46,13 @@ public class GemManager {
     @Getter
     private final ExtractGuiFactory extractGuiFactory;
 
-    private final Map<String, List<Gem>> dropIndex;
-
     public GemManager(InlayX plugin) {
         this.plugin = plugin;
-        this.gems = new HashMap<>();
-        this.dropIndex = new HashMap<>();
-        this.loader = new GemLoader(plugin, gems);
-        this.itemFactory = new GemItemFactory(plugin, gems);
-        this.socketService = new SocketService(plugin, itemFactory, gems);
+        this.loadingGems = new HashMap<>();
+        this.registry = new AtomicReference<>(new GemRegistry(Collections.emptyMap(), Collections.emptyMap()));
+        this.itemFactory = new GemItemFactory(plugin, registry);
+        this.loader = new GemLoader(plugin, loadingGems, itemFactory, this::publishLoadingGems);
+        this.socketService = new SocketService(plugin, itemFactory, registry);
         this.guiFactory = new SocketGuiFactory(plugin);
         this.extractGuiFactory = new ExtractGuiFactory(plugin, this);
         loadGems();
@@ -59,35 +60,42 @@ public class GemManager {
 
     public void loadGems() {
         loader.loadAll();
-        rebuildDropIndex();
-        extractGuiFactory.clearGemItemCache();
+        publishLoadingGems();
     }
 
     GemLoader getLoader() {
         return loader;
     }
 
-    private void rebuildDropIndex() {
-        dropIndex.clear();
-        for (Gem gem : gems.values()) {
-            for (String source : gem.getDropSources()) {
-                dropIndex.computeIfAbsent(source, k -> new ArrayList<>()).add(gem);
+    private void publishLoadingGems() {
+        registry.set(createRegistry(loadingGems));
+        extractGuiFactory.clearGemItemCache();
+    }
+
+    private GemRegistry createRegistry(Map<String, Gem> source) {
+        Map<String, Gem> gemsSnapshot = Collections.unmodifiableMap(new HashMap<>(source));
+        Map<String, List<Gem>> dropIndex = new HashMap<>();
+        for (Gem gem : gemsSnapshot.values()) {
+            for (String sourceName : gem.getDropSources()) {
+                dropIndex.computeIfAbsent(sourceName, k -> new ArrayList<>()).add(gem);
             }
         }
+        dropIndex.replaceAll((k, v) -> Collections.unmodifiableList(new ArrayList<>(v)));
+        return new GemRegistry(gemsSnapshot, Collections.unmodifiableMap(dropIndex));
     }
 
     // ==================== 查询 ====================
 
     public Map<String, Gem> getGems() {
-        return Collections.unmodifiableMap(this.gems);
+        return registry.get().gems();
     }
 
     public Collection<Gem> getAllGems() {
-        return Collections.unmodifiableCollection(this.gems.values());
+        return registry.get().gems().values();
     }
 
     public Gem getGem(String id) {
-        return this.gems.get(id);
+        return registry.get().gems().get(id);
     }
 
     /**
@@ -97,7 +105,7 @@ public class GemManager {
      * 总掉落率 = min(各宝石最终掉落率之和, 1.0), 命中后按最终掉落率加权选择一颗宝石.
      */
     public Gem getDropGem(String source, int mobLevel) {
-        List<Gem> candidates = dropIndex.get(source);
+        List<Gem> candidates = registry.get().dropIndex().get(source);
         if (candidates == null || candidates.isEmpty()) {
             return null;
         }
@@ -139,19 +147,31 @@ public class GemManager {
         if (gem == null) {
             throw new IllegalArgumentException("gem 不能为 null");
         }
-        gems.put(gem.getId(), gem);
-        rebuildDropIndex();
+        if (!itemFactory.initializeItemMetaTemplate(gem)) {
+            throw new IllegalArgumentException("无法初始化宝石 " + gem.getId() + " 的 ItemMeta");
+        }
+        registry.updateAndGet(current -> {
+            Map<String, Gem> updated = new HashMap<>(current.gems());
+            updated.put(gem.getId(), gem);
+            return createRegistry(updated);
+        });
+        extractGuiFactory.clearGemItemCache();
     }
 
     /**
      * 注销一个宝石, 返回被移除的宝石定义, 并刷新掉落索引.
      */
     public Gem unregisterGem(String gemId) {
-        Gem removed = gems.remove(gemId);
-        if (removed != null) {
-            rebuildDropIndex();
+        Gem[] removed = new Gem[1];
+        registry.updateAndGet(current -> {
+            Map<String, Gem> updated = new HashMap<>(current.gems());
+            removed[0] = updated.remove(gemId);
+            return removed[0] == null ? current : createRegistry(updated);
+        });
+        if (removed[0] != null) {
+            extractGuiFactory.clearGemItemCache();
         }
-        return removed;
+        return removed[0];
     }
 
     public boolean isGem(ItemStack item) {
@@ -245,6 +265,8 @@ public class GemManager {
     public Inventory createSocketGUI() {
         return guiFactory.createSocketGUI();
     }
+
+    public record GemRegistry(Map<String, Gem> gems, Map<String, List<Gem>> dropIndex) {}
 
     private record WeightedGem(Gem gem, double chance) {}
 }

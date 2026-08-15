@@ -1,7 +1,12 @@
 package me.qscbm.inlayx.command.sub;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.socket.ExtractResult;
 import org.bukkit.ChatColor;
@@ -88,11 +93,22 @@ public class CmdExtract extends SubCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        if (args.length == 1 && sender instanceof Player player) {
-            ItemStack item = player.getInventory().getItemInMainHand();
-            return plugin.getGemManager().getSocketedGems(item);
+        if (args.length == 1 && sender instanceof Player player && plugin.getFoliaLib() != null) {
+            CompletableFuture<List<String>> future = new CompletableFuture<>();
+            try {
+                plugin.getFoliaLib().getScheduler().runAtEntity(player, task -> {
+                    ItemStack item = player.getInventory().getItemInMainHand();
+                    future.complete(plugin.getGemManager().getSocketedGems(item));
+                });
+                return future.get(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return plugin.getGemManager().getAllGems().stream().map(Gem::getId).collect(Collectors.toList());
+            } catch (Exception e) {
+                return plugin.getGemManager().getAllGems().stream().map(Gem::getId).collect(Collectors.toList());
+            }
         }
-        return List.of();
+        return plugin.getGemManager().getAllGems().stream().map(Gem::getId).collect(Collectors.toList());
     }
 
     private static void giveOrDrop(Player player, ItemStack item) {

@@ -1,5 +1,6 @@
 package me.qscbm.inlayx;
 
+import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
 import me.qscbm.inlayx.api.InlayXApi;
 import me.qscbm.inlayx.command.GemCommand;
@@ -27,6 +28,8 @@ public class InlayX extends JavaPlugin implements InlayXApi {
 
     private ConfigManager configManager;
 
+    private FoliaLib foliaLib;
+
     private ExtractGuiListener extractGuiListener;
 
     private InteractionFeedback interactionFeedback;
@@ -51,6 +54,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         this.getLogger().info("加载配置文件中......");
         reloadConfig();
         this.configManager = new ConfigManager(this);
+        this.foliaLib = new FoliaLib(this);
         this.getLogger().info("配置文件已加载");
 
         this.getLogger().info("加载宝石中......");

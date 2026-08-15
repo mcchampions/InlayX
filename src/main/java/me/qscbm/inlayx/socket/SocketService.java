@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicReference;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.api.event.GemExtractEvent;
 import me.qscbm.inlayx.api.event.GemExtractedEvent;
@@ -16,6 +17,7 @@ import me.qscbm.inlayx.api.event.GemSocketEvent;
 import me.qscbm.inlayx.api.event.GemSocketedEvent;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemItemFactory;
+import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gem.GemTemplate;
 import me.qscbm.inlayx.gem.GemType;
 import me.qscbm.inlayx.util.TextUtils;
@@ -38,12 +40,12 @@ public class SocketService {
 
     private final InlayX plugin;
     private final GemItemFactory itemFactory;
-    private final Map<String, Gem> gems;
+    private final AtomicReference<GemManager.GemRegistry> registry;
 
-    public SocketService(InlayX plugin, GemItemFactory itemFactory, Map<String, Gem> gems) {
+    public SocketService(InlayX plugin, GemItemFactory itemFactory, AtomicReference<GemManager.GemRegistry> registry) {
         this.plugin = plugin;
         this.itemFactory = itemFactory;
-        this.gems = gems;
+        this.registry = registry;
     }
 
     // ==================== PDC 槽位列表读写 ====================
@@ -237,7 +239,7 @@ public class SocketService {
         if (slot == null || slot.getGemId() == null) {
             return List.of();
         }
-        Gem gem = gems.get(slot.getGemId());
+        Gem gem = registry.get().gems().get(slot.getGemId());
         return gem == null ? List.of() : renderFilledBlock(gem);
     }
 
@@ -345,7 +347,7 @@ public class SocketService {
     }
 
     public boolean canSocketGemType(ItemStack equipment, String gemId) {
-        Gem gem = gems.get(gemId);
+        Gem gem = registry.get().gems().get(gemId);
         if (gem == null || equipment == null) {
             return false;
         }
@@ -426,7 +428,7 @@ public class SocketService {
         if (gemId == null) {
             return SocketResult.failure(SocketResult.Status.NOT_A_GEM);
         }
-        Gem gem = gems.get(gemId);
+        Gem gem = registry.get().gems().get(gemId);
         if (gem == null) {
             return SocketResult.failure(SocketResult.Status.UNKNOWN_GEM);
         }
@@ -441,7 +443,7 @@ public class SocketService {
         if (equipment == null || equipment.getType() == Material.AIR || gemId == null || gemId.isEmpty()) {
             return SocketResult.failure(SocketResult.Status.INVALID_INPUT);
         }
-        Gem gem = gems.get(gemId);
+        Gem gem = registry.get().gems().get(gemId);
         if (gem == null) {
             return SocketResult.failure(SocketResult.Status.UNKNOWN_GEM);
         }
@@ -550,7 +552,7 @@ public class SocketService {
         }
         SocketSlot slot = slots.get(idx);
         if (slot.getType() == null) {
-            Gem gem = gems.get(gemId);
+            Gem gem = registry.get().gems().get(gemId);
             if (gem != null) {
                 slot.setType(gem.getType().getId());
             }
@@ -670,7 +672,7 @@ public class SocketService {
         if (slot.getGemId() == null) {
             return List.of(renderEmptySlot(slot.getType()));
         }
-        Gem gem = gems.get(slot.getGemId());
+        Gem gem = registry.get().gems().get(slot.getGemId());
         if (gem == null) {
             return List.of(renderEmptySlot(slot.getType()));
         }
