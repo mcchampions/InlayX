@@ -28,13 +28,13 @@ public class AsyncTabCompleteListener implements Listener {
             return;
         }
         String commandLabel = buffer.substring(0, firstPlace).toLowerCase();
-        if (!GemCommand.COMMAND_ALIASES.contains(commandLabel) && !"slimefun".equals(commandLabel)) {
-            int index = commandLabel.indexOf("slimefun:");
+        if (!GemCommand.COMMAND_ALIASES.contains(commandLabel) && !"gem".equals(commandLabel)) {
+            int index = commandLabel.indexOf("inlayx:");
             if (index != 0) {
                 return;
             }
             commandLabel = commandLabel.substring(9);
-            if (!GemCommand.COMMAND_ALIASES.contains(commandLabel) && !"slimefun".equals(commandLabel)) {
+            if (!GemCommand.COMMAND_ALIASES.contains(commandLabel) && !"gem".equals(commandLabel)) {
                 return;
             }
         }

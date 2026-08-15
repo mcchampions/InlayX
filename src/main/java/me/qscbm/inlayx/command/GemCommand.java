@@ -42,7 +42,7 @@ public class GemCommand implements CommandExecutor {
         List<SubCommand> all = new ArrayList<>(others);
         all.addFirst(new CmdHelp(plugin, others));
         COMMANDS = all.stream().collect(Collectors.toMap(SubCommand::name, Function.identity()));
-        COMMAND_ALIASES = plugin.getServer().getPluginCommand("slimefun").getAliases().stream()
+        COMMAND_ALIASES = plugin.getServer().getPluginCommand("gem").getAliases().stream()
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
     }
