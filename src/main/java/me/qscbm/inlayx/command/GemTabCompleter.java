@@ -20,7 +20,7 @@ public class GemTabCompleter {
             return filter(visible, prefix);
         }
         SubCommand cmd = GemCommand.COMMANDS.get(args.getFirst().toLowerCase());
-        if (cmd == null) return List.of();
+        if (cmd == null || SubCommand.noneOf(sender, cmd.permission())) return List.of();
         return cmd.tabComplete(sender, shift(args.toArray(new String[0])));
     }
 
