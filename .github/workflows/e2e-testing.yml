@@ -46,17 +46,21 @@ jobs:
         run: |
           VERSION="${{ matrix.mcVersion }}"
           if [ "$VERSION" == "latest" ]; then
-            VERSION=$(curl -fsSL https://api.papermc.io/v2/projects/paper/ | jq -r '.versions[-1]')
+            VERSION=$(curl -fsSL https://fill.papermc.io/v3/projects/paper \
+              | jq -r '[.versions | keys[] | select(test("^[0-9]+\\.[0-9]+$"))] | sort_by(split(".") | map(tonumber)) | .[-1]')
           fi
 
-          BUILD_JAR=$(curl -fsSL "https://api.papermc.io/v2/projects/paper/versions/$VERSION/builds" \
-            | jq -r '.builds[-1] | "\(.build) \(.downloads.application.name)"')
-          BUILD=$(echo "$BUILD_JAR" | awk '{print $1}')
-          JAR_FILE=$(echo "$BUILD_JAR" | awk '{print $2}')
+          BUILD_JSON=$(curl -fsSL "https://fill.papermc.io/v3/projects/paper/versions/$VERSION/builds")
+          JAR_NAME=$(echo "$BUILD_JSON" | jq -r '.[0].downloads["server:default"].name')
+          JAR_URL=$(echo "$BUILD_JSON" | jq -r '.[0].downloads["server:default"].url')
 
-          echo "Downloading https://api.papermc.io/v2/projects/paper/versions/$VERSION/builds/$BUILD/downloads/$JAR_FILE"
-          curl -fL -o paper.jar \
-            "https://api.papermc.io/v2/projects/paper/versions/$VERSION/builds/$BUILD/downloads/$JAR_FILE"
+          if [ -z "$JAR_NAME" ] || [ -z "$JAR_URL" ]; then
+            echo "Failed to resolve Paper build for $VERSION"
+            exit 1
+          fi
+
+          echo "Downloading $JAR_URL"
+          curl -fL -o paper.jar "$JAR_URL"
 
       - name: Run Paper server
         run: |
