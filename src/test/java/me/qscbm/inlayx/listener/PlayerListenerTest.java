@@ -9,6 +9,8 @@ import me.qscbm.inlayx.gem.GemType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
@@ -31,6 +33,18 @@ class PlayerListenerTest extends InlayXTestBase {
     void init() {
         player = server.addPlayer("Steve");
         attack = plugin.getConfigManager().getGemType("ATTACK");
+    }
+
+    private static final class CancelAllListener implements Listener {
+        @EventHandler
+        public void onInteract(PlayerInteractEvent event) {
+            event.setCancelled(true);
+        }
+
+        @EventHandler
+        public void onClick(InventoryClickEvent event) {
+            event.setCancelled(true);
+        }
     }
 
     private PlayerInteractEvent rightClick(ItemStack gemItem) {
@@ -79,10 +93,11 @@ class PlayerListenerTest extends InlayXTestBase {
         ItemStack sword = socketableSword(attack, 1);
         Inventory inv = Bukkit.createInventory(null, 9);
         player.openInventory(inv);
+        int bottomSlotRaw = player.getOpenInventory().getTopInventory().getSize();
         InventoryClickEvent event = new InventoryClickEvent(
                 player.getOpenInventory(),
                 InventoryType.SlotType.CONTAINER,
-                0,
+                bottomSlotRaw,
                 ClickType.LEFT,
                 InventoryAction.SWAP_WITH_CURSOR);
         event.setCursor(gemItem.clone());
@@ -92,6 +107,77 @@ class PlayerListenerTest extends InlayXTestBase {
         assertEquals(2, event.getCursor().getAmount());
         assertTrue(
                 plugin.getGemManager().getSocketedGems(event.getCurrentItem()).contains("t1-drag"));
+    }
+
+    @Test
+    void dragSocketDoesNotModifyNonPlayerInventory() {
+        registerGem("t1-chest", "ATTACK", 1.0);
+        ItemStack gemItem = plugin.getGemManager().createGemItem("t1-chest");
+        gemItem.setAmount(3);
+        ItemStack sword = socketableSword(attack, 1);
+
+        Inventory chest = Bukkit.createInventory(null, 9);
+        player.openInventory(chest);
+        InventoryClickEvent event = new InventoryClickEvent(
+                player.getOpenInventory(),
+                InventoryType.SlotType.CONTAINER,
+                0,
+                ClickType.LEFT,
+                InventoryAction.SWAP_WITH_CURSOR);
+        event.setCursor(gemItem.clone());
+        event.setCurrentItem(sword);
+        server.getPluginManager().callEvent(event);
+
+        assertFalse(event.isCancelled());
+        assertEquals(3, event.getCursor().getAmount());
+        assertTrue(
+                plugin.getGemManager().getSocketedGems(event.getCurrentItem()).isEmpty());
+    }
+
+    @Test
+    void dragSocketRespectsCancelledEvent() {
+        registerGem("t1-cancelled-drag", "ATTACK", 1.0);
+        ItemStack gemItem = plugin.getGemManager().createGemItem("t1-cancelled-drag");
+        gemItem.setAmount(3);
+        ItemStack sword = socketableSword(attack, 1);
+        server.getPluginManager().registerEvents(new CancelAllListener(), plugin);
+
+        Inventory inv = Bukkit.createInventory(null, 9);
+        player.openInventory(inv);
+        int bottomSlotRaw = player.getOpenInventory().getTopInventory().getSize();
+        InventoryClickEvent event = new InventoryClickEvent(
+                player.getOpenInventory(),
+                InventoryType.SlotType.CONTAINER,
+                bottomSlotRaw,
+                ClickType.LEFT,
+                InventoryAction.SWAP_WITH_CURSOR);
+        event.setCursor(gemItem.clone());
+        event.setCurrentItem(sword);
+        server.getPluginManager().callEvent(event);
+
+        assertTrue(event.isCancelled());
+        assertEquals(3, event.getCursor().getAmount());
+        assertTrue(
+                plugin.getGemManager().getSocketedGems(event.getCurrentItem()).isEmpty());
+    }
+
+    @Test
+    void rightClickRespectsCancelledEvent() {
+        registerGem("t1-cancelled", "ATTACK", 1.0);
+        ItemStack gemItem = plugin.getGemManager().createGemItem("t1-cancelled");
+        ItemStack sword = socketableSword(attack, 1);
+        player.getInventory().setItemInMainHand(gemItem);
+        player.getInventory().setItemInOffHand(sword);
+        server.getPluginManager().registerEvents(new CancelAllListener(), plugin);
+
+        PlayerInteractEvent event = rightClick(player.getInventory().getItemInMainHand());
+        server.getPluginManager().callEvent(event);
+
+        assertTrue(event.isCancelled());
+        assertTrue(plugin.getGemManager().isGem(player.getInventory().getItemInMainHand()));
+        assertTrue(plugin.getGemManager()
+                .getSocketedGems(player.getInventory().getItemInOffHand())
+                .isEmpty());
     }
 
     @Test

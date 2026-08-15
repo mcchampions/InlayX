@@ -6,6 +6,7 @@ import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.socket.SocketResult;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,6 +14,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener {
@@ -23,8 +25,11 @@ public class PlayerListener implements Listener {
     }
 
     // 右键快捷镶嵌: 主手持宝石, 副手持装备
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.useItemInHand() == Event.Result.DENY) {
+            return;
+        }
         if (!plugin.getConfigManager().isRightClickSocketEnabled()) {
             return;
         }
@@ -62,13 +67,14 @@ public class PlayerListener implements Listener {
     }
 
     // 背包拖拽快捷镶嵌
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!plugin.getConfigManager().isDragSocketEnabled()) {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) return;
         if (event.getAction() != InventoryAction.SWAP_WITH_CURSOR) return;
+        if (!isPlayerInventoryClick(event)) return;
 
         ItemStack gemItem = event.getCursor();
         if (gemItem == null || !gm().isGem(gemItem)) {
@@ -115,6 +121,13 @@ public class PlayerListener implements Listener {
         } else {
             event.setCursor(null);
         }
+    }
+
+    private static boolean isPlayerInventoryClick(InventoryClickEvent event) {
+        Inventory clicked = event.getClickedInventory();
+        return clicked != null
+                && event.getRawSlot() >= event.getView().getTopInventory().getSize()
+                && clicked.equals(event.getView().getBottomInventory());
     }
 
     private GemManager gm() {
