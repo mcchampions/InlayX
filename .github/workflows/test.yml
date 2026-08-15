@@ -13,7 +13,7 @@ env:
   TZ: 'Asia/Shanghai'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -28,5 +28,20 @@ jobs:
           java-package: jdk
           architecture: x64
           cache: maven
-      - name: Test
+      - name: Maven Test
         run: mvn test
+      - name: Maven Build Test
+        run: mvn clean package -DskipTests=true
+      - name: Upload E2E plugin jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: inlayx-e2e-jar
+          path: target/InlayX-1.0-SNAPSHOT.jar
+          if-no-files-found: error
+
+  e2e:
+    needs: test
+    uses: ./.github/workflows/e2e-testing.yml
+    with:
+      artifact-name: inlayx-e2e-jar
+      jar-path: artifact/InlayX-1.0-SNAPSHOT.jar

@@ -1,0 +1,91 @@
+name: End to End Testing
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: Name of the uploaded plugin jar artifact
+        type: string
+        required: false
+        default: inlayx-e2e-jar
+      jar-path:
+        description: Path of the plugin jar inside the downloaded artifact
+        type: string
+        required: false
+        default: artifact/InlayX-1.0-SNAPSHOT.jar
+
+jobs:
+  e2e:
+    name: E2E Paper ${{ matrix.mcVersion }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mcVersion: "1.21.3"
+            javaVersion: "21"
+          - mcVersion: "1.21.11"
+            javaVersion: "21"
+          - mcVersion: "26.2"
+            javaVersion: "25"
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: ${{ matrix.javaVersion }}
+          java-package: jdk
+          architecture: x64
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: artifact
+
+      - name: Download Paper ${{ matrix.mcVersion }}
+        run: |
+          VERSION="${{ matrix.mcVersion }}"
+          if [ "$VERSION" == "latest" ]; then
+            VERSION=$(curl -fsSL https://api.papermc.io/v2/projects/paper/ | jq -r '.versions[-1]')
+          fi
+
+          BUILD_JAR=$(curl -fsSL "https://api.papermc.io/v2/projects/paper/versions/$VERSION/builds" \
+            | jq -r '.builds[-1] | "\(.build) \(.downloads.application.name)"')
+          BUILD=$(echo "$BUILD_JAR" | awk '{print $1}')
+          JAR_FILE=$(echo "$BUILD_JAR" | awk '{print $2}')
+
+          echo "Downloading https://api.papermc.io/v2/projects/paper/versions/$VERSION/builds/$BUILD/downloads/$JAR_FILE"
+          curl -fL -o paper.jar \
+            "https://api.papermc.io/v2/projects/paper/versions/$VERSION/builds/$BUILD/downloads/$JAR_FILE"
+
+      - name: Run Paper server
+        run: |
+          mkdir -p server/plugins
+          cp "$GITHUB_WORKSPACE/${{ inputs.jar-path }}" server/plugins/
+          cp paper.jar server/
+          echo "eula=true" > server/eula.txt
+
+          cd server
+          java -Xmx1G -jar paper.jar nogui > server.log 2>&1 &
+          SERVER_PID=$!
+
+          for i in $(seq 1 300); do
+            if grep -q "Done (" server.log && grep -q "InlayX 已启用" server.log; then
+              echo "Server started and InlayX loaded"
+              kill "$SERVER_PID" || true
+              wait "$SERVER_PID" || true
+              exit 0
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              cat server.log
+              echo "Server exited unexpectedly"
+              exit 1
+            fi
+            sleep 1
+          done
+
+          cat server.log
+          echo "Timed out waiting for Paper and InlayX startup"
+          kill "$SERVER_PID" || true
+          wait "$SERVER_PID" || true
+          exit 1
