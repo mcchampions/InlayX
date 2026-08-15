@@ -25,15 +25,6 @@ class SocketServiceTest extends InlayXTestBase {
         return plugin.getConfigManager().getGemType("ATTACK");
     }
 
-    private void stripHeader(ItemStack item) {
-        ItemMeta meta = item.getItemMeta();
-        String header = plugin.getConfigManager().getSocketHeader();
-        List<String> lore =
-                meta.getLore().stream().filter(l -> !l.equals(header)).toList();
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-    }
-
     @Test
     void addSlotCreatesEmptySlotsInLore() {
         ItemStack sword = socketableSword(attackType(), 2);
@@ -42,6 +33,8 @@ class SocketServiceTest extends InlayXTestBase {
         assertFalse(plugin.getGemManager().hasSocketedGems(sword));
         assertTrue(
                 sword.getItemMeta().getLore().contains(plugin.getConfigManager().getSocketHeader()));
+        assertTrue(
+                sword.getItemMeta().getLore().contains(plugin.getConfigManager().getSocketFooter()));
     }
 
     @Test
@@ -163,6 +156,7 @@ class SocketServiceTest extends InlayXTestBase {
         for (int i = 0; i <= plugin.getConfigManager().getMaxSockets(); i++) {
             lore.add(emptyLine);
         }
+        lore.add(plugin.getConfigManager().getSocketFooter());
         ItemMeta meta = sword.getItemMeta();
         meta.setLore(lore);
         sword.setItemMeta(meta);
@@ -172,21 +166,25 @@ class SocketServiceTest extends InlayXTestBase {
     }
 
     @Test
-    void unrecognizedLoreLineEndsSocketArea() {
-        ItemStack sword = socketableSword(attackType(), 2);
-        String extraEmpty = plugin.getConfigManager()
-                .getSocketEmptyPattern()
-                .replace("{gemTypeColor}", ChatColor.RED.toString())
-                .replace("{gemTypeName}", "攻击")
-                .replace("{gemTypeId}", "ATTACK");
+    void trailingLoreAfterFooterIsPreservedOnSocket() {
+        registerGem("t_tail", "ATTACK", 1.0);
+        ItemStack sword = socketableSword(attackType(), 1);
+        String externalLore = "&7外部插件写入的文本";
         ItemMeta meta = sword.getItemMeta();
         List<String> lore = new ArrayList<>(meta.getLore());
-        lore.add("&7外部插件写入的文本");
-        lore.add(extraEmpty);
+        lore.add(externalLore);
         meta.setLore(lore);
         sword.setItemMeta(meta);
 
-        assertEquals(2, plugin.getGemManager().getSocketCount(sword));
+        SocketResult result =
+                plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t_tail"));
+
+        assertEquals(SocketResult.Status.SUCCESS, result.getStatus());
+        assertEquals(1, plugin.getGemManager().getSocketCount(sword));
+        List<String> updatedLore = sword.getItemMeta().getLore();
+        int footerIdx = updatedLore.indexOf(plugin.getConfigManager().getSocketFooter());
+        assertTrue(footerIdx >= 0);
+        assertTrue(updatedLore.subList(footerIdx + 1, updatedLore.size()).contains(externalLore));
     }
 
     @Test
@@ -241,42 +239,13 @@ class SocketServiceTest extends InlayXTestBase {
     }
 
     @Test
-    void removeAllSlotsAlsoRemovesHeader() {
+    void removeAllSlotsAlsoRemovesHeaderAndFooter() {
         ItemStack sword = socketableSword(attackType(), 1);
         plugin.getGemManager().removeSlotFromItem(sword, 1, attackType());
         assertEquals(0, plugin.getGemManager().getSocketCount(sword));
         List<String> lore = sword.getItemMeta().getLore();
-        assertTrue(lore == null || !lore.contains(plugin.getConfigManager().getSocketHeader()));
-    }
-
-    @Test
-    void headerMissingKeepsGemsVisibleAndRestoresOnWrite() {
-        registerGem("t1", "ATTACK", 1.0);
-        ItemStack sword = socketableSword(attackType(), 2);
-        plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t1"));
-        stripHeader(sword);
-        assertEquals(List.of("t1"), plugin.getGemManager().getSocketedGems(sword));
-        plugin.getGemManager().addSlotToItem(sword, 1, attackType());
-        assertEquals(2, plugin.getGemManager().getSocketCount(sword));
-        assertTrue(
-                sword.getItemMeta().getLore().contains(plugin.getConfigManager().getSocketHeader()));
-    }
-
-    @Test
-    void headerMissingRestoresFreedSlotOnExtract() {
-        setExtractRate(1.0);
-        registerGem("t1", "ATTACK", 1.0);
-        ItemStack sword = socketableSword(attackType(), 2);
-        plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t1"));
-        stripHeader(sword);
-        assertEquals(
-                ExtractResult.Status.SUCCESS,
-                plugin.getGemManager().extractGem(sword, "t1").getStatus());
-        assertEquals(1, plugin.getGemManager().getSocketCount(sword));
-        assertTrue(plugin.getGemManager().getSocketedGems(sword).isEmpty());
-        assertEquals(
-                "ATTACK", plugin.getGemManager().getSocketSlots(sword).get(0).getType());
-        assertTrue(
-                sword.getItemMeta().getLore().contains(plugin.getConfigManager().getSocketHeader()));
+        assertTrue(lore == null
+                || (!lore.contains(plugin.getConfigManager().getSocketHeader())
+                        && !lore.contains(plugin.getConfigManager().getSocketFooter())));
     }
 }
