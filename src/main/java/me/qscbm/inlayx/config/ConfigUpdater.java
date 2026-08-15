@@ -23,13 +23,25 @@ public final class ConfigUpdater {
         File file = new File(plugin.getDataFolder(), fileName);
         if (!file.exists()) return;
 
-        YamlConfiguration existing = YamlConfiguration.loadConfiguration(file);
+        CommentConfiguration existing = new CommentConfiguration();
+        try {
+            existing.load(file);
+        } catch (Exception e) {
+            plugin.getLogger().warning("加载现有配置文件 " + fileName + " 失败: " + e.getMessage());
+            return;
+        }
         int currentVersion = existing.getInt("config-version", 0);
 
-        InputStream jarStream = plugin.getResource(fileName);
-        if (jarStream == null) return;
-        YamlConfiguration defaults =
-                YamlConfiguration.loadConfiguration(new InputStreamReader(jarStream, StandardCharsets.UTF_8));
+        YamlConfiguration defaults = new YamlConfiguration();
+        try (InputStream jarStream = plugin.getResource(fileName)) {
+            if (jarStream == null) return;
+            try (InputStreamReader reader = new InputStreamReader(jarStream, StandardCharsets.UTF_8)) {
+                defaults.load(reader);
+            }
+        } catch (Exception e) {
+            plugin.getLogger().warning("读取默认配置文件 " + fileName + " 失败: " + e.getMessage());
+            return;
+        }
 
         int expectedVersion = defaults.getInt("config-version", 0);
         if (currentVersion >= expectedVersion) return;
