@@ -24,11 +24,6 @@ public class CmdHelp extends SubCommand {
     }
 
     @Override
-    public String permission() {
-        return "inlayx.help";
-    }
-
-    @Override
     protected void execute(CommandSender sender, String[] args) {
         sender.sendMessage(ChatColor.GOLD + "===== InlayX 帮助 =====");
         for (SubCommand cmd : GemCommand.COMMANDS.values()) {

@@ -21,14 +21,10 @@ permissions:
     description: 基础使用权限
     default: true
     children:
-      inlayx.help: true
       inlayx.list: true
       inlayx.socket: true
       inlayx.extract: true
       inlayx.info: true
-  inlayx.help:
-    description: 允许查看帮助
-    default: true
   inlayx.list:
     description: 允许查看宝石列表
     default: true
