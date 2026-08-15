@@ -52,7 +52,7 @@ public class Gem {
     /*
      * 镶嵌配置
      */
-    private double socketSuccessRate = 0.9;
+    private double socketSuccessRate = 1;
     private boolean destroyOnFailure = false;
 
     /*

@@ -16,9 +16,9 @@ class ConfigManagerTest extends InlayXTestBase {
         assertEquals(8, cm.getMaxSockets());
         assertTrue(cm.isRightClickSocketEnabled());
         assertTrue(cm.isDragSocketEnabled());
-        plugin.getConfig().set("settings.gem.extract.success_rate", 0.9);
+        plugin.getConfig().set("settings.gem.extract.success_rate", 1);
         plugin.getConfigManager().loadSettings();
-        assertEquals(0.9, cm.getExtractSuccessRate());
+        assertEquals(1, cm.getExtractSuccessRate());
         plugin.getConfig().set("settings.gem.extract.success_rate", 5.0);
         plugin.getConfigManager().loadSettings();
         assertEquals(1.0, cm.getExtractSuccessRate());

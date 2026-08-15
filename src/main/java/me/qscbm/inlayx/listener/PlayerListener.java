@@ -88,13 +88,13 @@ public class PlayerListener implements Listener {
         SocketResult result = gm.socketGem(player, equipment, gemItem);
         if (!result.isSuccess()) {
             if (plugin.getInteractionFeedback().sendSocketFailure(player, result, gem, gm.hasSocketLore(equipment))) {
-                consumeCursorGem(player, gemItem);
+                consumeCursorGem(event, gemItem);
             }
             event.setCancelled(true);
             return;
         }
         event.setCurrentItem(result.getItem());
-        consumeCursorGem(player, gemItem);
+        consumeCursorGem(event, gemItem);
         plugin.getInteractionFeedback().sendSocketSuccess(player);
         event.setCancelled(true);
     }
@@ -102,16 +102,18 @@ public class PlayerListener implements Listener {
     private void consumeMainHandGem(Player player, ItemStack gemItem) {
         if (gemItem.getAmount() > 1) {
             gemItem.setAmount(gemItem.getAmount() - 1);
+            player.getInventory().setItemInMainHand(gemItem);
         } else {
             player.getInventory().setItemInMainHand(null);
         }
     }
 
-    private void consumeCursorGem(Player player, ItemStack gemItem) {
+    private void consumeCursorGem(InventoryClickEvent event, ItemStack gemItem) {
         if (gemItem.getAmount() > 1) {
             gemItem.setAmount(gemItem.getAmount() - 1);
+            event.setCursor(gemItem);
         } else {
-            player.setItemOnCursor(null);
+            event.setCursor(null);
         }
     }
 

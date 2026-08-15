@@ -12,6 +12,7 @@ import me.qscbm.inlayx.command.sub.CmdAddSlot;
 import me.qscbm.inlayx.command.sub.CmdExtract;
 import me.qscbm.inlayx.command.sub.CmdGive;
 import me.qscbm.inlayx.command.sub.CmdHelp;
+import me.qscbm.inlayx.command.sub.CmdInfo;
 import me.qscbm.inlayx.command.sub.CmdList;
 import me.qscbm.inlayx.command.sub.CmdRemoveGem;
 import me.qscbm.inlayx.command.sub.CmdRemoveSlot;
@@ -38,6 +39,26 @@ class CommandTest extends InlayXTestBase {
         ConsoleCommandSenderMock sender = server.getConsoleSender();
         new CmdHelp(plugin, List.of(new CmdList(plugin), new CmdGive(plugin))).tryExecute(sender, new String[0]);
         assertEquals(ChatColor.GOLD + "===== InlayX 帮助 =====", sender.nextMessage());
+    }
+
+    @Test
+    void infoTranslatesAttributeLoreColorCodes() {
+        registerGem("t1", "ATTACK", 1.0);
+        plugin.getGemManager().getGems().get("t1").addAttributeLore("&c火焰伤害 +10");
+        player.getInventory().setItemInMainHand(plugin.getGemManager().createGemItem("t1"));
+
+        new CmdInfo(plugin).tryExecute(player, new String[0]);
+
+        boolean found = false;
+        String message;
+        while ((message = player.nextMessage()) != null) {
+            if (message.contains("火焰伤害 +10")) {
+                found = true;
+                assertTrue(message.contains("§c"));
+                assertFalse(message.contains("&c"));
+            }
+        }
+        assertTrue(found, "应输出翻译颜色码后的属性 Lore");
     }
 
     @Test

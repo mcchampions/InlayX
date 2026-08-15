@@ -60,6 +60,7 @@ public class GemManager {
     public void loadGems() {
         loader.loadAll();
         rebuildDropIndex();
+        extractGuiFactory.clearGemItemCache();
     }
 
     GemLoader getLoader() {

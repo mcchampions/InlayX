@@ -5,6 +5,7 @@ import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.socket.SocketSlot;
+import me.qscbm.inlayx.util.TextUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -67,7 +68,9 @@ public class CmdInfo extends SubCommand {
         player.sendMessage(ChatColor.YELLOW + "等级: " + ChatColor.WHITE + gem.getLevel());
         player.sendMessage("");
         player.sendMessage(ChatColor.GOLD + "属性加成:");
-        gem.getAttributeLore().forEach(line -> player.sendMessage(ChatColor.GREEN + "  " + line));
+        gem.getAttributeLore()
+                .forEach(line ->
+                        player.sendMessage(ChatColor.GREEN + "  " + TextUtils.translateAlternateColorCodes(line)));
     }
 
     private void showEquipmentInfo(Player player, ItemStack item, Material itemType) {
@@ -94,7 +97,9 @@ public class CmdInfo extends SubCommand {
                 player.sendMessage(ChatColor.YELLOW + "  槽位" + slotNo + ": "
                         + ChatColor.GREEN + gem.getName()
                         + ChatColor.WHITE + " [" + gem.getType().getName() + " Lv." + gem.getLevel() + "]");
-                gem.getAttributeLore().forEach(attr -> player.sendMessage(ChatColor.GRAY + "    " + attr));
+                gem.getAttributeLore()
+                        .forEach(attr -> player.sendMessage(
+                                ChatColor.GRAY + "    " + TextUtils.translateAlternateColorCodes(attr)));
             } else {
                 player.sendMessage(ChatColor.YELLOW + "  槽位" + slotNo + ": " + ChatColor.RED + "未知宝石");
             }

@@ -72,6 +72,13 @@ public class ExtractGuiFactory {
     }
 
     /**
+     * 清空宝石物品缓存, 重载宝石配置后调用, 使 GUI 展示新的物品定义.
+     */
+    public void clearGemItemCache() {
+        gemItemCache.clear();
+    }
+
+    /**
      * 按当前装备与页码刷新槽位区与翻页按钮.
      */
     public void refresh(Inventory inv, GemExtractHolder holder) {
