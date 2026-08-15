@@ -15,8 +15,35 @@ on:
         default: artifact/InlayX-1.0-SNAPSHOT.jar
 
 jobs:
+  check-first-commit:
+    name: Check first commit of day
+    runs-on: ubuntu-latest
+    outputs:
+      first-commit-of-day: ${{ steps.check.outputs.first-commit-of-day }}
+    steps:
+      - name: Check first commit of day
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]; then
+            echo "first-commit-of-day=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          SINCE=$(TZ=Asia/Shanghai date -d "today 00:00:00" -u +%Y-%m-%dT%H:%M:%SZ)
+          COMMITS_TODAY=$(gh api "repos/$GITHUB_REPOSITORY/commits?sha=$GITHUB_REF_NAME&since=$SINCE&per_page=100" --jq 'length')
+
+          if [ "$COMMITS_TODAY" -le 1 ]; then
+            echo "first-commit-of-day=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "first-commit-of-day=false" >> "$GITHUB_OUTPUT"
+          fi
+
   e2e:
     name: E2E Paper ${{ matrix.mcVersion }}
+    needs: check-first-commit
+    if: ${{ needs.check-first-commit.outputs.first-commit-of-day == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:

@@ -73,7 +73,7 @@ class GemItemFactoryTest extends InlayXTestBase {
         assertEquals(Color.fromRGB(255, 0, 0), ((LeatherArmorMeta) leatherItem.getItemMeta()).getColor());
 
         Gem potion = itemGem("item_potion", Material.LINGERING_POTION);
-        potion.addPotionEffect(Registry.MOB_EFFECT.get(NamespacedKey.minecraft("speed")), 200, 1, false, true, false);
+        potion.addPotionEffect(Registry.EFFECT.get(NamespacedKey.minecraft("speed")), 200, 1, false, true, false);
         plugin.getGemManager().registerGem(potion);
         ItemStack potionItem = plugin.getGemManager().createGemItem("item_potion");
         assertTrue(potionItem.getItemMeta() instanceof PotionMeta);

@@ -454,7 +454,7 @@ class GemLoader {
 
     private PotionEffectType parsePotionEffect(String name) {
         NamespacedKey key = parseNamespacedKey(name);
-        return key == null ? null : Registry.MOB_EFFECT.get(key);
+        return key == null ? null : Registry.EFFECT.get(key);
     }
 
     private NamespacedKey parseNamespacedKey(String name) {
