@@ -1,4 +1,4 @@
 /**
- * 玩家交互的公共反馈逻辑, 例如提示消息与声音.
+ * 玩家交互公共逻辑
  */
 package me.qscbm.inlayx.interaction;
