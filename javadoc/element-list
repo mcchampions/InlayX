@@ -4,6 +4,7 @@ me.qscbm.inlayx.api.event
 me.qscbm.inlayx.command
 me.qscbm.inlayx.command.sub
 me.qscbm.inlayx.config
+me.qscbm.inlayx.drop
 me.qscbm.inlayx.gem
 me.qscbm.inlayx.gui
 me.qscbm.inlayx.integration
