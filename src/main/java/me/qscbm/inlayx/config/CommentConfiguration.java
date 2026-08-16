@@ -15,16 +15,20 @@ import org.jspecify.annotations.NonNull;
  * ”'comment # 注释内容': comment“的格式存储
  */
 public class CommentConfiguration extends YamlConfiguration {
-    protected static String commentPrefixSymbol = "'comment ";
+    protected static String commentPrefixSymbol = "'comment";
     protected static String commentSuffixSymbol = "': comment";
-    protected static String loadedCommentPrefix = commentPrefixSymbol.substring(1) + "# ";
+    protected static String commentIndexSeparator = " ";
+    protected static String commentBodyPrefix = "# ";
+    protected static Pattern loadedCommentPattern = Pattern.compile(
+            "^" + commentPrefixSymbol.substring(1) + "(\\d+)" + commentIndexSeparator + commentBodyPrefix + "(.*)$");
     protected static String fromRegex = "( *)(#.*)";
     protected static Pattern fromPattern = Pattern.compile(fromRegex);
     protected static String toRegex =
-            "( *)(- )*" + "(" + commentPrefixSymbol + ")" + "(# .*)" + "(" + commentSuffixSymbol + ")";
+            "( *)(- )*" + commentPrefixSymbol + "(\\d+)" + commentIndexSeparator + "(# .*)" + commentSuffixSymbol;
     protected static Pattern toPattern = Pattern.compile(toRegex);
     protected static Pattern countSpacePattern = Pattern.compile("( *)(- )*(.*)");
     protected static int commentSplitWidth = 250;
+    private int commentIndex;
 
     private static String[] split(String string, int partLength) {
         String[] array = new String[string.length() / partLength + 1];
@@ -44,6 +48,7 @@ public class CommentConfiguration extends YamlConfiguration {
         String[] parts = contents.split("\n");
         List<String> lastComments = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
+        int nextCommentIndex = 0;
         for (String part : parts) {
             Matcher matcher = fromPattern.matcher(part);
             if (matcher.find()) {
@@ -65,6 +70,8 @@ public class CommentConfiguration extends YamlConfiguration {
                         builder.append(matcher.group(1));
                         builder.append(this.checkNull(matcher.group(2)));
                         builder.append(commentPrefixSymbol);
+                        builder.append(nextCommentIndex++);
+                        builder.append(commentIndexSeparator);
                         builder.append(comment);
                         builder.append(commentSuffixSymbol);
                         builder.append("\n");
@@ -75,6 +82,7 @@ public class CommentConfiguration extends YamlConfiguration {
                 builder.append("\n");
             }
         }
+        this.commentIndex = nextCommentIndex;
         super.loadFromString(builder.toString());
     }
 
@@ -85,8 +93,8 @@ public class CommentConfiguration extends YamlConfiguration {
         String[] parts = contents.split("\n");
         for (String part : parts) {
             Matcher matcher = toPattern.matcher(part);
-            if (matcher.find() && matcher.groupCount() == 5) {
-                part = this.checkNull(matcher.group(1)) + matcher.group(4);
+            if (matcher.find() && matcher.groupCount() == 4) {
+                part = this.checkNull(matcher.group(1)) + this.checkNull(matcher.group(2)) + matcher.group(4);
             }
             savcontent.append(part.replace("．", ".").replace("＇", "'").replace("：", ":"));
             savcontent.append("\n");
@@ -122,7 +130,13 @@ public class CommentConfiguration extends YamlConfiguration {
         List<String> comments = List.of(value.split("\n"));
         for (String comment : comments) {
             comment = comment.replace(".", "．").replace("'", "＇").replace(":", "：");
-            section.set(loadedCommentPrefix + comment, "comment");
+            section.set(
+                    commentPrefixSymbol.substring(1)
+                            + nextCommentIndex(section)
+                            + commentIndexSeparator
+                            + commentBodyPrefix
+                            + comment,
+                    "comment");
         }
     }
 
@@ -148,11 +162,10 @@ public class CommentConfiguration extends YamlConfiguration {
             if (name.equals(keyName)) {
                 return comments;
             }
-            if (name.startsWith(loadedCommentPrefix) && "comment".equals(section.get(name))) {
-                comments.add(name.substring(loadedCommentPrefix.length())
-                        .replace("．", ".")
-                        .replace("＇", "'")
-                        .replace("：", ":"));
+            Matcher matcher = loadedCommentPattern.matcher(name);
+            if (matcher.matches() && "comment".equals(section.get(name))) {
+                comments.add(
+                        matcher.group(2).replace("．", ".").replace("＇", "'").replace("：", ":"));
             } else {
                 comments.clear();
             }
@@ -161,7 +174,22 @@ public class CommentConfiguration extends YamlConfiguration {
     }
 
     public static boolean isCommentByKeys(String key) {
-        return key != null && key.startsWith(loadedCommentPrefix);
+        return key != null && loadedCommentPattern.matcher(key).matches();
+    }
+
+    private int nextCommentIndex(ConfigurationSection section) {
+        int next = commentIndex;
+        for (String name : section.getKeys(false)) {
+            Matcher matcher = loadedCommentPattern.matcher(name);
+            if (matcher.matches()) {
+                try {
+                    next = Math.max(next, Integer.parseInt(matcher.group(1)) + 1);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+        commentIndex = next;
+        return commentIndex++;
     }
 
     private String checkNull(String string) {
