@@ -41,7 +41,6 @@ permissions:
     description: 管理员权限
     default: op
     children:
-      inlayx.help: true
       inlayx.list: true
       inlayx.socket: true
       inlayx.extract: true
