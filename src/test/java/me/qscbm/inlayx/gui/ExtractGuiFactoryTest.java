@@ -40,7 +40,7 @@ class ExtractGuiFactoryTest extends InlayXTestBase {
         assertTrue(inv.getItem(ExtractGuiFactory.SLOT_SLOTS[2])
                 .getItemMeta()
                 .getLore()
-                .get(0)
+                .getFirst()
                 .contains("暂无此槽位"));
     }
 
@@ -53,7 +53,7 @@ class ExtractGuiFactoryTest extends InlayXTestBase {
         assertTrue(inv.getItem(ExtractGuiFactory.SLOT_SLOTS[0])
                 .getItemMeta()
                 .getLore()
-                .get(0)
+                .getFirst()
                 .contains("请先将装备放入左侧格子"));
     }
 

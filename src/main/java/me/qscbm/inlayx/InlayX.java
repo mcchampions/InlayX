@@ -2,6 +2,7 @@ package me.qscbm.inlayx;
 
 import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
+import lombok.NonNull;
 import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.api.InlayXApi;
 import me.qscbm.inlayx.command.GemCommand;
@@ -21,7 +22,6 @@ import me.qscbm.inlayx.listener.PlayerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jspecify.annotations.NonNull;
 
 /**
  * 插件主类

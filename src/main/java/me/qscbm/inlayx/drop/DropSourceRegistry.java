@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import lombok.NonNull;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.integration.MythicMobsBridge;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -88,13 +88,10 @@ public final class DropSourceRegistry {
         if (source == null) {
             throw new IllegalArgumentException("dropSource 不能为 null");
         }
-        if (source.id() == null || source.id().isBlank()) {
+        if (source.id().isBlank()) {
             throw new IllegalArgumentException("DropSource.id() 不能为空");
         }
         Map<String, Object> raw = source.defaultSettings();
-        if (raw == null) {
-            throw new IllegalArgumentException("DropSource.defaultSettings() 不能为 null");
-        }
         Map<String, Object> defaults = new LinkedHashMap<>();
         defaults.put("enable", true);
         defaults.put("priority", 0);

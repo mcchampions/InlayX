@@ -69,7 +69,7 @@ public class CmdInfo extends SubCommand {
         player.sendMessage(ChatColor.YELLOW + "ID: " + ChatColor.WHITE + gem.getId());
         player.sendMessage(ChatColor.YELLOW + "名称: " + ChatColor.WHITE + gem.getName());
         player.sendMessage(
-                ChatColor.YELLOW + "类型: " + ChatColor.WHITE + gem.getType().getName());
+                ChatColor.YELLOW + "类型: " + ChatColor.WHITE + gem.getType().name());
         player.sendMessage(ChatColor.YELLOW + "等级: " + ChatColor.WHITE + gem.getLevel());
         player.sendMessage("");
         player.sendMessage(ChatColor.GOLD + "属性加成:");
@@ -101,7 +101,7 @@ public class CmdInfo extends SubCommand {
                 hasGem = true;
                 player.sendMessage(ChatColor.YELLOW + "  槽位" + slotNo + ": "
                         + ChatColor.GREEN + gem.getName()
-                        + ChatColor.WHITE + " [" + gem.getType().getName() + " Lv." + gem.getLevel() + "]");
+                        + ChatColor.WHITE + " [" + gem.getType().name() + " Lv." + gem.getLevel() + "]");
                 gem.getAttributeLore()
                         .forEach(attr -> player.sendMessage(
                                 ChatColor.GRAY + "    " + TextUtils.translateAlternateColorCodes(attr)));

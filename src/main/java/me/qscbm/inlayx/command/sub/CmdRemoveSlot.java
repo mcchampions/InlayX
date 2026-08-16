@@ -67,15 +67,15 @@ public class CmdRemoveSlot extends SubCommand {
         player.getInventory().setItemInMainHand(gm.removeSlotFromItem(item, count, type));
         int removed = before - gm.getSocketCount(player.getInventory().getItemInMainHand());
         if (removed == 0) {
-            player.sendMessage(ChatColor.RED + "该装备没有可移除的「" + type.getName() + "」空宝石槽位!(只有空槽位可以被移除)");
+            player.sendMessage(ChatColor.RED + "该装备没有可移除的「" + type.name() + "」空宝石槽位!(只有空槽位可以被移除)");
             return;
         }
         if (removed < count) {
-            player.sendMessage(ChatColor.GREEN + "已为装备移除 " + removed + " 个 " + type.getName() + " 宝石槽位"
-                    + ChatColor.YELLOW + " (仅空槽位被移除, 已镶嵌宝石的槽位不受影响)");
+            player.sendMessage(ChatColor.GREEN + "已为装备移除 " + removed + " 个 " + type.name() + " 宝石槽位" + ChatColor.YELLOW
+                    + " (仅空槽位被移除, 已镶嵌宝石的槽位不受影响)");
             return;
         }
-        player.sendMessage(ChatColor.GREEN + "已为装备移除 " + removed + " 个 " + type.getName() + " 宝石槽位");
+        player.sendMessage(ChatColor.GREEN + "已为装备移除 " + removed + " 个 " + type.name() + " 宝石槽位");
     }
 
     @Override

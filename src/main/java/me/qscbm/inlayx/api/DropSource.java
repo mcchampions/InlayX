@@ -1,8 +1,8 @@
 package me.qscbm.inlayx.api;
 
 import java.util.Map;
+import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
-import org.jspecify.annotations.NonNull;
 
 /**
  * 自定义掉落来源 SPI.

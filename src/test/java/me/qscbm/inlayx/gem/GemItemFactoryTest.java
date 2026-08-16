@@ -80,7 +80,8 @@ class GemItemFactoryTest extends InlayXTestBase {
         PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
         assertEquals(1, potionMeta.getCustomEffects().size());
         assertEquals(
-                "speed", potionMeta.getCustomEffects().get(0).getType().getKey().getKey());
+                "speed",
+                potionMeta.getCustomEffects().getFirst().getType().getKey().getKey());
     }
 
     @Test

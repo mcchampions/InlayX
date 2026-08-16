@@ -113,7 +113,7 @@ public class SocketService {
             if (type == null) {
                 break;
             }
-            slots.add(new SocketSlot(index, type.getId(), null, offset, offset));
+            slots.add(new SocketSlot(index, type.id(), null, offset, offset));
             offset++;
             index++;
         }
@@ -135,7 +135,7 @@ public class SocketService {
         for (SocketSlot filled : filledSlots) {
             maxEnd = Math.max(maxEnd, filled.getEnd());
         }
-        int offset = Math.min(Math.max(maxEnd + 1, 0), lore.size() - headerIdx - 1);
+        int offset = Math.clamp(maxEnd + 1, 0, lore.size() - headerIdx - 1);
         while (offset < lore.size() - headerIdx - 1) {
             if (matchEmptyType(lore.get(headerIdx + 1 + offset)) == null) {
                 break;
@@ -164,7 +164,7 @@ public class SocketService {
                 if (type == null) {
                     break;
                 }
-                leadingEmpties.add(new SocketSlot(-1, type.getId(), null, up, up));
+                leadingEmpties.add(new SocketSlot(-1, type.id(), null, up, up));
                 up--;
             }
             int headerInsertIndex = up + 1;
@@ -184,7 +184,7 @@ public class SocketService {
                 }
                 GemType type = matchEmptyType(lore.get(cursor));
                 if (type != null) {
-                    trailingSlots.add(new SocketSlot(-1, type.getId(), null, cursor, cursor));
+                    trailingSlots.add(new SocketSlot(-1, type.id(), null, cursor, cursor));
                     cursor++;
                     areaEndIndex = cursor;
                     continue;
@@ -361,7 +361,7 @@ public class SocketService {
     // ==================== 槽位操作 ====================
 
     public ItemStack addSlotToItem(ItemStack item, int sockets, GemType socketType) {
-        if (item == null) {
+        if (item == null || item.getType() == Material.AIR) {
             return item;
         }
         ItemMeta meta = item.getItemMeta();
@@ -370,19 +370,19 @@ public class SocketService {
         }
         List<SocketSlot> slots = readSlots(meta);
         int maxSockets = plugin.getConfigManager().getMaxSockets();
-        sockets = Math.min(sockets, Math.max(0, maxSockets - slots.size()));
+        sockets = Math.clamp(maxSockets - slots.size(), 0, sockets);
         if (sockets <= 0) {
             return item;
         }
-        int nextIndex = slots.isEmpty() ? 0 : slots.get(slots.size() - 1).getIndex() + 1;
+        int nextIndex = slots.isEmpty() ? 0 : slots.getLast().getIndex() + 1;
         for (int i = 0; i < sockets; i++) {
-            slots.add(new SocketSlot(nextIndex + i, socketType.getId(), null, 0, 0));
+            slots.add(new SocketSlot(nextIndex + i, socketType.id(), null, 0, 0));
         }
         return rebuildSocketArea(item, slots);
     }
 
     public ItemStack removeSlotFromItem(ItemStack item, int sockets, GemType socketType) {
-        if (item == null) {
+        if (item == null || item.getType() == Material.AIR) {
             return item;
         }
         ItemMeta meta = item.getItemMeta();
@@ -393,9 +393,7 @@ public class SocketService {
         List<SocketSlot> keep = new ArrayList<>(slots.size());
         int removed = 0;
         for (SocketSlot slot : slots) {
-            if (removed < sockets
-                    && slot.getGemId() == null
-                    && socketType.getId().equals(slot.getType())) {
+            if (removed < sockets && slot.getGemId() == null && socketType.id().equals(slot.getType())) {
                 removed++;
             } else {
                 keep.add(slot);
@@ -554,7 +552,7 @@ public class SocketService {
         if (slot.getType() == null) {
             Gem gem = registry.get().gems().get(gemId);
             if (gem != null) {
-                slot.setType(gem.getType().getId());
+                slot.setType(gem.getType().id());
             }
         }
         slot.setGemId(null);
@@ -693,9 +691,9 @@ public class SocketService {
 
     private String renderEmptySlot(GemType type) {
         return TextUtils.translateAlternateColorCodes(plugin.getConfigManager().getSocketEmptyPattern())
-                .replace("{gemTypeColor}", type.getColor().toString())
-                .replace("{gemTypeName}", type.getName())
-                .replace("{gemTypeId}", type.getId());
+                .replace("{gemTypeColor}", type.color().toString())
+                .replace("{gemTypeName}", type.name())
+                .replace("{gemTypeId}", type.id());
     }
 
     private GemType matchEmptyType(String line) {
@@ -735,7 +733,7 @@ public class SocketService {
     private int findEmptySlotIndex(List<SocketSlot> slots, GemType type) {
         for (int i = 0; i < slots.size(); i++) {
             SocketSlot slot = slots.get(i);
-            if (slot.getGemId() == null && type.getId().equals(slot.getType())) {
+            if (slot.getGemId() == null && type.id().equals(slot.getType())) {
                 return i;
             }
         }

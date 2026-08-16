@@ -7,13 +7,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 import me.qscbm.inlayx.api.DropCandidate;
 import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.api.DropSourceContext;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
-import org.jspecify.annotations.NonNull;
 
 final class NormalDropSource implements DropSource {
     private static final List<String> DEFAULT_ALLOW_ENTITIES = defaultAllowEntities();

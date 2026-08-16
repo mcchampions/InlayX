@@ -3,6 +3,7 @@ package me.qscbm.inlayx.drop;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import lombok.NonNull;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.api.DropCandidate;
 import me.qscbm.inlayx.api.DropSource;
@@ -15,7 +16,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jspecify.annotations.NonNull;
 
 /**
  * 掉落协调器.

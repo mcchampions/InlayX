@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
+import lombok.NonNull;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.InlayXTestBase;
 import org.bukkit.Bukkit;
@@ -29,12 +30,12 @@ class InlayXApiTest extends InlayXTestBase {
     void registersDropSourceThroughApi() {
         DropSource source = new DropSource() {
             @Override
-            public String id() {
+            public @NonNull String id() {
                 return "api_source";
             }
 
             @Override
-            public Map<String, Object> defaultSettings() {
+            public @NonNull Map<String, Object> defaultSettings() {
                 return Map.of("chance", 0.5);
             }
 

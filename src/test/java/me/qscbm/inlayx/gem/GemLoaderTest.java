@@ -56,7 +56,7 @@ class GemLoaderTest extends InlayXTestBase {
         Gem gem = plugin.getGemManager().getGem("attack_test");
         assertNotNull(gem);
         assertEquals("血锋尖晶", gem.getName());
-        assertEquals("ATTACK", gem.getType().getId());
+        assertEquals("ATTACK", gem.getType().id());
         assertEquals(4, gem.getLevel());
         assertEquals(Material.REDSTONE, gem.getMaterial());
         assertEquals(List.of("物理伤害 +8", "暴击几率 +2.5%"), gem.getAttributeLore());
@@ -211,14 +211,14 @@ class GemLoaderTest extends InlayXTestBase {
         assertTrue(gem.getItemFlags().contains(ItemFlag.HIDE_ENCHANTS));
         assertEquals(Color.fromRGB(255, 0, 0), gem.getLeatherColor());
         assertEquals(1, gem.getAttributes().size());
-        Gem.AttributeEntry attribute = gem.getAttributes().get(0);
+        Gem.AttributeEntry attribute = gem.getAttributes().getFirst();
         assertEquals(Attribute.ATTACK_DAMAGE, attribute.attribute());
         assertEquals(10, attribute.amount());
         assertEquals(AttributeModifier.Operation.ADD_NUMBER, attribute.operation());
         assertEquals(EquipmentSlot.HAND, attribute.slot());
         assertEquals(42, gem.getCustomModelData());
         assertEquals(1, gem.getPotionEffects().size());
-        Gem.PotionEntry potion = gem.getPotionEffects().get(0);
+        Gem.PotionEntry potion = gem.getPotionEffects().getFirst();
         assertEquals(200, potion.duration());
         assertEquals(1, potion.amplifier());
         assertTrue(potion.ambient());

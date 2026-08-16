@@ -72,14 +72,14 @@ public class GemManager {
     }
 
     private GemRegistry createRegistry(Map<String, Gem> source) {
-        Map<String, Gem> gemsSnapshot = Collections.unmodifiableMap(new HashMap<>(source));
+        Map<String, Gem> gemsSnapshot = Map.copyOf(source);
         Map<String, List<Gem>> dropIndex = new HashMap<>();
         for (Gem gem : gemsSnapshot.values()) {
             for (String sourceName : gem.getDropSources()) {
                 dropIndex.computeIfAbsent(sourceName, k -> new ArrayList<>()).add(gem);
             }
         }
-        dropIndex.replaceAll((k, v) -> Collections.unmodifiableList(new ArrayList<>(v)));
+        dropIndex.replaceAll((k, v) -> List.copyOf(v));
         return new GemRegistry(gemsSnapshot, Collections.unmodifiableMap(dropIndex));
     }
 

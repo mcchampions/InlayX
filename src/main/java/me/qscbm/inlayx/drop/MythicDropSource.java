@@ -2,12 +2,12 @@ package me.qscbm.inlayx.drop;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.NonNull;
 import me.qscbm.inlayx.api.DropCandidate;
 import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.api.DropSourceContext;
 import me.qscbm.inlayx.integration.MythicMobsBridge;
 import org.bukkit.entity.LivingEntity;
-import org.jspecify.annotations.NonNull;
 
 final class MythicDropSource implements DropSource {
     private final MythicMobsBridge bridge;

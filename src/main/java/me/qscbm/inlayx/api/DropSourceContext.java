@@ -1,10 +1,9 @@
 package me.qscbm.inlayx.api;
 
-import java.util.Collections;
 import java.util.List;
+import lombok.NonNull;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -20,7 +19,7 @@ public final class DropSourceContext {
             @NonNull LivingEntity entity, @NonNull Player killer, @NonNull List<DropCandidate> candidates) {
         this.entity = entity;
         this.killer = killer;
-        this.candidates = Collections.unmodifiableList(List.copyOf(candidates));
+        this.candidates = List.copyOf(candidates);
     }
 
     /**

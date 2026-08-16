@@ -71,7 +71,7 @@ public class CmdAddSlot extends SubCommand {
             return;
         }
         player.getInventory().setItemInMainHand(gm.addSlotToItem(item, added, type));
-        String message = ChatColor.GREEN + "已为装备添加 " + added + " 个 " + type.getName() + " 宝石槽位";
+        String message = ChatColor.GREEN + "已为装备添加 " + added + " 个 " + type.name() + " 宝石槽位";
         if (added < requested) {
             message += ChatColor.YELLOW + "(已达上限 " + maxSockets + " 个)";
         }

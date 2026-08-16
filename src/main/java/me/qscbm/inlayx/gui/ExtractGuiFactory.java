@@ -106,7 +106,7 @@ public class ExtractGuiFactory {
                     } else {
                         inv.setItem(
                                 SLOT_SLOTS[i],
-                                gemItemCache.computeIfAbsent(slot.getGemId(), id -> gemManager.createGemItem(id)));
+                                gemItemCache.computeIfAbsent(slot.getGemId(), gemManager::createGemItem));
                     }
                 }
             } else {
@@ -122,10 +122,7 @@ public class ExtractGuiFactory {
         List<String> lore = new ArrayList<>(2);
         lore.add(ChatColor.GRAY + "第 " + slotNo + " 槽位");
         GemType type = plugin.getConfigManager().getGemType(typeId);
-        lore.add(
-                type == null
-                        ? ChatColor.GRAY + "未知类型（空）"
-                        : type.getColor() + type.getName() + ChatColor.GRAY + "类型（空）");
+        lore.add(type == null ? ChatColor.GRAY + "未知类型（空）" : type.color() + type.name() + ChatColor.GRAY + "类型（空）");
         meta.setLore(lore);
         ItemStack item = emptySlotBase.clone();
         item.setItemMeta(meta);

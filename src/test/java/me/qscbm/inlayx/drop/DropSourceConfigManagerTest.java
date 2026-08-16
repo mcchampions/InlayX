@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import lombok.NonNull;
 import me.qscbm.inlayx.InlayXTestBase;
 import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.api.DropSourceContext;
@@ -84,7 +85,7 @@ class DropSourceConfigManagerTest extends InlayXTestBase {
         AtomicReference<ConfigurationSection> loaded = new AtomicReference<>();
         assertTrue(plugin.registerDropSource(new TestDropSource("callback_source", Map.of("chance", 0.4)) {
             @Override
-            public void onSettingsLoaded(ConfigurationSection settings) {
+            public void onSettingsLoaded(@NonNull ConfigurationSection settings) {
                 loaded.set(settings);
             }
         }));
@@ -102,12 +103,12 @@ class DropSourceConfigManagerTest extends InlayXTestBase {
         }
 
         @Override
-        public String id() {
+        public @NonNull String id() {
             return id;
         }
 
         @Override
-        public Map<String, Object> defaultSettings() {
+        public @NonNull Map<String, Object> defaultSettings() {
             return defaults;
         }
 

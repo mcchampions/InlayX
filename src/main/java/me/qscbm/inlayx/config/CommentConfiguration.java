@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.jspecify.annotations.NonNull;
 
 /**
  * 保存时保留配置文件注释的Yaml实例
@@ -15,19 +15,19 @@ import org.jspecify.annotations.NonNull;
  * ”'__comment__ # 注释内容': comment“的格式存储
  */
 public class CommentConfiguration extends YamlConfiguration {
-    protected static String commentPrefixSymbol = "'__comment__";
-    protected static String commentSuffixSymbol = "': comment";
-    protected static String commentIndexSeparator = " ";
-    protected static String commentBodyPrefix = "# ";
-    protected static Pattern loadedCommentPattern = Pattern.compile(
-            "^" + commentPrefixSymbol.substring(1) + "(\\d+)" + commentIndexSeparator + commentBodyPrefix + "(.*)$");
-    protected static String fromRegex = "( *)(#.*)";
-    protected static Pattern fromPattern = Pattern.compile(fromRegex);
-    protected static String toRegex =
-            "( *)(- )*" + commentPrefixSymbol + "(\\d+)" + commentIndexSeparator + "(# .*)" + commentSuffixSymbol;
-    protected static Pattern toPattern = Pattern.compile(toRegex);
-    protected static Pattern countSpacePattern = Pattern.compile("( *)(- )*(.*)");
-    protected static int commentSplitWidth = 250;
+    protected static final String COMMENT_PREFIX_SYMBOL = "'__comment__";
+    protected static final String COMMENT_SUFFIX_SYMBOL = "': comment";
+    protected static final String COMMENT_INDEX_SEPARATOR = " ";
+    protected static final String COMMENT_BODY_PREFIX = "# ";
+    protected static final Pattern LOADED_COMMENT_PATTERN = Pattern.compile("^" + COMMENT_PREFIX_SYMBOL.substring(1)
+            + "(\\d+)" + COMMENT_INDEX_SEPARATOR + COMMENT_BODY_PREFIX + "(.*)$");
+    protected static final String FROM_REGEX = "( *)(#.*)";
+    protected static final Pattern FROM_PATTERN = Pattern.compile(FROM_REGEX);
+    protected static final String TO_REGEX =
+            "( *)(- )*" + COMMENT_PREFIX_SYMBOL + "(\\d+)" + COMMENT_INDEX_SEPARATOR + "(# .*)" + COMMENT_SUFFIX_SYMBOL;
+    protected static final Pattern TO_PATTERN = Pattern.compile(TO_REGEX);
+    protected static final Pattern COUNT_SPACE_PATTERN = Pattern.compile("( *)(- )*(.*)");
+    protected static final int COMMENT_SPLIT_WIDTH = 250;
     private int commentIndex;
 
     private static String[] split(String string, int partLength) {
@@ -50,10 +50,10 @@ public class CommentConfiguration extends YamlConfiguration {
         StringBuilder builder = new StringBuilder();
         int nextCommentIndex = 0;
         for (String part : parts) {
-            Matcher matcher = fromPattern.matcher(part);
+            Matcher matcher = FROM_PATTERN.matcher(part);
             if (matcher.find()) {
                 String originComment = matcher.group(2);
-                String[] splitComments = split(originComment, commentSplitWidth);
+                String[] splitComments = split(originComment, COMMENT_SPLIT_WIDTH);
                 for (int i = 0; i < splitComments.length; i++) {
                     String comment = splitComments[i];
                     if (i == 0) {
@@ -64,16 +64,16 @@ public class CommentConfiguration extends YamlConfiguration {
                     lastComments.add(comment.replace(".", "．").replace("'", "＇").replace(":", "："));
                 }
             } else {
-                matcher = countSpacePattern.matcher(part);
+                matcher = COUNT_SPACE_PATTERN.matcher(part);
                 if (matcher.find() && !lastComments.isEmpty()) {
                     for (String comment : lastComments) {
                         builder.append(matcher.group(1));
                         builder.append(this.checkNull(matcher.group(2)));
-                        builder.append(commentPrefixSymbol);
+                        builder.append(COMMENT_PREFIX_SYMBOL);
                         builder.append(nextCommentIndex++);
-                        builder.append(commentIndexSeparator);
+                        builder.append(COMMENT_INDEX_SEPARATOR);
                         builder.append(comment);
-                        builder.append(commentSuffixSymbol);
+                        builder.append(COMMENT_SUFFIX_SYMBOL);
                         builder.append("\n");
                     }
                     lastComments.clear();
@@ -92,7 +92,7 @@ public class CommentConfiguration extends YamlConfiguration {
         StringBuilder savcontent = new StringBuilder();
         String[] parts = contents.split("\n");
         for (String part : parts) {
-            Matcher matcher = toPattern.matcher(part);
+            Matcher matcher = TO_PATTERN.matcher(part);
             if (matcher.find() && matcher.groupCount() == 4) {
                 part = this.checkNull(matcher.group(1)) + this.checkNull(matcher.group(2)) + matcher.group(4);
             }
@@ -131,10 +131,10 @@ public class CommentConfiguration extends YamlConfiguration {
         for (String comment : comments) {
             comment = comment.replace(".", "．").replace("'", "＇").replace(":", "：");
             section.set(
-                    commentPrefixSymbol.substring(1)
+                    COMMENT_PREFIX_SYMBOL.substring(1)
                             + nextCommentIndex(section)
-                            + commentIndexSeparator
-                            + commentBodyPrefix
+                            + COMMENT_INDEX_SEPARATOR
+                            + COMMENT_BODY_PREFIX
                             + comment,
                     "comment");
         }
@@ -162,7 +162,7 @@ public class CommentConfiguration extends YamlConfiguration {
             if (name.equals(keyName)) {
                 return comments;
             }
-            Matcher matcher = loadedCommentPattern.matcher(name);
+            Matcher matcher = LOADED_COMMENT_PATTERN.matcher(name);
             if (matcher.matches() && "comment".equals(section.get(name))) {
                 comments.add(
                         matcher.group(2).replace("．", ".").replace("＇", "'").replace("：", ":"));
@@ -174,13 +174,13 @@ public class CommentConfiguration extends YamlConfiguration {
     }
 
     public static boolean isCommentByKeys(String key) {
-        return key != null && loadedCommentPattern.matcher(key).matches();
+        return key != null && LOADED_COMMENT_PATTERN.matcher(key).matches();
     }
 
     private int nextCommentIndex(ConfigurationSection section) {
         int next = commentIndex;
         for (String name : section.getKeys(false)) {
-            Matcher matcher = loadedCommentPattern.matcher(name);
+            Matcher matcher = LOADED_COMMENT_PATTERN.matcher(name);
             if (matcher.matches()) {
                 try {
                     next = Math.max(next, Integer.parseInt(matcher.group(1)) + 1);

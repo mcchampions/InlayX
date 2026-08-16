@@ -25,8 +25,8 @@ class ConfigManagerTest extends InlayXTestBase {
         plugin.getConfigManager().loadSettings();
         assertEquals(1.0, cm.getExtractSuccessRate());
         assertTrue(cm.isDropGemOnFullInventory());
-        assertEquals("攻击", cm.getGemType("ATTACK").getName());
-        assertEquals("ATTACK", cm.getDefaultGemType().getId());
+        assertEquals("攻击", cm.getGemType("ATTACK").name());
+        assertEquals("ATTACK", cm.getDefaultGemType().id());
         assertTrue(cm.getSocketSuccessSound().isEnable());
         assertEquals(Sound.ENTITY_PLAYER_LEVELUP, cm.getSocketSuccessSound().getSound());
         assertEquals(Sound.BLOCK_ANVIL_BREAK, cm.getSocketFailureSound().getSound());

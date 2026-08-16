@@ -52,7 +52,7 @@ public final class InteractionFeedback {
                 }
             }
             case TYPE_MISMATCH -> {
-                String typeName = gem == null ? "对应" : gem.getType().getName();
+                String typeName = gem == null ? "对应" : gem.getType().name();
                 player.sendMessage(ChatColor.RED + "该装备没有「" + typeName + "」类型的空槽位!");
             }
             case MATERIAL_MISMATCH -> player.sendMessage(ChatColor.RED + "该宝石不能镶嵌到这种装备上!");

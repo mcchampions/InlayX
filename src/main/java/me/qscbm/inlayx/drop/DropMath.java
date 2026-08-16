@@ -35,7 +35,7 @@ final class DropMath {
                 return entry.value;
             }
         }
-        return entries.get(entries.size() - 1).value;
+        return entries.getLast().value;
     }
 
     private record Entry<T>(T value, double weight) {}

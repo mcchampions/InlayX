@@ -16,11 +16,11 @@ public final class GemTemplate {
 
     public static String parse(String text, Gem gem, String... extraVariables) {
         GemType type = gem.getType();
-        ChatColor color = type.getColor();
+        ChatColor color = type.color();
         String parsed = TextUtils.translateAlternateColorCodes(text);
         parsed = parsed.replace("{gemTypeColor}", color.toString())
                 .replace("{gemName}", gem.getName())
-                .replace("{gemTypeName}", type.getName())
+                .replace("{gemTypeName}", type.name())
                 .replace("{gemLevelStars}", TextUtils.getStars(gem.getLevel()))
                 .replace("{gemLevel}", String.valueOf(gem.getLevel()))
                 .replace("{successRate}", gem.getSocketSuccessRate() * 100 + "%")

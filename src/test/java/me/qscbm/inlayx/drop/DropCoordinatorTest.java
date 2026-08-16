@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import lombok.NonNull;
 import me.qscbm.inlayx.InlayXTestBase;
 import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.api.DropSourceContext;
@@ -50,7 +51,7 @@ class DropCoordinatorTest extends InlayXTestBase {
 
         assertEquals(1, event.getDrops().size());
         assertEquals(
-                "high_gem", plugin.getGemManager().getGemId(event.getDrops().get(0)));
+                "high_gem", plugin.getGemManager().getGemId(event.getDrops().getFirst()));
     }
 
     @Test
@@ -95,7 +96,7 @@ class DropCoordinatorTest extends InlayXTestBase {
         plugin.getDropCoordinator().onEntityDeath(event);
 
         assertEquals(1, event.getDrops().size());
-        assertEquals("low_gem", plugin.getGemManager().getGemId(event.getDrops().get(0)));
+        assertEquals("low_gem", plugin.getGemManager().getGemId(event.getDrops().getFirst()));
     }
 
     @Test
@@ -115,8 +116,8 @@ class DropCoordinatorTest extends InlayXTestBase {
         plugin.registerDropSource(new TestDropSource("merge_source", Map.of("chance", 0.5, "extra", "bar")) {
             @Override
             public void handleEntityDeath(DropSourceContext context) {
-                seenSettings.set(context.getCandidates().get(0).settings());
-                context.select(context.getCandidates().get(0));
+                seenSettings.set(context.getCandidates().getFirst().settings());
+                context.select(context.getCandidates().getFirst());
             }
         });
         registerGem("merge_gem", "merge_source", Map.of("chance", 0.1, "priority", 7));
@@ -161,7 +162,7 @@ class DropCoordinatorTest extends InlayXTestBase {
         plugin.registerDropSource(new TestDropSource(id, Map.of("chance", 1.0, "priority", priority)) {
             @Override
             public void handleEntityDeath(DropSourceContext context) {
-                context.select(context.getCandidates().get(0));
+                context.select(context.getCandidates().getFirst());
             }
         });
     }
@@ -182,12 +183,12 @@ class DropCoordinatorTest extends InlayXTestBase {
         }
 
         @Override
-        public String id() {
+        public @NonNull String id() {
             return id;
         }
 
         @Override
-        public Map<String, Object> defaultSettings() {
+        public @NonNull Map<String, Object> defaultSettings() {
             return defaults;
         }
 

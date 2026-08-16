@@ -54,7 +54,8 @@ class SocketServiceTest extends InlayXTestBase {
         assertEquals(SocketResult.Status.SUCCESS, result.getStatus());
         assertTrue(plugin.getGemManager().getSocketedGems(sword).contains("t1"));
         assertEquals(
-                "ATTACK", plugin.getGemManager().getSocketSlots(sword).get(0).getType());
+                "ATTACK",
+                plugin.getGemManager().getSocketSlots(sword).getFirst().getType());
         assertTrue(sword.getItemMeta().getLore().stream().anyMatch(l -> l.contains("测试宝石")));
     }
 
@@ -208,8 +209,8 @@ class SocketServiceTest extends InlayXTestBase {
         assertEquals(ExtractResult.Status.SUCCESS, result.getStatus());
         List<SocketSlot> slots = plugin.getGemManager().getSocketSlots(sword);
         assertEquals(1, slots.size());
-        assertNull(slots.get(0).getGemId());
-        assertEquals("ATTACK", slots.get(0).getType());
+        assertNull(slots.getFirst().getGemId());
+        assertEquals("ATTACK", slots.getFirst().getType());
         assertEquals(
                 SocketResult.Status.SUCCESS,
                 plugin.getGemManager()

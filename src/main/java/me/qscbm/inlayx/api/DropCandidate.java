@@ -1,8 +1,8 @@
 package me.qscbm.inlayx.api;
 
+import lombok.NonNull;
 import me.qscbm.inlayx.gem.Gem;
 import org.bukkit.configuration.ConfigurationSection;
-import org.jspecify.annotations.NonNull;
 
 /**
  * 掉落候选项.

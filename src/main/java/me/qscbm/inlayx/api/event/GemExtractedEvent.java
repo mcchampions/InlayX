@@ -1,10 +1,11 @@
 package me.qscbm.inlayx.api.event;
 
+import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -17,6 +18,10 @@ public final class GemExtractedEvent extends Event {
     private final @Nullable Player actor;
     private final @NonNull ItemStack equipment;
     private final @NonNull String gemId;
+    /**
+     *  宝石是否成功返还, false 表示宝石已碎裂.
+     */
+    @Getter
     private final boolean success;
 
     public GemExtractedEvent(
@@ -46,13 +51,6 @@ public final class GemExtractedEvent extends Event {
      */
     public @NonNull String getGemId() {
         return gemId;
-    }
-
-    /**
-     * 宝石是否成功返还, false 表示宝石已碎裂.
-     */
-    public boolean isSuccess() {
-        return success;
     }
 
     @Override

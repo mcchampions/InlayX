@@ -1,8 +1,8 @@
 package me.qscbm.inlayx.api;
 
+import lombok.NonNull;
 import me.qscbm.inlayx.command.sub.SubCommand;
 import me.qscbm.inlayx.gem.GemManager;
-import org.jspecify.annotations.NonNull;
 
 /**
  * API 入口.

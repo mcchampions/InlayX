@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
+import lombok.NonNull;
 import me.qscbm.inlayx.InlayXTestBase;
 import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.api.DropSourceContext;
@@ -54,29 +55,17 @@ class DropSourceRegistryTest extends InlayXTestBase {
     @Test
     void nullDefaultSettingsIsRejected() {
         DropSource source = new TestDropSource("bad_source", null);
-        assertThrows(IllegalArgumentException.class, () -> plugin.registerDropSource(source));
+        assertThrows(NullPointerException.class, () -> plugin.registerDropSource(source));
     }
 
-    private static final class TestDropSource implements DropSource {
-        private final String id;
-        private final Map<String, Object> defaults;
-
-        private TestDropSource(String id, Map<String, Object> defaults) {
-            this.id = id;
-            this.defaults = defaults;
-        }
+    private record TestDropSource(String id, Map<String, Object> defaults) implements DropSource {
 
         @Override
-        public String id() {
-            return id;
-        }
-
-        @Override
-        public Map<String, Object> defaultSettings() {
+        public @NonNull Map<String, Object> defaultSettings() {
             return defaults;
         }
 
         @Override
-        public void handleEntityDeath(DropSourceContext context) {}
+        public void handleEntityDeath(@NonNull DropSourceContext context) {}
     }
 }
