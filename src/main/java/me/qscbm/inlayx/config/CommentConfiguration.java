@@ -12,10 +12,10 @@ import org.jspecify.annotations.NonNull;
 /**
  * 保存时保留配置文件注释的Yaml实例
  * 会以KV的形式存储
- * ”'comment # 注释内容': comment“的格式存储
+ * ”'__comment__ # 注释内容': comment“的格式存储
  */
 public class CommentConfiguration extends YamlConfiguration {
-    protected static String commentPrefixSymbol = "'comment";
+    protected static String commentPrefixSymbol = "'__comment__";
     protected static String commentSuffixSymbol = "': comment";
     protected static String commentIndexSeparator = " ";
     protected static String commentBodyPrefix = "# ";
