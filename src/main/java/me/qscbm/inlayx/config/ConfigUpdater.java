@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -32,7 +31,7 @@ public final class ConfigUpdater {
         }
         int currentVersion = existing.getInt("config-version", 0);
 
-        YamlConfiguration defaults = new YamlConfiguration();
+        CommentConfiguration defaults = new CommentConfiguration();
         try (InputStream jarStream = plugin.getResource(fileName)) {
             if (jarStream == null) return;
             try (InputStreamReader reader = new InputStreamReader(jarStream, StandardCharsets.UTF_8)) {
@@ -56,23 +55,33 @@ public final class ConfigUpdater {
         }
     }
 
-    private static void mergeSection(YamlConfiguration defaults, YamlConfiguration target, String path) {
+    private static void mergeSection(CommentConfiguration defaults, CommentConfiguration target, String path) {
         ConfigurationSection defaultSection = path.isEmpty() ? defaults : defaults.getConfigurationSection(path);
         if (defaultSection == null) return;
 
         Set<String> keys = defaultSection.getKeys(false);
         for (String key : keys) {
             String fullPath = path.isEmpty() ? key : path + "." + key;
+            if (CommentConfiguration.isCommentByKeys(key)) continue;
             if (defaultSection.isConfigurationSection(key)) {
                 if (!target.isConfigurationSection(fullPath)) {
+                    copyComment(defaults, target, fullPath);
                     target.createSection(fullPath);
                 }
                 mergeSection(defaults, target, fullPath);
             } else {
                 if (!target.contains(fullPath)) {
+                    copyComment(defaults, target, fullPath);
                     target.set(fullPath, defaults.get(fullPath));
                 }
             }
+        }
+    }
+
+    private static void copyComment(CommentConfiguration defaults, CommentConfiguration target, String fullPath) {
+        String comment = defaults.getComment(fullPath);
+        if (comment != null) {
+            target.insertComment(fullPath, comment);
         }
     }
 }

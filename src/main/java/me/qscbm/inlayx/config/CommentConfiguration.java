@@ -12,18 +12,19 @@ import org.jspecify.annotations.NonNull;
 /**
  * 保存时保留配置文件注释的Yaml实例
  * 会以KV的形式存储
- * ”'comment   # 注释内容': comment“的格式存储
+ * ”'comment # 注释内容': comment“的格式存储
  */
 public class CommentConfiguration extends YamlConfiguration {
     protected static String commentPrefixSymbol = "'comment ";
     protected static String commentSuffixSymbol = "': comment";
+    protected static String loadedCommentPrefix = commentPrefixSymbol.substring(1) + "# ";
     protected static String fromRegex = "( *)(#.*)";
     protected static Pattern fromPattern = Pattern.compile(fromRegex);
     protected static String toRegex =
-            "( *)(- )*" + "(" + commentPrefixSymbol + ")" + "(#.*)" + "(" + commentSuffixSymbol + ")";
+            "( *)(- )*" + "(" + commentPrefixSymbol + ")" + "(# .*)" + "(" + commentSuffixSymbol + ")";
     protected static Pattern toPattern = Pattern.compile(toRegex);
     protected static Pattern countSpacePattern = Pattern.compile("( *)(- )*(.*)");
-    protected static int commentSplitWidth = 90;
+    protected static int commentSplitWidth = 250;
 
     private static String[] split(String string, int partLength) {
         String[] array = new String[string.length() / partLength + 1];
@@ -51,11 +52,11 @@ public class CommentConfiguration extends YamlConfiguration {
                 for (int i = 0; i < splitComments.length; i++) {
                     String comment = splitComments[i];
                     if (i == 0) {
-                        comment = comment.substring(1);
+                        comment = "#" + comment.substring(1);
+                    } else {
+                        comment = "# " + comment;
                     }
-                    comment = "# " + comment;
-                    lastComments.add(
-                            comment.replaceAll("\\.", "．").replace("'", "＇").replace(":", "："));
+                    lastComments.add(comment.replace(".", "．").replace("'", "＇").replace(":", "："));
                 }
             } else {
                 matcher = countSpacePattern.matcher(part);
@@ -101,6 +102,30 @@ public class CommentConfiguration extends YamlConfiguration {
         return comments.isEmpty() ? null : String.join("\n", comments);
     }
 
+    /**
+     * 设置注释
+     */
+    public void insertComment(String key, String value) {
+        if (key == null || key.isEmpty() || value == null) {
+            return;
+        }
+        int lastDot = key.lastIndexOf('.');
+        ConfigurationSection section;
+        if (lastDot < 0) {
+            section = this;
+        } else {
+            section = getConfigurationSection(key.substring(0, lastDot));
+        }
+        if (section == null) {
+            return;
+        }
+        List<String> comments = List.of(value.split("\n"));
+        for (String comment : comments) {
+            comment = comment.replace(".", "．").replace("'", "＇").replace(":", "：");
+            section.set(loadedCommentPrefix + comment, "comment");
+        }
+    }
+
     private List<String> collectCommentLines(String key) {
         if (key == null || key.isEmpty()) {
             return List.of();
@@ -118,7 +143,6 @@ public class CommentConfiguration extends YamlConfiguration {
         if (section == null) {
             return List.of();
         }
-        String loadedCommentPrefix = commentPrefixSymbol.substring(1);
         List<String> comments = new ArrayList<>();
         for (String name : section.getKeys(false)) {
             if (name.equals(keyName)) {
@@ -134,6 +158,10 @@ public class CommentConfiguration extends YamlConfiguration {
             }
         }
         return List.of();
+    }
+
+    public static boolean isCommentByKeys(String key) {
+        return key != null && key.startsWith(loadedCommentPrefix);
     }
 
     private String checkNull(String string) {
