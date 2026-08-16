@@ -2,6 +2,11 @@ name: Auto Builder
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'pom.xml'
+      - '.editorconfig'
+      - 'src/**'
+      - '.github/**'
   workflow_dispatch:
 
 env:

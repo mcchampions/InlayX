@@ -2,6 +2,11 @@ name: Deploy Javadoc
 
 on:
   push:
+    paths:
+      - 'pom.xml'
+      - '.editorconfig'
+      - 'src/**'
+      - '.github/**'
     branches:
       - main
   workflow_dispatch:
