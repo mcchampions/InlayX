@@ -100,6 +100,9 @@ class GemLoader {
         Arrays.sort(files, Comparator.comparing(File::getAbsolutePath));
         for (File f : files) {
             if (f.isDirectory()) {
+                if (f.getName().startsWith(".")) {
+                    continue;
+                }
                 count += scanDir(f);
             } else if (f.getName().endsWith(".yml") || f.getName().endsWith(".yaml")) {
                 count += loadFromFile(f);
