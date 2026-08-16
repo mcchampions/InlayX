@@ -12,10 +12,11 @@ utility_harvest:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 utility_trueflight:
   name: "真飞箭符"
   type: UTILITY
@@ -29,10 +30,11 @@ utility_trueflight:
     success_rate: 0.90
     destroy_on_failure: false
   drop:
-    chance: 0.012
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.012
+    mythic:
+      chance: 0.012
+      min_mob_level: 1
 utility_runner:
   name: "远行徽石"
   type: UTILITY
@@ -45,10 +47,9 @@ utility_runner:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.007
+      min_mob_level: 3
 utility_bogwalker:
   name: "泥行枝符"
   type: UTILITY
@@ -62,10 +63,9 @@ utility_bogwalker:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.007
+      min_mob_level: 3
 utility_huntsign:
   name: "猎程铭羽"
   type: UTILITY
@@ -79,10 +79,9 @@ utility_huntsign:
     success_rate: 0.65
     destroy_on_failure: true
   drop:
-    chance: 0.003
-    sources: [mythic]
-    min_mob_level: 5
-
+    mythic:
+      chance: 0.003
+      min_mob_level: 5
 utility_hunter:
   name: "猎获勋章"
   type: UTILITY
@@ -96,6 +95,6 @@ utility_hunter:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
+    mythic:
+      chance: 0.001
+      min_mob_level: 8

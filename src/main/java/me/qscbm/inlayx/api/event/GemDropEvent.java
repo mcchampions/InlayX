@@ -1,6 +1,8 @@
 package me.qscbm.inlayx.api.event;
 
+import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.gem.Gem;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -18,22 +20,22 @@ public final class GemDropEvent extends Event implements Cancellable {
 
     private final @NonNull LivingEntity entity;
     private final @NonNull Player killer;
-    private final @NonNull String source;
-    private final int mobLevel;
+    private final @NonNull DropSource source;
+    private final @NonNull ConfigurationSection settings;
     private @Nullable Gem gem;
     private boolean cancelled;
 
     public GemDropEvent(
             @NonNull LivingEntity entity,
             @NonNull Player killer,
-            @NonNull String source,
-            int mobLevel,
-            @Nullable Gem gem) {
+            @NonNull DropSource source,
+            @Nullable Gem gem,
+            @NonNull ConfigurationSection settings) {
         this.entity = entity;
         this.killer = killer;
         this.source = source;
-        this.mobLevel = mobLevel;
         this.gem = gem;
+        this.settings = settings;
     }
 
     /**
@@ -51,17 +53,24 @@ public final class GemDropEvent extends Event implements Cancellable {
     }
 
     /**
-     * 掉落来源, 目前是 normal 或 mythic.
+     * 本次掉落的注册式来源.
      */
-    public @NonNull String getSource() {
+    public @NonNull DropSource getSource() {
         return source;
     }
 
     /**
-     * 参与本次掉落判定的怪物等级.
+     * 掉落来源 ID.
      */
-    public int getMobLevel() {
-        return mobLevel;
+    public @NonNull String getSourceId() {
+        return source.id();
+    }
+
+    /**
+     * 本次掉落实际使用的合并配置.
+     */
+    public @NonNull ConfigurationSection getSettings() {
+        return settings;
     }
 
     /**

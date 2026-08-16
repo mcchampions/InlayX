@@ -12,10 +12,11 @@ speed_galefeather:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 speed_quickdraw:
   name: "疾羽风砂"
   type: SPEED
@@ -29,10 +30,11 @@ speed_quickdraw:
     success_rate: 0.90
     destroy_on_failure: false
   drop:
-    chance: 0.012
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.012
+    mythic:
+      chance: 0.012
+      min_mob_level: 1
 speed_flashstep:
   name: "逐电星砂"
   type: SPEED
@@ -46,10 +48,11 @@ speed_flashstep:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.007
+    mythic:
+      chance: 0.007
+      min_mob_level: 1
 speed_rangerstep:
   name: "巡林迅痕"
   type: SPEED
@@ -63,10 +66,9 @@ speed_rangerstep:
     success_rate: 0.65
     destroy_on_failure: true
   drop:
-    chance: 0.003
-    sources: [mythic]
-    min_mob_level: 5
-
+    mythic:
+      chance: 0.003
+      min_mob_level: 5
 speed_phantom:
   name: "幻步风精"
   type: SPEED
@@ -80,6 +82,6 @@ speed_phantom:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
+    mythic:
+      chance: 0.001
+      min_mob_level: 8

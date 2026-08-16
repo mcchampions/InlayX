@@ -41,13 +41,8 @@ public class Gem {
     /*
      * 掉落配置
      */
-    private double dropChance = 0;
-
     @Getter(AccessLevel.NONE)
-    private Set<String> dropSources = new HashSet<>();
-
-    private int minMobLevel = 1;
-    private double levelBonus = 0;
+    private final Map<String, Map<String, Object>> dropSourceSettings = new LinkedHashMap<>();
 
     /*
      * 镶嵌配置
@@ -113,10 +108,6 @@ public class Gem {
         return Collections.unmodifiableList(attributeLore);
     }
 
-    public Set<String> getDropSources() {
-        return Collections.unmodifiableSet(dropSources);
-    }
-
     public void addAttributeLore(String lore) {
         attributeLore.add(lore);
     }
@@ -127,8 +118,36 @@ public class Gem {
 
     // ==================== 掉落配置 ====================
 
-    public boolean canDropFrom(String source, int mobLevel) {
-        return dropSources.contains(source) && mobLevel >= minMobLevel;
+    public Set<String> getDropSources() {
+        return Collections.unmodifiableSet(dropSourceSettings.keySet());
+    }
+
+    public boolean hasDropSource(String sourceId) {
+        return dropSourceSettings.containsKey(sourceId);
+    }
+
+    public Map<String, Map<String, Object>> getDropSourceSettings() {
+        Map<String, Map<String, Object>> copy = new LinkedHashMap<>();
+        for (Map.Entry<String, Map<String, Object>> entry : dropSourceSettings.entrySet()) {
+            copy.put(entry.getKey(), Collections.unmodifiableMap(new LinkedHashMap<>(entry.getValue())));
+        }
+        return Collections.unmodifiableMap(copy);
+    }
+
+    public void setDropSourceSettings(Map<String, Map<String, Object>> settings) {
+        dropSourceSettings.clear();
+        if (settings != null) {
+            for (Map.Entry<String, Map<String, Object>> entry : settings.entrySet()) {
+                putDropSourceSettings(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    public void putDropSourceSettings(String sourceId, Map<String, Object> settings) {
+        if (sourceId == null || sourceId.isBlank() || settings == null) {
+            throw new IllegalArgumentException("掉落来源配置不能为空");
+        }
+        dropSourceSettings.put(sourceId, new LinkedHashMap<>(settings));
     }
 
     // ==================== 镶嵌限制 ====================

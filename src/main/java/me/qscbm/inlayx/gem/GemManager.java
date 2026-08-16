@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import me.qscbm.inlayx.InlayX;
@@ -99,45 +98,10 @@ public class GemManager {
     }
 
     /**
-     * 按掉落来源与怪物等级随机选取一颗掉落的宝石.
-     * <p>
-     * 各宝石的最终掉落率 = drop.chance + mobLevel * drop.per_level_rate (限制在 [0, 1]).
-     * 总掉落率 = min(各宝石最终掉落率之和, 1.0), 命中后按最终掉落率加权选择一颗宝石.
+     * 获取配置了指定掉落来源的候选宝石.
      */
-    public Gem getDropGem(String source, int mobLevel) {
-        List<Gem> candidates = registry.get().dropIndex().get(source);
-        if (candidates == null || candidates.isEmpty()) {
-            return null;
-        }
-        List<WeightedGem> eligible = new ArrayList<>();
-        double totalChance = 0.0;
-        for (Gem gem : candidates) {
-            if (mobLevel < gem.getMinMobLevel()) {
-                continue;
-            }
-            double chance = Math.clamp(gem.getDropChance() + mobLevel * gem.getLevelBonus(), 0.0, 1.0);
-            if (chance <= 0.0) {
-                continue;
-            }
-            eligible.add(new WeightedGem(gem, chance));
-            totalChance += chance;
-        }
-        if (eligible.isEmpty()) {
-            return null;
-        }
-        double roll = ThreadLocalRandom.current().nextDouble();
-        double target = roll * Math.max(1.0, totalChance);
-        if (target >= totalChance) {
-            return null;
-        }
-        double cumulative = 0.0;
-        for (WeightedGem weighted : eligible) {
-            cumulative += weighted.chance;
-            if (target < cumulative) {
-                return weighted.gem;
-            }
-        }
-        return eligible.get(eligible.size() - 1).gem;
+    public List<Gem> getDropCandidates(String sourceId) {
+        return registry.get().dropIndex().getOrDefault(sourceId, List.of());
     }
 
     /**
@@ -267,6 +231,4 @@ public class GemManager {
     }
 
     public record GemRegistry(Map<String, Gem> gems, Map<String, List<Gem>> dropIndex) {}
-
-    private record WeightedGem(Gem gem, double chance) {}
 }

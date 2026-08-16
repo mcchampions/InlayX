@@ -12,10 +12,11 @@ defense_guardscale:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 defense_mossguard:
   name: "苔壁结晶"
   type: DEFENSE
@@ -28,10 +29,11 @@ defense_mossguard:
     success_rate: 0.90
     destroy_on_failure: false
   drop:
-    chance: 0.012
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.012
+    mythic:
+      chance: 0.012
+      min_mob_level: 1
 defense_bastion:
   name: "壁垒玄核"
   type: DEFENSE
@@ -45,10 +47,9 @@ defense_bastion:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.007
+      min_mob_level: 3
 defense_crownwall:
   name: "王陵壁芯"
   type: DEFENSE
@@ -62,10 +63,9 @@ defense_crownwall:
     success_rate: 0.65
     destroy_on_failure: true
   drop:
-    chance: 0.003
-    sources: [mythic]
-    min_mob_level: 5
-
+    mythic:
+      chance: 0.003
+      min_mob_level: 5
 defense_sporebark:
   name: "孢树护芯"
   type: DEFENSE
@@ -79,10 +79,9 @@ defense_sporebark:
     success_rate: 0.65
     destroy_on_failure: true
   drop:
-    chance: 0.003
-    sources: [mythic]
-    min_mob_level: 5
-
+    mythic:
+      chance: 0.003
+      min_mob_level: 5
 defense_duelward:
   name: "决斗铠印"
   type: DEFENSE
@@ -97,6 +96,6 @@ defense_duelward:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
+    mythic:
+      chance: 0.001
+      min_mob_level: 8

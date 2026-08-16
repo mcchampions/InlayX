@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import me.qscbm.inlayx.InlayXTestBase;
+import me.qscbm.inlayx.config.ConfigManager.DropSourceMode;
 import org.bukkit.Sound;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,7 @@ class ConfigManagerTest extends InlayXTestBase {
     void loadsDefaultsFromBundledConfig() {
         ConfigManager cm = plugin.getConfigManager();
         assertEquals(8, cm.getMaxSockets());
+        assertEquals(DropSourceMode.FIRST, cm.getDropSourceMode());
         assertTrue(cm.isRightClickSocketEnabled());
         assertTrue(cm.isDragSocketEnabled());
         plugin.getConfig().set("settings.gem.extract.success_rate", 1);
@@ -57,5 +59,15 @@ class ConfigManagerTest extends InlayXTestBase {
         plugin.getConfig().set("settings.gem.drop.enable", null);
         plugin.getConfigManager().loadSettings();
         assertFalse(plugin.getConfigManager().isDropSystemEnabled());
+    }
+
+    @Test
+    void parsesDropSourceModeAllAndFallsBackToFirst() {
+        plugin.getConfig().set("settings.gem.drop.mode", "ALL");
+        plugin.getConfigManager().loadSettings();
+        assertEquals(DropSourceMode.ALL, plugin.getConfigManager().getDropSourceMode());
+        plugin.getConfig().set("settings.gem.drop.mode", "INVALID");
+        plugin.getConfigManager().loadSettings();
+        assertEquals(DropSourceMode.FIRST, plugin.getConfigManager().getDropSourceMode());
     }
 }

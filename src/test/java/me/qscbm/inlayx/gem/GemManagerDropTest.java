@@ -1,16 +1,14 @@
 package me.qscbm.inlayx.gem;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import me.qscbm.inlayx.InlayXTestBase;
 import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
@@ -24,7 +22,7 @@ class GemManagerDropTest extends InlayXTestBase {
     }
 
     @Test
-    void dropsBySourceAndMobLevel() throws IOException {
+    void dropIndexContainsConfiguredSources() throws IOException {
         writeGemFile("test_drop.yml", """
                         drop_normal:
                           name: "普通掉落"
@@ -32,87 +30,33 @@ class GemManagerDropTest extends InlayXTestBase {
                           level: 1
                           material: EMERALD
                           drop:
-                            chance: 1.0
-                            sources: [normal]
-                            min_mob_level: 1
-                        drop_mythic:
-                          name: "神话掉落"
-                          type: ATTACK
-                          level: 5
-                          material: DIAMOND
-                          drop:
-                            chance: 1.0
-                            sources: [mythic]
-                            min_mob_level: 5
+                            normal:
+                              chance: 1.0
+                            mythic:
+                              chance: 1.0
+                              min_mob_level: 5
                         """);
         plugin.getGemManager().loadGems();
-        Gem normal = plugin.getGemManager().getDropGem("normal", 1);
-        assertNotNull(normal);
-        assertEquals("drop_normal", normal.getId());
-        Gem mythic = plugin.getGemManager().getDropGem("mythic", 8);
-        assertNotNull(mythic);
-        assertEquals("drop_mythic", mythic.getId());
-        assertNull(plugin.getGemManager().getDropGem("mythic", 4));
-        assertNull(plugin.getGemManager().getDropGem("unknown", 10));
-    }
-
-    @Test
-    void noDropWhenChanceIsZero() throws IOException {
-        writeGemFile("test_no_drop.yml", """
-                        drop_none:
-                          name: "不掉落"
-                          type: ATTACK
-                          level: 1
-                          material: EMERALD
-                          drop:
-                            chance: 0.0
-                            sources: [normal]
-                            min_mob_level: 1
-                        """);
-        plugin.getGemManager().loadGems();
-        assertNull(plugin.getGemManager().getDropGem("normal", 1));
-    }
-
-    @Test
-    void weightedDropNeverSelectsZeroChanceGem() throws IOException {
-        writeGemFile("test_mixed.yml", """
-                        drop_zero:
-                          name: "零概率"
-                          type: ATTACK
-                          level: 1
-                          material: EMERALD
-                          drop:
-                            chance: 0.0
-                            sources: [normal]
-                        drop_certain:
-                          name: "必掉"
-                          type: ATTACK
-                          level: 1
-                          material: DIAMOND
-                          drop:
-                            chance: 1.0
-                            sources: [normal]
-                        """);
-        plugin.getGemManager().loadGems();
-        for (int i = 0; i < 20; i++) {
-            assertEquals(
-                    "drop_certain",
-                    plugin.getGemManager().getDropGem("normal", 1).getId());
-        }
+        assertTrue(plugin.getGemManager().getDropCandidates("normal").stream()
+                .anyMatch(gem -> gem.getId().equals("drop_normal")));
+        assertTrue(plugin.getGemManager().getDropCandidates("mythic").stream()
+                .anyMatch(gem -> gem.getId().equals("drop_normal")));
+        assertTrue(plugin.getGemManager().getDropCandidates("unknown").isEmpty());
     }
 
     @Test
     void registerAndUnregisterRebuildsDropIndex() {
         GemType type = plugin.getConfigManager().getGemType("ATTACK");
         Gem gem = new Gem("api_gem", "API宝石", type, 1, Material.EMERALD);
-        gem.setDropChance(1.0);
-        gem.setDropSources(new HashSet<>(Set.of("normal")));
+        gem.putDropSourceSettings("normal", Map.of("chance", 1.0));
 
         plugin.getGemManager().registerGem(gem);
-        assertEquals("api_gem", plugin.getGemManager().getDropGem("normal", 1).getId());
+        assertTrue(plugin.getGemManager().getDropCandidates("normal").stream()
+                .anyMatch(candidate -> candidate.getId().equals("api_gem")));
 
         plugin.getGemManager().unregisterGem("api_gem");
-        assertNull(plugin.getGemManager().getDropGem("normal", 1));
+        assertTrue(plugin.getGemManager().getDropCandidates("normal").stream()
+                .noneMatch(candidate -> candidate.getId().equals("api_gem")));
     }
 
     @Test
@@ -124,5 +68,16 @@ class GemManagerDropTest extends InlayXTestBase {
                 () -> plugin.getGemManager().getGems().put("other", gem));
         assertThrows(
                 UnsupportedOperationException.class, () -> gem.getDropSources().add("normal"));
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> gem.getDropSourceSettings().put("other", Map.of()));
+    }
+
+    @Test
+    void gemDropSourceSettingsAreDetached() {
+        GemType type = plugin.getConfigManager().getGemType("ATTACK");
+        Gem gem = new Gem("api_gem", "API宝石", type, 1, Material.EMERALD);
+        gem.putDropSourceSettings("normal", Map.of("chance", 1.0));
+        assertEquals(1.0, ((Number) gem.getDropSourceSettings().get("normal").get("chance")).doubleValue());
     }
 }

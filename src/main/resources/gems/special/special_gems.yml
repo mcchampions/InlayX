@@ -12,10 +12,11 @@ special_thornheart:
     success_rate: 0.88
     destroy_on_failure: false
   drop:
-    chance: 0.01
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.01
+    mythic:
+      chance: 0.01
+      min_mob_level: 1
 special_natureward:
   name: "自然壁印"
   type: SPECIAL
@@ -29,10 +30,9 @@ special_natureward:
     success_rate: 0.75
     destroy_on_failure: true
   drop:
-    chance: 0.006
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.006
+      min_mob_level: 3
 special_featherstorm:
   name: "流羽回响"
   type: SPECIAL
@@ -46,10 +46,11 @@ special_featherstorm:
     success_rate: 0.75
     destroy_on_failure: true
   drop:
-    chance: 0.006
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.006
+    mythic:
+      chance: 0.006
+      min_mob_level: 1
 special_duelist:
   name: "决斗王印"
   type: SPECIAL
@@ -63,10 +64,9 @@ special_duelist:
     success_rate: 0.60
     destroy_on_failure: true
   drop:
-    chance: 0.0025
-    sources: [mythic]
-    min_mob_level: 5
-
+    mythic:
+      chance: 0.0025
+      min_mob_level: 5
 special_titan:
   name: "泰坦魂髓"
   type: SPECIAL
@@ -80,10 +80,9 @@ special_titan:
     success_rate: 0.45
     destroy_on_failure: true
   drop:
-    chance: 0.0008
-    sources: [mythic]
-    min_mob_level: 8
-
+    mythic:
+      chance: 0.0008
+      min_mob_level: 8
 special_bloodmoon:
   name: "血月异核"
   type: SPECIAL
@@ -97,10 +96,9 @@ special_bloodmoon:
     success_rate: 0.45
     destroy_on_failure: true
   drop:
-    chance: 0.0008
-    sources: [mythic]
-    min_mob_level: 8
-
+    mythic:
+      chance: 0.0008
+      min_mob_level: 8
 special_boneking:
   name: "骸王遗印"
   type: SPECIAL
@@ -114,10 +112,9 @@ special_boneking:
     success_rate: 0.45
     destroy_on_failure: true
   drop:
-    chance: 0.0008
-    sources: [mythic]
-    min_mob_level: 8
-
+    mythic:
+      chance: 0.0008
+      min_mob_level: 8
 special_judgement:
   name: "裁决圣徽"
   type: SPECIAL
@@ -131,10 +128,9 @@ special_judgement:
     success_rate: 0.45
     destroy_on_failure: true
   drop:
-    chance: 0.0008
-    sources: [mythic]
-    min_mob_level: 8
-
+    mythic:
+      chance: 0.0008
+      min_mob_level: 8
 special_sporequeen:
   name: "孢冠王印"
   type: SPECIAL
@@ -149,10 +145,9 @@ special_sporequeen:
     success_rate: 0.45
     destroy_on_failure: true
   drop:
-    chance: 0.0008
-    sources: [mythic]
-    min_mob_level: 8
-
+    mythic:
+      chance: 0.0008
+      min_mob_level: 8
 special_huntmoon:
   name: "猎心月印"
   type: SPECIAL
@@ -167,6 +162,6 @@ special_huntmoon:
     success_rate: 0.45
     destroy_on_failure: true
   drop:
-    chance: 0.0008
-    sources: [mythic]
-    min_mob_level: 8
+    mythic:
+      chance: 0.0008
+      min_mob_level: 8

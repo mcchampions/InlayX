@@ -21,4 +21,11 @@ public interface InlayXApi {
      * 注册子命令.
      */
     boolean registerSubCommand(@NonNull SubCommand subCommand);
+
+    /**
+     * 注册自定义掉落来源.
+     * <p>
+     * ID 重复时注册失败.
+     */
+    boolean registerDropSource(@NonNull DropSource dropSource);
 }

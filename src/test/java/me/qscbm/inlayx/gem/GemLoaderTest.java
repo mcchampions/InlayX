@@ -46,10 +46,12 @@ class GemLoaderTest extends InlayXTestBase {
                             success_rate: 0.95
                             destroy_on_failure: false
                           drop:
-                            chance: 0.02
-                            sources: [normal, mythic]
-                            min_mob_level: 3
-                            per_level_rate: 0.001
+                              normal:
+                                chance: 0.02
+                              mythic:
+                                chance: 0.02
+                                min_mob_level: 3
+                                per_level_rate: 0.001
                         """);
         Gem gem = plugin.getGemManager().getGem("attack_test");
         assertNotNull(gem);
@@ -60,10 +62,11 @@ class GemLoaderTest extends InlayXTestBase {
         assertEquals(List.of("物理伤害 +8", "暴击几率 +2.5%"), gem.getAttributeLore());
         assertEquals(0.95, gem.getSocketSuccessRate());
         assertFalse(gem.isDestroyOnFailure());
-        assertEquals(0.02, gem.getDropChance());
         assertEquals(Set.of("normal", "mythic"), gem.getDropSources());
-        assertEquals(3, gem.getMinMobLevel());
-        assertEquals(0.001, gem.getLevelBonus());
+        assertEquals(0.02, ((Number) gem.getDropSourceSettings().get("normal").get("chance")).doubleValue());
+        assertEquals(0.02, ((Number) gem.getDropSourceSettings().get("mythic").get("chance")).doubleValue());
+        assertEquals(3, ((Number) gem.getDropSourceSettings().get("mythic").get("min_mob_level")).intValue());
+        assertEquals(0.001, ((Number) gem.getDropSourceSettings().get("mythic").get("per_level_rate")).doubleValue());
         assertEquals(ChatColor.RED + "血锋尖晶 ★★★★", gem.getDisplayName());
         assertTrue(gem.getLore().stream().anyMatch(l -> l.contains("物理伤害 +8")));
         assertTrue(gem.getLore().stream().anyMatch(l -> l.contains("成功率")));

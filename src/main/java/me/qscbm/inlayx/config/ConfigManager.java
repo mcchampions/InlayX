@@ -48,6 +48,7 @@ public class ConfigManager {
     private String attributeLorePattern;
 
     private boolean dropSystemEnabled;
+    private DropSourceMode dropSourceMode;
     private double extractSuccessRate;
     private boolean dropGemOnFullInventory;
 
@@ -119,6 +120,7 @@ public class ConfigManager {
                 cfg.getString("settings.gem.display_pattern.per_line_attribute_lore", "{gemTypeColor}{attributeLore}");
 
         dropSystemEnabled = cfg.getBoolean("settings.gem.drop.enable", false);
+        dropSourceMode = parseDropSourceMode(cfg.getString("settings.gem.drop.mode", "FIRST"));
         extractSuccessRate = Math.clamp(cfg.getDouble("settings.gem.extract.success_rate", 1.0), 0.0, 1.0);
         dropGemOnFullInventory = "drop".equalsIgnoreCase(cfg.getString("settings.gem.give.full_inventory", "drop"));
     }
@@ -138,6 +140,14 @@ public class ConfigManager {
 
     public GemType getDefaultGemType() {
         return gemTypes.isEmpty() ? null : gemTypes.values().iterator().next();
+    }
+
+    private DropSourceMode parseDropSourceMode(String name) {
+        try {
+            return DropSourceMode.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return DropSourceMode.FIRST;
+        }
     }
 
     private static ChatColor parseColor(String name, ChatColor def) {
@@ -164,6 +174,20 @@ public class ConfigManager {
         }
         Sound sound = Registry.SOUNDS.get(key);
         return sound != null ? sound : fallback;
+    }
+
+    /**
+     * 多个掉落来源之间的关系.
+     */
+    public enum DropSourceMode {
+        /**
+         * 第一次掉落后停止.
+         */
+        FIRST,
+        /**
+         * 掉落后继续遍历剩余来源.
+         */
+        ALL
     }
 
     /**

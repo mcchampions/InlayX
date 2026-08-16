@@ -66,6 +66,8 @@ settings:
     drop:
       # 是否启用本插件自带的 掉落物系统
       enable: false
+      # 多个掉落来源之间的关系: FIRST 首次掉落后停止, ALL 掉落后继续判断剩余来源
+      mode: FIRST
     # 提取设置
     extract:
       # 宝石提取成功率 (0.0 - 1.0), 失败时宝石将碎裂消失

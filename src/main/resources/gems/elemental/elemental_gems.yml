@@ -11,10 +11,11 @@ elemental_ember:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 elemental_frost:
   name: "霜寒蓝晶"
   type: ELEMENTAL
@@ -26,10 +27,11 @@ elemental_frost:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 elemental_blight:
   name: "侵蚀孢核"
   type: ELEMENTAL
@@ -41,10 +43,11 @@ elemental_blight:
     success_rate: 0.90
     destroy_on_failure: false
   drop:
-    chance: 0.012
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.012
+    mythic:
+      chance: 0.012
+      min_mob_level: 1
 elemental_thunder:
   name: "雷罚黄晶"
   type: ELEMENTAL
@@ -57,10 +60,11 @@ elemental_thunder:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.007
+    mythic:
+      chance: 0.007
+      min_mob_level: 1
 elemental_venom:
   name: "剧毒幽晶"
   type: ELEMENTAL
@@ -73,10 +77,9 @@ elemental_venom:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.007
+      min_mob_level: 3
 elemental_decay:
   name: "腐潮沼核"
   type: ELEMENTAL
@@ -90,10 +93,9 @@ elemental_decay:
     success_rate: 0.65
     destroy_on_failure: true
   drop:
-    chance: 0.003
-    sources: [mythic]
-    min_mob_level: 5
-
+    mythic:
+      chance: 0.003
+      min_mob_level: 5
 elemental_prism:
   name: "棱彩天核"
   type: ELEMENTAL
@@ -108,6 +110,6 @@ elemental_prism:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
+    mythic:
+      chance: 0.001
+      min_mob_level: 8

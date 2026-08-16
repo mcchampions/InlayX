@@ -12,10 +12,11 @@ luck_clover:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 luck_goldcat:
   name: "淘金猫眼"
   type: LUCK
@@ -29,10 +30,9 @@ luck_goldcat:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.007
+      min_mob_level: 3
 luck_scholar:
   name: "博学流金"
   type: LUCK
@@ -46,6 +46,6 @@ luck_scholar:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
+    mythic:
+      chance: 0.001
+      min_mob_level: 8

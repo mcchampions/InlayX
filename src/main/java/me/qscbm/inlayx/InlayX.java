@@ -2,11 +2,15 @@ package me.qscbm.inlayx;
 
 import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
+import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.api.InlayXApi;
 import me.qscbm.inlayx.command.GemCommand;
 import me.qscbm.inlayx.command.sub.SubCommand;
 import me.qscbm.inlayx.config.ConfigManager;
 import me.qscbm.inlayx.config.ConfigUpdater;
+import me.qscbm.inlayx.drop.DropCoordinator;
+import me.qscbm.inlayx.drop.DropSourceConfigManager;
+import me.qscbm.inlayx.drop.DropSourceRegistry;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.interaction.InteractionFeedback;
 import me.qscbm.inlayx.listener.AsyncTabCompleteListener;
@@ -27,6 +31,12 @@ public class InlayX extends JavaPlugin implements InlayXApi {
     public static InlayX INSTANCE;
 
     private GemManager gemManager;
+
+    private DropSourceRegistry dropSourceRegistry;
+
+    private DropSourceConfigManager dropSourceConfigManager;
+
+    private DropCoordinator dropCoordinator;
 
     private ConfigManager configManager;
 
@@ -59,9 +69,14 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         this.foliaLib = new FoliaLib(this);
         this.getLogger().info("配置文件已加载");
 
+        this.getLogger().info("加载掉落来源中......");
+        this.dropSourceRegistry = DropSourceRegistry.createDefault(this);
+        this.dropSourceConfigManager = new DropSourceConfigManager(this, dropSourceRegistry);
+        this.dropSourceConfigManager.load();
         this.getLogger().info("加载宝石中......");
         this.gemManager = new GemManager(this);
         this.interactionFeedback = new InteractionFeedback(this);
+        this.dropCoordinator = new DropCoordinator(this);
         this.getCommand("gem").setExecutor(new GemCommand(this));
         this.getServer().getServicesManager().register(InlayXApi.class, this, this, ServicePriority.Normal);
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
@@ -82,6 +97,15 @@ public class InlayX extends JavaPlugin implements InlayXApi {
     @Override
     public boolean registerSubCommand(@NonNull SubCommand subCommand) {
         return GemCommand.registerSubCommand(subCommand);
+    }
+
+    @Override
+    public boolean registerDropSource(@NonNull DropSource dropSource) {
+        if (!dropSourceRegistry.register(dropSource)) {
+            return false;
+        }
+        dropSourceConfigManager.onSourceRegistered(dropSource);
+        return true;
     }
 
     /**

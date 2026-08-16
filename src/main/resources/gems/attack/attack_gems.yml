@@ -12,10 +12,11 @@ attack_bloodfang:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 attack_mirefang:
   name: "沼牙蚀晶"
   type: ATTACK
@@ -28,15 +29,16 @@ attack_mirefang:
     success_rate: 0.90
     destroy_on_failure: false
   drop:
-    chance: 0.012
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.012
+    mythic:
+      chance: 0.012
+      min_mob_level: 1
 attack_berserker:
   name: "狂袭赤髓"
   type: ATTACK
   level: 3
-  material: RUBY
+  material: COAL
   attributes:
     - "物理伤害 +16"
     - "攻击速度 +4%"
@@ -45,10 +47,9 @@ attack_berserker:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.007
+      min_mob_level: 3
 attack_executionseal:
   name: "处决赤印"
   type: ATTACK
@@ -62,10 +63,9 @@ attack_executionseal:
     success_rate: 0.65
     destroy_on_failure: true
   drop:
-    chance: 0.003
-    sources: [mythic]
-    min_mob_level: 5
-
+    mythic:
+      chance: 0.003
+      min_mob_level: 5
 attack_sporeedge:
   name: "孢锋毒芒"
   type: ATTACK
@@ -79,10 +79,9 @@ attack_sporeedge:
     success_rate: 0.65
     destroy_on_failure: true
   drop:
-    chance: 0.003
-    sources: [mythic]
-    min_mob_level: 5
-
+    mythic:
+      chance: 0.003
+      min_mob_level: 5
 attack_voidbreaker:
   name: "破界黑曜"
   type: ATTACK
@@ -97,10 +96,9 @@ attack_voidbreaker:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
-
+    mythic:
+      chance: 0.001
+      min_mob_level: 8
 attack_finalrot:
   name: "终腐王核"
   type: ATTACK
@@ -115,10 +113,9 @@ attack_finalrot:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
-
+    mythic:
+      chance: 0.001
+      min_mob_level: 8
 attack_fletching:
   name: "羽矢棱晶"
   type: ATTACK
@@ -131,10 +128,11 @@ attack_fletching:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 attack_hawkeye:
   name: "鹰眼锋核"
   type: ATTACK
@@ -148,10 +146,9 @@ attack_hawkeye:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.007
+      min_mob_level: 3
 attack_moonpiercer:
   name: "裂月穿锋"
   type: ATTACK
@@ -166,6 +163,6 @@ attack_moonpiercer:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
+    mythic:
+      chance: 0.001
+      min_mob_level: 8

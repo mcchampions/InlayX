@@ -26,20 +26,22 @@ gem_id_1:
     equipment_materials:
        mode: WHITELIST
        list: [DIAMOND_SWORD, NETHERITE_SWORD]
-  # (可选) 默认关闭掉落系统
+  # (可选) 掉落配置, 配置对应的掉落来源
   drop:
-    # 掉落概率
-    chance: 0.02
-    # 掉落来源
-    # 目前支持:
-    #  normal  - 原版怪物
-    #  mythic  - MythicMobs 的怪物
-    sources: [normal, mythic]
-    # 最小怪物等级
-    # 对于 原版怪物, 默认其等级为 1.
-    min_mob_level: 1
-    # (可选) 怪物每级提升的概率, 默认为0
-    per_level_rate: 0.001
+    # (可选) 配置时代表启用, 覆盖 drop_source.yml 下的设置
+    #
+    # 原版怪物掉落设置
+    normal:
+      # (可选) enable: false 没啥意义啊, 不如不配置
+      # (可选) 概率
+      chance: 0.02
+      # (可选) 指定实体掉落
+      allow_entities:
+        - "ZOMBIE"
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
+      per_level_rate: 0.001
 gem_id_2:
   name: "名称2"
   type: UTILITY

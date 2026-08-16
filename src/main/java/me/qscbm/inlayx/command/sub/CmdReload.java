@@ -31,6 +31,7 @@ public class CmdReload extends SubCommand {
     protected void execute(CommandSender sender, String[] args) {
         plugin.reloadConfig();
         plugin.getConfigManager().loadSettings();
+        plugin.getDropSourceConfigManager().load();
         plugin.getGemManager().loadGems();
         sender.sendMessage(ChatColor.GREEN + "InlayX 插件配置已重载");
     }

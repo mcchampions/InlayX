@@ -12,10 +12,11 @@ magic_arcane:
     success_rate: 0.95
     destroy_on_failure: false
   drop:
-    chance: 0.02
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.02
+    mythic:
+      chance: 0.02
+      min_mob_level: 1
 magic_sporegrimoire:
   name: "孢雾秘页"
   type: MAGIC
@@ -29,10 +30,11 @@ magic_sporegrimoire:
     success_rate: 0.90
     destroy_on_failure: false
   drop:
-    chance: 0.012
-    sources: [normal, mythic]
-    min_mob_level: 1
-
+    normal:
+      chance: 0.012
+    mythic:
+      chance: 0.012
+      min_mob_level: 1
 magic_tide:
   name: "潮汐秘核"
   type: MAGIC
@@ -45,10 +47,9 @@ magic_tide:
     success_rate: 0.80
     destroy_on_failure: true
   drop:
-    chance: 0.007
-    sources: [mythic]
-    min_mob_level: 3
-
+    mythic:
+      chance: 0.007
+      min_mob_level: 3
 magic_motherfungus:
   name: "母后菌髓"
   type: MAGIC
@@ -63,10 +64,9 @@ magic_motherfungus:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
-
+    mythic:
+      chance: 0.001
+      min_mob_level: 8
 magic_sage:
   name: "贤者月核"
   type: MAGIC
@@ -80,6 +80,6 @@ magic_sage:
     success_rate: 0.50
     destroy_on_failure: true
   drop:
-    chance: 0.001
-    sources: [mythic]
-    min_mob_level: 8
+    mythic:
+      chance: 0.001
+      min_mob_level: 8

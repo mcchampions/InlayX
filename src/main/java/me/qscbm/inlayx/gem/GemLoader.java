@@ -237,13 +237,30 @@ class GemLoader {
 
             ConfigurationSection dropSec = section.getConfigurationSection("drop");
             if (dropSec != null) {
-                gem.setDropChance(dropSec.getDouble("chance", 0));
-                gem.setLevelBonus(dropSec.getDouble("per_level_rate", 0));
-                List<String> sources = dropSec.getStringList("sources");
-                if (!sources.isEmpty()) {
-                    gem.setDropSources(new HashSet<>(sources));
+                boolean hasSourceSections = dropSec.getKeys(false).stream()
+                        .anyMatch(key -> !"sources".equals(key) && dropSec.isConfigurationSection(key));
+                if (hasSourceSections) {
+                    for (String sourceId : dropSec.getKeys(false)) {
+                        ConfigurationSection sourceSec = dropSec.getConfigurationSection(sourceId);
+                        if (sourceSec != null) {
+                            gem.putDropSourceSettings(sourceId, sourceSec.getValues(true));
+                        }
+                    }
+                } else {
+                    List<String> sources = dropSec.getStringList("sources");
+                    if (!sources.isEmpty()) {
+                        double chance = dropSec.getDouble("chance", 0);
+                        for (String sourceId : sources) {
+                            Map<String, Object> legacy = new LinkedHashMap<>();
+                            legacy.put("chance", chance);
+                            if ("mythic".equalsIgnoreCase(sourceId)) {
+                                legacy.put("min_mob_level", dropSec.getInt("min_mob_level", 1));
+                                legacy.put("per_level_rate", dropSec.getDouble("per_level_rate", 0));
+                            }
+                            gem.putDropSourceSettings(sourceId, legacy);
+                        }
+                    }
                 }
-                gem.setMinMobLevel(dropSec.getInt("min_mob_level", 1));
             }
 
             gem.setDisplayName(parseVariables(plugin.getConfigManager().getGemDisplayNamePattern(), gem));
