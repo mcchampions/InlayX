@@ -36,9 +36,6 @@ final class NormalDropSource implements DropSource {
     @Override
     public void handleEntityDeath(@NonNull DropSourceContext context) {
         LivingEntity entity = context.getEntity();
-        if (!(entity instanceof Mob)) {
-            return;
-        }
         List<DropCandidate> allowed = new ArrayList<>();
         for (DropCandidate candidate : context.getCandidates()) {
             Set<String> allowEntities = candidate.settings().getStringList("allow_entities").stream()
