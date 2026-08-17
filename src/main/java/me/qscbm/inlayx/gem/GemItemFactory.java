@@ -78,7 +78,6 @@ public class GemItemFactory {
         }
         meta.setDisplayName(gem.getDisplayName());
         meta.setLore(gem.getLore());
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         applyItemOverrides(gem, meta);
         meta.getPersistentDataContainer().set(gemIdKey(), PersistentDataType.STRING, gem.getId());
         gem.setItemMetaTemplate(meta);
