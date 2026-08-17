@@ -15,6 +15,8 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    outputs:
+      unique_filename: ${{ steps.get_name.outputs.unique_filename }}
     permissions:
       contents: write
       packages: read
@@ -32,11 +34,30 @@ jobs:
         run: mvn test
       - name: Maven Build Test
         run: mvn clean package -DskipTests=true
+      - name: Delete useless files
+        run: |
+          rm -rf target/classes target/generated-sources target/generated-test-sources
+          rm -rf target/maven-archiver target/maven-status target/test-classes target/javadoc-bundle-options
+          rm target/original-*.jar
+          rm target/spotless-index
+      - name: Get file name
+        id: get_name
+        run: |
+            FILE_NAME=$(find ./target -maxdepth 1 -type f | head -n 1 | xargs basename)
+            
+            if [ -z "$FILE_NAME" ]; then
+              echo "Error: No files found in the ./target directory."
+              exit 1
+            fi
+            
+            echo "unique_filename=$FILE_NAME" >> $GITHUB_OUTPUT
+          
+            echo "Find：$FILE_NAME"
       - name: Upload E2E plugin jar
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: inlayx-e2e-jar
-          path: target/InlayX-1.0-SNAPSHOT.jar
+          path: target
           if-no-files-found: error
 
   e2e:
@@ -44,4 +65,4 @@ jobs:
     uses: ./.github/workflows/e2e-testing.yml
     with:
       artifact-name: inlayx-e2e-jar
-      jar-path: artifact/InlayX-1.0-SNAPSHOT.jar
+      jar-path: artifact/${{ needs.test.outputs.unique_filename }}
