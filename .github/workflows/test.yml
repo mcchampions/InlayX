@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: inlayx-e2e-jar
-          path: target
+          path: target/${{ needs.test.outputs.unique_filename }}
           if-no-files-found: error
 
   e2e:
