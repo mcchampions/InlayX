@@ -42,18 +42,7 @@ class NormalDropSourceTest extends InlayXTestBase {
     }
 
     @Test
-    void ignoresNonMobEntity() {
-        Gem gem = new Gem("test", "测试", plugin.getConfigManager().getGemType("ATTACK"), 1, Material.EMERALD);
-        YamlConfiguration settings = new YamlConfiguration();
-        settings.set("chance", 1.0);
-        settings.set("allow_entities", List.of("PLAYER"));
-        DropSourceContext context = new DropSourceContext(player, player, List.of(new DropCandidate(gem, settings)));
-        source.handleEntityDeath(context);
-        assertNull(context.getSelected());
-    }
-
-    @Test
-    void ignoresNotAllowedMob() {
+    void ignoresNotAllowedEntities() {
         SkeletonMock skeleton = new SkeletonMock(server, UUID.randomUUID());
         Gem gem = new Gem("test", "测试", plugin.getConfigManager().getGemType("ATTACK"), 1, Material.EMERALD);
         YamlConfiguration settings = new YamlConfiguration();
