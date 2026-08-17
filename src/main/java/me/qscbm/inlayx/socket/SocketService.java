@@ -355,6 +355,9 @@ public class SocketService {
         if (meta == null) {
             return false;
         }
+        if (!gem.canSocketTo(equipment.getType())) {
+            return false;
+        }
         return findEmptySlotIndex(readSlots(meta), gem.getType()) >= 0;
     }
 
