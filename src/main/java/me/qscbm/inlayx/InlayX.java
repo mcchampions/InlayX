@@ -76,6 +76,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         this.foliaLib = new FoliaLib(this);
 
         this.translationService = new TranslationService(this);
+        this.getLogger().info("加载物品组中......");
         this.itemGroupConfigManager = new ItemGroupConfigManager(this);
         itemGroupConfigManager.load();
         this.getLogger().info("配置文件已加载");

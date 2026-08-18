@@ -124,8 +124,10 @@ public class ConfigManager {
         attributeLorePattern =
                 cfg.getString("settings.gem.display_pattern.per_line_attribute_lore", "{gemTypeColor}{attributeLore}");
         noneFilterPattern = cfg.getStringList("settings.gem.display_pattern.equipment_filter_lore.pattern.none");
-        whiteListFilterPattern = cfg.getStringList("settings.gem.display_pattern.equipment_filter_lore.pattern.white_list");
-        blackListFilterPattern = cfg.getStringList("settings.gem.display_pattern.equipment_filter_lore.pattern.black_list");
+        whiteListFilterPattern =
+                cfg.getStringList("settings.gem.display_pattern.equipment_filter_lore.pattern.white_list");
+        blackListFilterPattern =
+                cfg.getStringList("settings.gem.display_pattern.equipment_filter_lore.pattern.black_list");
         perLineEquipmentDisplayLore =
                 cfg.getString("settings.gem.display_pattern.equipment_filter_lore.per_line_equipment_display_lore");
 
