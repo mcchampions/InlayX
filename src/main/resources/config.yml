@@ -8,7 +8,7 @@ settings:
   # 宝石槽位有关设置
   socket:
     header: "&7------- 宝石槽位 -------"
-    footer: "&7======================="
+    footer: "&7======================"
     max_sockets: 8
     # 快捷镶嵌开关
     quick_socket:
