@@ -25,6 +25,7 @@ gem_id_1:
     # mode 可选 NONE, WHITELIST, BLACKLIST
     equipment_materials:
        mode: WHITELIST
+       # 这里的 ALL_SWORD 时物品组中设置的, MACE为原版物品id
        list: [ALL_SWORD, MACE]
   # (可选) 掉落配置, 配置对应的掉落来源
   drop:
