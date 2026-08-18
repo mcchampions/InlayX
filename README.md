@@ -79,6 +79,10 @@ InlayX 是一个简约的宝石镶嵌插件, 基于 Paper 1.21.11 开发
 
 通过 `config.yml` 中的 `settings.socket.header` 为标识, 标记宝石槽位区的开始
 
+通过 `config.yml` 中的 `settings.socket.footer` 为标识, 标记宝石槽位区的结束
+
+宝石槽位的识别就在宝石槽位区之间进行, 超出 header 与 footer 的将无法识别
+
 #### 空槽位识别
 
 通过 `config.yml` 中的 `settings.socket.display_pattern.empty` 为模板
