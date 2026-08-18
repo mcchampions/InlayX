@@ -24,9 +24,11 @@ public class GemTabCompleter {
         return cmd.tabComplete(sender, shift(args.toArray(new String[0])));
     }
 
-    private static List<String> filter(List<String> list, String prefix) {
+    public static List<String> filter(List<String> list, String prefix) {
         if (prefix == null || prefix.isEmpty()) return list;
-        return list.stream().filter(s -> s.toLowerCase().startsWith(prefix)).collect(Collectors.toList());
+        return list.stream()
+                .filter(s -> s.toLowerCase().startsWith(prefix.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     private static String[] shift(String[] args) {

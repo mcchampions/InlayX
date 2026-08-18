@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.command.GemTabCompleter;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gem.GemType;
 import org.bukkit.ChatColor;
@@ -81,7 +82,8 @@ public class CmdRemoveSlot extends SubCommand {
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return plugin.getConfigManager().getGemTypes().keySet().stream().toList();
+            return GemTabCompleter.filter(
+                    plugin.getConfigManager().getGemTypes().keySet().stream().toList(), args[0]);
         }
         if (args.length == 2) {
             return IntStream.rangeClosed(1, plugin.getConfigManager().getMaxSockets())
