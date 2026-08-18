@@ -25,7 +25,7 @@ gem_id_1:
     # mode 可选 NONE, WHITELIST, BLACKLIST
     equipment_materials:
        mode: WHITELIST
-       list: [DIAMOND_SWORD, NETHERITE_SWORD]
+       list: [ALL_SWORD, MACE]
   # (可选) 掉落配置, 配置对应的掉落来源
   drop:
     # (可选) 配置时代表启用, 覆盖 drop_source.yml 下的设置
