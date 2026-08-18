@@ -150,7 +150,9 @@ class GemLoaderTest extends InlayXTestBase {
         Gem gem = plugin.getGemManager().getGem("whitelist_gem");
         assertNotNull(gem);
         assertEquals(Gem.MaterialFilterMode.WHITELIST, gem.getMaterialFilterMode());
-        assertEquals(Set.of(Material.DIAMOND_SWORD), gem.getFilterMaterials());
+        assertEquals(
+                Set.of(plugin.getItemGroupConfigManager().getItemGroupOrItem(Material.DIAMOND_SWORD.name())),
+                gem.getFilterMaterials());
         assertTrue(gem.canSocketTo(Material.DIAMOND_SWORD));
         assertFalse(gem.canSocketTo(Material.STONE));
     }

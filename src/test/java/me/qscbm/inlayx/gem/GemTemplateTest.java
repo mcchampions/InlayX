@@ -2,11 +2,12 @@ package me.qscbm.inlayx.gem;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import me.qscbm.inlayx.InlayXTestBase;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
 
-class GemTemplateTest {
+class GemTemplateTest extends InlayXTestBase {
 
     @Test
     void parsesAllVariables() {

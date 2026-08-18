@@ -11,6 +11,8 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.config.ItemGroupOrItem;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -57,13 +59,21 @@ public class Gem {
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private Set<Material> filterMaterials = new HashSet<>();
+    private Set<ItemGroupOrItem> filterMaterials = new HashSet<>();
 
     /*
      * 显示样式
      */
     private String displayName;
     private List<String> lore;
+
+    private List<String> noneFilterPattern = InlayX.INSTANCE.getConfigManager().getNoneFilterPattern();
+    private List<String> whiteListFilterPattern =
+            InlayX.INSTANCE.getConfigManager().getWhiteListFilterPattern();
+    private List<String> blackListFilterPattern =
+            InlayX.INSTANCE.getConfigManager().getBlackListFilterPattern();
+    private String perLineEquipmentDisplayLore =
+            InlayX.INSTANCE.getConfigManager().getPerLineEquipmentDisplayLore();
 
     /*
      * 物品修饰
@@ -161,11 +171,11 @@ public class Gem {
         BLACKLIST
     }
 
-    public Set<Material> getFilterMaterials() {
+    public Set<ItemGroupOrItem> getFilterMaterials() {
         return Collections.unmodifiableSet(filterMaterials);
     }
 
-    public void setFilterMaterials(Set<Material> filterMaterials) {
+    public void setFilterMaterials(Set<ItemGroupOrItem> filterMaterials) {
         this.filterMaterials.clear();
         if (filterMaterials != null) {
             this.filterMaterials.addAll(filterMaterials);
@@ -178,8 +188,22 @@ public class Gem {
     public boolean canSocketTo(Material material) {
         return switch (materialFilterMode) {
             case NONE -> true;
-            case WHITELIST -> filterMaterials.contains(material);
-            case BLACKLIST -> !filterMaterials.contains(material);
+            case WHITELIST -> {
+                for (ItemGroupOrItem item : filterMaterials) {
+                    if (item.containsItem(material)) {
+                        yield true;
+                    }
+                }
+                yield false;
+            }
+            case BLACKLIST -> {
+                for (ItemGroupOrItem item : filterMaterials) {
+                    if (item.containsItem(material)) {
+                        yield false;
+                    }
+                }
+                yield true;
+            }
         };
     }
 

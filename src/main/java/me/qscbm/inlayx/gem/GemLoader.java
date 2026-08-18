@@ -10,6 +10,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import lombok.Getter;
 import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.config.ItemGroupOrItem;
 import me.qscbm.inlayx.util.TextUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -220,15 +221,16 @@ class GemLoader {
                                 .warning("宝石 " + gemId + " 的 socket.equipment_materials.mode 无效: " + modeName
                                         + ", 已按 NONE 处理");
                     }
-                    Set<Material> filterMaterials = new HashSet<>();
+                    Set<ItemGroupOrItem> filterMaterials = new HashSet<>();
                     for (String materialEntry : filterSec.getStringList("list")) {
-                        Material filtered = Material.getMaterial(materialEntry);
-                        if (filtered == null) {
+                        try {
+                            ItemGroupOrItem filtered =
+                                    plugin.getItemGroupConfigManager().getItemGroupOrItem(materialEntry);
+                            filterMaterials.add(filtered);
+                        } catch (Exception e) {
                             plugin.getLogger()
                                     .warning("宝石 " + gemId + " 的 socket.equipment_materials.list 含有无效材质: "
                                             + materialEntry + ", 已忽略该项");
-                        } else {
-                            filterMaterials.add(filtered);
                         }
                     }
                     gem.setMaterialFilterMode(mode);
@@ -298,6 +300,33 @@ class GemLoader {
             Set<String> keys = displayPatternSec.getKeys(false);
             List<String> lorePatterns = displayPatternSec.getStringList("lore");
             String attrLorePattern = displayPatternSec.getString("per_line_attribute_lore");
+
+            ConfigurationSection equipmentFilterLoreSec =
+                    displayPatternSec.getConfigurationSection("equipment_filter_lore");
+            if (equipmentFilterLoreSec != null) {
+                ConfigurationSection patternSec = equipmentFilterLoreSec.getConfigurationSection("pattern");
+                if (patternSec != null) {
+                    List<String> none = patternSec.getStringList("none");
+                    List<String> whiteList = patternSec.getStringList("white_list");
+                    List<String> blackList = patternSec.getStringList("black_list");
+                    Set<String> pKeys = patternSec.getKeys(false);
+                    if (pKeys.contains("none")) {
+                        gem.setNoneFilterPattern(none);
+                    }
+                    if (pKeys.contains("white_list")) {
+                        gem.setWhiteListFilterPattern(whiteList);
+                    }
+                    if (pKeys.contains("black_list")) {
+                        gem.setBlackListFilterPattern(blackList);
+                    }
+                }
+                String per_line_equipment_display_lore =
+                        equipmentFilterLoreSec.getString("per_line_equipment_display_lore");
+                if (per_line_equipment_display_lore != null) {
+                    gem.setPerLineEquipmentDisplayLore(per_line_equipment_display_lore);
+                }
+            }
+
             if (attrLorePattern != null) {
                 // 用 keys 判断 lore 项是否存在
                 if (keys.contains("lore")) {
@@ -309,6 +338,11 @@ class GemLoader {
                 if (keys.contains("lore")) {
                     gem.setLore(parseVariables(
                             lorePatterns, gem, plugin.getConfigManager().getAttributeLorePattern()));
+                } else if (equipmentFilterLoreSec != null) {
+                    gem.setLore(parseVariables(
+                            plugin.getConfigManager().getGemLorePattern(),
+                            gem,
+                            plugin.getConfigManager().getAttributeLorePattern()));
                 }
             }
         }
@@ -581,8 +615,32 @@ class GemLoader {
                     String parsedAttrLore = parseVariables(attrLorePattern, gem).replace("{attributeLore}", attrLore);
                     result.add(TextUtils.translateAlternateColorCodes(parsedAttrLore));
                 }
-
                 continue;
+            }
+            if ("{equipmentFilterLores}".equals(line)) {
+                Gem.MaterialFilterMode materialFilterMode = gem.getMaterialFilterMode();
+                List<String> materialFilterLore =
+                        switch (materialFilterMode) {
+                            case NONE -> gem.getNoneFilterPattern();
+                            case WHITELIST -> gem.getWhiteListFilterPattern();
+                            case BLACKLIST -> gem.getBlackListFilterPattern();
+                        };
+                if (materialFilterLore == null) {
+                    continue;
+                }
+                for (String filterLore : materialFilterLore) {
+                    String parsedFilterLore = parseVariables(filterLore, gem);
+                    if ("{equipmentDisplayLore}".equals(parsedFilterLore)) {
+                        for (ItemGroupOrItem itemGroupOrItem : gem.getFilterMaterials()) {
+                            String parsed = parseVariables(attrLorePattern, gem)
+                                    .replace("{equipmentName}", itemGroupOrItem.getName())
+                                    .replace("{equipmentId}", itemGroupOrItem.getId());
+                            result.add(TextUtils.translateAlternateColorCodes(parsed));
+                        }
+                        continue;
+                    }
+                    result.add(TextUtils.translateAlternateColorCodes(parsedFilterLore));
+                }
             }
             result.add(parseVariables(line, gem));
         }

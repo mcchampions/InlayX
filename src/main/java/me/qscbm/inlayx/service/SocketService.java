@@ -1,4 +1,4 @@
-package me.qscbm.inlayx.socket;
+package me.qscbm.inlayx.service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,6 +20,9 @@ import me.qscbm.inlayx.gem.GemItemFactory;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gem.GemTemplate;
 import me.qscbm.inlayx.gem.GemType;
+import me.qscbm.inlayx.socket.ExtractResult;
+import me.qscbm.inlayx.socket.SocketResult;
+import me.qscbm.inlayx.socket.SocketSlot;
 import me.qscbm.inlayx.util.TextUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

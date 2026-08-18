@@ -49,6 +49,7 @@ settings:
       display_name: "{gemTypeColor}{gemName} {gemLevelStars}"
       # 专有变量:
       #  {attributeLores} 属性 lore(只在一行中单独存在该变量时解析)
+      #  {equipmentFilterLores} 设备过滤 lore(只在一行中单独存在该变量时解析)
       lore:
         - "&7类型: {gemTypeName} 宝石"
         - "&7等级: {gemLevel}"
@@ -57,11 +58,30 @@ settings:
         - ""
         - "{attributeLores}"
         - ""
+        - "{equipmentFilterLores}"
+        - ""
         - "&e右键点击装备可直接镶嵌"
         - "&e或使用 /gem socket 打开镶嵌界面"
       # 每一行属性 lore 的显示模板
       # {attributeLore} 当行对应的属性 lore, 在宝石配置文件中, 该变量仅对当前配置有效
       per_line_attribute_lore: "{gemTypeColor}{attributeLore}"
+      # 装备过滤显示模板
+      equipment_filter_lore:
+        # 这里为 {equipmentFilterLores} 的具体显示方法
+        # 支持变量: {equipmentDisplayLore} (只在一行中单独存在该变量时解析)替换为所有装备的列表, 每行的显示效果由 per_line_equipment_display_lore 配置决定
+        pattern:
+          none:
+            - "&7允许镶嵌在所有装备"
+          white_list:
+            - "&7允许镶嵌在以下装备:"
+            - "{equipmentDisplayLore}"
+          black_list:
+            - "&7不允许镶嵌在以下装备:"
+            - "{equipmentDisplayLore}"
+        # 每行装备显示模板
+        # 专用变量:
+        #  {equipmentName} 装备显示名(钻石剑)  {equipmentId} 装备ID(DIAMOND_SWORD)
+        per_line_equipment_display_lore: "&7  - {equipmentName}"
     # 掉落系统
     drop:
       # 是否启用本插件自带的 掉落物系统
@@ -133,7 +153,7 @@ settings:
         volume: 1.0
         pitch: 1.0
 
-config-version: 1
+config-version: 2
 # 自定义宝石(不建议在此处配置除非只有几种宝石, 或许更方便)
 # gems:
 #   example_gem:

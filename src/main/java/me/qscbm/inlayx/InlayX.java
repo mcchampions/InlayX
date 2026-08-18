@@ -9,8 +9,9 @@ import me.qscbm.inlayx.command.GemCommand;
 import me.qscbm.inlayx.command.sub.SubCommand;
 import me.qscbm.inlayx.config.ConfigManager;
 import me.qscbm.inlayx.config.ConfigUpdater;
+import me.qscbm.inlayx.config.DropSourceConfigManager;
+import me.qscbm.inlayx.config.ItemGroupConfigManager;
 import me.qscbm.inlayx.drop.DropCoordinator;
-import me.qscbm.inlayx.drop.DropSourceConfigManager;
 import me.qscbm.inlayx.drop.DropSourceRegistry;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.interaction.InteractionFeedback;
@@ -19,6 +20,7 @@ import me.qscbm.inlayx.listener.ExtractGuiListener;
 import me.qscbm.inlayx.listener.GuiListener;
 import me.qscbm.inlayx.listener.MobListener;
 import me.qscbm.inlayx.listener.PlayerListener;
+import me.qscbm.inlayx.service.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,8 +48,13 @@ public class InlayX extends JavaPlugin implements InlayXApi {
 
     private InteractionFeedback interactionFeedback;
 
+    private TranslationService translationService;
+
+    private ItemGroupConfigManager itemGroupConfigManager;
+
     @Override
     public void onEnable() {
+        INSTANCE = this;
         this.getLogger().info("""
 
             #############################################
@@ -67,12 +74,17 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         reloadConfig();
         this.configManager = new ConfigManager(this);
         this.foliaLib = new FoliaLib(this);
+
+        this.translationService = new TranslationService(this);
+        this.itemGroupConfigManager = new ItemGroupConfigManager(this);
+        itemGroupConfigManager.load();
         this.getLogger().info("配置文件已加载");
 
         this.getLogger().info("加载掉落来源中......");
         this.dropSourceRegistry = DropSourceRegistry.createDefault(this);
         this.dropSourceConfigManager = new DropSourceConfigManager(this, dropSourceRegistry);
         this.dropSourceConfigManager.load();
+
         this.getLogger().info("加载宝石中......");
         this.gemManager = new GemManager(this);
         this.interactionFeedback = new InteractionFeedback(this);
@@ -88,8 +100,6 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         if (this.getServer().getPluginManager().getPlugin("MythicMobs") != null) {
             this.getLogger().info("已检测到MythicMobs插件, 启用MythicMobs支持");
         }
-
-        INSTANCE = this;
 
         this.getLogger().info("InlayX 已启用");
     }

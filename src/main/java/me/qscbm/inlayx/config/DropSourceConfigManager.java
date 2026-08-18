@@ -1,4 +1,4 @@
-package me.qscbm.inlayx.drop;
+package me.qscbm.inlayx.config;
 
 import java.io.File;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ import java.util.Set;
 import lombok.NonNull;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.api.DropSource;
-import me.qscbm.inlayx.config.CommentConfiguration;
+import me.qscbm.inlayx.drop.DropSourceRegistry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 

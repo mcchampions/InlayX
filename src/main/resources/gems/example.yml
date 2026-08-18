@@ -185,3 +185,11 @@ gem_id_5:
     display_pattern:
       display_name: "测试宝石 5"
       per_line_attribute_lore: "&7  - &b{attributeLore}"
+      # (可选)
+      equipment_filter_lore:
+        # 这里为 {equipmentFilterLores} 的具体显示方法
+        # 支持变量: {equipmentDisplayLore} 替换为所有装备的列表, 每行的显示效果由 per_line_equipment_display_lore 配置决定
+        pattern:
+          none: []
+          white_list: []
+          black_list: []

@@ -47,6 +47,11 @@ public class ConfigManager {
     private List<String> gemLorePattern;
     private String attributeLorePattern;
 
+    private List<String> noneFilterPattern;
+    private List<String> whiteListFilterPattern;
+    private List<String> blackListFilterPattern;
+    private String perLineEquipmentDisplayLore;
+
     private boolean dropSystemEnabled;
     private DropSourceMode dropSourceMode;
     private double extractSuccessRate;
@@ -118,6 +123,11 @@ public class ConfigManager {
         gemLorePattern = cfg.getStringList("settings.gem.display_pattern.lore");
         attributeLorePattern =
                 cfg.getString("settings.gem.display_pattern.per_line_attribute_lore", "{gemTypeColor}{attributeLore}");
+        noneFilterPattern = cfg.getStringList("settings.display_pattern.equipment_filter_lore.pattern.none");
+        whiteListFilterPattern = cfg.getStringList("settings.display_pattern.equipment_filter_lore.pattern.white_list");
+        blackListFilterPattern = cfg.getStringList("settings.display_pattern.equipment_filter_lore.pattern.black_list");
+        perLineEquipmentDisplayLore =
+                cfg.getString("settings.display_pattern.equipment_filter_lore.per_line_equipment_display_lore");
 
         dropSystemEnabled = cfg.getBoolean("settings.gem.drop.enable", false);
         dropSourceMode = parseDropSourceMode(cfg.getString("settings.gem.drop.mode", "FIRST"));

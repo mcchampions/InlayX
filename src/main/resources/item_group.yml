@@ -1,0 +1,21 @@
+# 物品组
+# 可以引用其他物品组
+# 注意: 不要相互引用
+item_group:
+  # 此时 {equipmentId} 指代 ALL_SWORD
+  ALL_SWORD:
+    # {equipmentName} 变为指定 name(所有剑)
+    name: "所有剑"
+    # 物品列表
+    items:
+      - "COPPER_SWORD"
+      - "DIAMOND_SWORD"
+      - "GOLDEN_SWORD"
+      - "IRON_SWORD"
+      - "NETHERITE_SWORD"
+      - "STONE_SWORD"
+      - "WOODEN_SWORD"
+  ALL_WEAPONS:
+    name: "所有武器"
+    items:
+      - "ALL_SWORD"

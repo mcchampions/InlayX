@@ -87,7 +87,8 @@ class SocketServiceTest extends InlayXTestBase {
         registerGem("t_material", "ATTACK", 1.0);
         Gem filtered = plugin.getGemManager().getGems().get("t_material");
         filtered.setMaterialFilterMode(Gem.MaterialFilterMode.WHITELIST);
-        filtered.setFilterMaterials(Set.of(Material.NETHERITE_SWORD));
+        filtered.setFilterMaterials(
+                Set.of(plugin.getItemGroupConfigManager().getItemGroupOrItem(Material.NETHERITE_SWORD.name())));
         ItemStack sword = socketableSword(attackType(), 1);
         SocketResult result =
                 plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t_material"));
@@ -100,7 +101,8 @@ class SocketServiceTest extends InlayXTestBase {
         registerGem("t_material", "ATTACK", 1.0);
         Gem filtered = plugin.getGemManager().getGems().get("t_material");
         filtered.setMaterialFilterMode(Gem.MaterialFilterMode.WHITELIST);
-        filtered.setFilterMaterials(Set.of(Material.DIAMOND_SWORD));
+        filtered.setFilterMaterials(
+                Set.of(plugin.getItemGroupConfigManager().getItemGroupOrItem(Material.DIAMOND_SWORD.name())));
         ItemStack sword = socketableSword(attackType(), 1);
         SocketResult result =
                 plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t_material"));
@@ -113,7 +115,8 @@ class SocketServiceTest extends InlayXTestBase {
         registerGem("t_material", "ATTACK", 1.0);
         Gem filtered = plugin.getGemManager().getGems().get("t_material");
         filtered.setMaterialFilterMode(Gem.MaterialFilterMode.BLACKLIST);
-        filtered.setFilterMaterials(Set.of(Material.DIAMOND_SWORD));
+        filtered.setFilterMaterials(
+                Set.of(plugin.getItemGroupConfigManager().getItemGroupOrItem(Material.DIAMOND_SWORD.name())));
         ItemStack sword = socketableSword(attackType(), 1);
         SocketResult result =
                 plugin.getGemManager().socketGem(sword, plugin.getGemManager().createGemItem("t_material"));
