@@ -632,7 +632,7 @@ class GemLoader {
                     String parsedFilterLore = parseVariables(filterLore, gem);
                     if ("{equipmentDisplayLore}".equals(parsedFilterLore)) {
                         for (ItemGroupOrItem itemGroupOrItem : gem.getFilterMaterials()) {
-                            String parsed = parseVariables(attrLorePattern, gem)
+                            String parsed = parseVariables(gem.getPerLineEquipmentDisplayLore(), gem)
                                     .replace("{equipmentName}", itemGroupOrItem.getName())
                                     .replace("{equipmentId}", itemGroupOrItem.getId());
                             result.add(TextUtils.translateAlternateColorCodes(parsed));
@@ -641,6 +641,7 @@ class GemLoader {
                     }
                     result.add(TextUtils.translateAlternateColorCodes(parsedFilterLore));
                 }
+                continue;
             }
             result.add(parseVariables(line, gem));
         }
