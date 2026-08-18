@@ -8,14 +8,99 @@ item_group:
     name: "所有剑"
     # 物品列表
     items:
-      - "COPPER_SWORD"
-      - "DIAMOND_SWORD"
-      - "GOLDEN_SWORD"
-      - "IRON_SWORD"
-      - "NETHERITE_SWORD"
-      - "STONE_SWORD"
       - "WOODEN_SWORD"
+      - "STONE_SWORD"
+      - "IRON_SWORD"
+      - "GOLDEN_SWORD"
+      - "DIAMOND_SWORD"
+      - "NETHERITE_SWORD"
+      - "COPPER_SWORD"
+
+  ALL_AXE:
+    name: "所有斧头"
+    items:
+      - "WOODEN_AXE"
+      - "STONE_AXE"
+      - "IRON_AXE"
+      - "GOLDEN_AXE"
+      - "DIAMOND_AXE"
+      - "NETHERITE_AXE"
+      - "COPPER_AXE"
+
+  ALL_SPEAR:
+    name: "所有矛"
+    items:
+      - "WOODEN_SPEAR"
+      - "STONE_SPEAR"
+      - "IRON_SPEAR"
+      - "GOLDEN_SPEAR"
+      - "DIAMOND_SPEAR"
+      - "NETHERITE_SPEAR"
+      - "COPPER_SPEAR"
+
   ALL_WEAPONS:
     name: "所有武器"
     items:
       - "ALL_SWORD"
+      - "ALL_AXE"
+      - "ALL_SPEAR"
+      - "MACE"
+
+  ALL_HELMET:
+    name: "所有头盔"
+    items:
+      - "LEATHER_HELMET"
+      - "CHAINMAIL_HELMET"
+      - "IRON_HELMET"
+      - "GOLDEN_HELMET"
+      - "DIAMOND_HELMET"
+      - "NETHERITE_HELMET"
+      - "TURTLE_HELMET"
+      - "COPPER_HELMET"
+
+  ALL_CHESTPLATE:
+    name: "所有胸甲"
+    items:
+      - "LEATHER_CHESTPLATE"
+      - "CHAINMAIL_CHESTPLATE"
+      - "IRON_CHESTPLATE"
+      - "GOLDEN_CHESTPLATE"
+      - "DIAMOND_CHESTPLATE"
+      - "NETHERITE_CHESTPLATE"
+      - "COPPER_CHESTPLATE"
+
+  ALL_LEGGINGS:
+    name: "所有护腿"
+    items:
+      - "LEATHER_LEGGINGS"
+      - "CHAINMAIL_LEGGINGS"
+      - "IRON_LEGGINGS"
+      - "GOLDEN_LEGGINGS"
+      - "DIAMOND_LEGGINGS"
+      - "NETHERITE_LEGGINGS"
+      - "COPPER_LEGGINGS"
+
+  ALL_BOOTS:
+    name: "所有靴子"
+    items:
+      - "LEATHER_BOOTS"
+      - "CHAINMAIL_BOOTS"
+      - "IRON_BOOTS"
+      - "GOLDEN_BOOTS"
+      - "DIAMOND_BOOTS"
+      - "NETHERITE_BOOTS"
+      - "COPPER_BOOTS"
+
+  ALL_ARMOR:
+    name: "所有盔甲"
+    items:
+      - "ALL_HELMET"
+      - "ALL_CHESTPLATE"
+      - "ALL_LEGGINGS"
+      - "ALL_BOOTS"
+
+  ALL_EQUIPMENT:
+    name: "所有装备"
+    items:
+      - "ALL_WEAPONS"
+      - "ALL_ARMOR"
