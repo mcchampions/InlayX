@@ -1,4 +1,6 @@
 # InlayX 配置文件
+# 宝石定义文件位于 plugins/InlayX/gems/ 目录下
+# 所有宝石参数(属性, 掉落, 镶嵌)均在各自文件中独立配置
 
 # 插件通用设置
 settings:
