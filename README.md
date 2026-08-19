@@ -205,3 +205,7 @@ mvn test
 ## 开源协议
 
 本项目使用 MIT 协议开源
+
+## 相关链接
+
+Minebbs: [https://www.minebbs.com/resources/inlayx.17877/](https://www.minebbs.com/resources/inlayx.17877/)
