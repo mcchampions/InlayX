@@ -1,0 +1,149 @@
+# InlayX 语言文件 - 简体中文 (zh_cn)
+
+
+# ==================== 通用提示 ====================
+common:
+  no_permission: "&c你没有权限执行此命令"
+  player_only: "&c此命令只能由玩家执行"
+  usage: "&c用法: {0}"
+
+# ==================== 命令 ====================
+command:
+  unknown: "&c未知命令, 输入 /gem help 查看帮助"
+  help:
+    description: "显示帮助信息"
+    usage: "/gem help"
+    title: "&6===== InlayX 帮助 ====="
+    line: "&e{0} &f- {1}"
+  list:
+    description: "列出所有宝石"
+    usage: "/gem list"
+    title: "&6===== 可用宝石列表 ====="
+    entry: "&e{0}&f - &a{1}&f (等级: {2})"
+  give:
+    description: "给予宝石"
+    usage: "/gem give <玩家名> <宝石ID> [数量]"
+    player_not_found: "&c找不到玩家: {0}"
+    gem_not_found: "&c找不到宝石: {0}"
+    create_failed: "&c创建宝石失败: {0}"
+    given_to_sender: "&a已将 {0} 个 {1}&a 给予 {2}"
+    given_to_target: "&a你收到了 {0} 个 {1}!"
+    full_drop_target: "&e你的背包已满, {0} 个 {1}&e 已掉落在你旁边!"
+    full_drop_sender: "&e{0} 的背包已满, {1} 个 {2}&e 已掉落在其旁边"
+    full_deny_target: "&e你的背包已满, {0} 个 {1}&e 未能发放!"
+    full_deny_sender: "&e{0} 的背包已满, {1} 个 {2}&e 未发放"
+  addgem:
+    description: "直接向装备添加指定宝石"
+    usage: "/gem addgem <宝石ID>"
+    must_hold_equipment: "&c你必须手持一件装备!"
+    success: "&a已直接将宝石「{0}」镶嵌到装备上!"
+  socket:
+    description: "打开宝石镶嵌界面"
+    usage: "/gem socket"
+  extract:
+    description: "从手持装备提取指定宝石"
+    usage: "/gem extract [宝石ID]"
+    not_socketed: "&c你手中的装备没有镶嵌宝石!"
+    inventory_full_drop: "&e你的物品栏已满, 物品已掉落在地上!"
+  removegem:
+    description: "直接移除装备上的指定宝石"
+    usage: "/gem removegem <宝石ID>"
+    success: "&a已从装备上移除宝石「{0}」"
+    failed: "&c宝石移除失败!"
+  info:
+    description: "查看手持宝石或装备信息"
+    usage: "/gem info"
+    must_hold: "&c请手持宝石或已镶嵌宝石的装备!"
+    invalid_gem: "&c无效的宝石!"
+    gem_title: "&6===== 宝石信息 ====="
+    equip_title: "&6===== 装备宝石信息 ====="
+    id: "&eID: &f{0}"
+    name: "&e名称: &f{0}"
+    type: "&e类型: &f{0}"
+    level: "&e等级: &f{0}"
+    attributes: "&6属性加成:"
+    equipment: "&e装备: &f{0}"
+    no_socket_slot: "&7  该装备没有宝石槽位"
+    no_socketed_gem: "&7  该装备没有镶嵌宝石"
+    slot_empty: "&e  槽位{0}: &7(空)"
+    slot_unknown: "&e  槽位{0}: &c未知宝石"
+    slot_filled: "&e  槽位{0}: &a{1}&f [{2} Lv.{3}]"
+  addslot:
+    description: "为手持装备添加空槽位"
+    usage: "/gem addslot <类型> [数量]"
+    must_hold_equipment: "&c你必须手持一件装备"
+    invalid_type: "&c无效的宝石类型: {0}"
+    no_type_configured: "&c未配置任何宝石类型, 请先在 config.yml 的 settings.gem_types 中配置"
+    reached_max: "&c该装备的宝石槽位已达上限({0} 个)!"
+    added: "&a已为装备添加 {0} 个 {1} 宝石槽位"
+    added_partial: "&a已为装备添加 {0} 个 {1} 宝石槽位&e(已达上限 {2} 个)"
+  removeslot:
+    description: "为手持装备移除空槽位"
+    usage: "/gem removeslot <类型> [数量]"
+    must_hold_equipment: "&c你必须手持一件装备"
+    invalid_type: "&c无效的宝石类型: {0}"
+    no_type_configured: "&c未配置任何宝石类型, 请先在 config.yml 的 settings.gem_types 中配置"
+    none_removable: "&c该装备没有可移除的「{0}」空宝石槽位!(只有空槽位可以被移除)"
+    removed_partial: "&a已为装备移除 {0} 个 {1} 宝石槽位&e (仅空槽位被移除, 已镶嵌宝石的槽位不受影响)"
+    removed: "&a已为装备移除 {0} 个 {1} 宝石槽位"
+  reload:
+    description: "重载插件配置"
+    usage: "/gem reload"
+    success: "&aInlayX 插件配置已重载"
+
+# ==================== 镶嵌 / 提取反馈 ====================
+feedback:
+  socket:
+    success: "&a宝石镶嵌成功!"
+    failed_destroyed: "&c镶嵌失败!宝石已碎裂."
+    failed_intact: "&c镶嵌失败!宝石完好无损, 可再次尝试."
+    not_a_gem: "&c这不是一个有效的宝石!"
+    unknown_gem: "&c无法识别该宝石, 可能已被删除或配置已变更!"
+    no_socket_full: "&c该装备的宝石槽位已满!"
+    no_socket_empty: "&c该装备没有宝石槽位!"
+    type_mismatch: "&c该装备没有「{0}」类型的空槽位!"
+    type_mismatch_unknown: "&c该装备没有「对应」类型的空槽位!"
+    material_mismatch: "&c该宝石不能镶嵌到这种装备上!"
+    over_cap: "&c该装备的宝石槽位数量异常, 无法镶嵌!"
+    cancelled: "&c镶嵌已被取消!"
+    default: "&c无法镶嵌, 请检查装备与宝石!"
+  extract:
+    success: "&a宝石提取成功!"
+    failed: "&c提取失败!宝石已碎裂."
+    cancelled: "&c提取已被取消!"
+    not_found: "&c该装备上没有镶嵌「{0}」宝石!"
+    remove_unknown_failed: "&c移除未知宝石失败!"
+    removed_unknown: "&a已移除未知宝石「{0}」(不会返还)"
+
+# ==================== GUI ====================
+gui:
+  socket:
+    need_both: "&c请放入装备和宝石!"
+    place_equipment: "&6放置装备"
+    place_equipment_lore: "&7请将需要镶嵌宝石的装备放在这里"
+    place_gem: "&b放置宝石"
+    place_gem_lore: "&7请将要镶嵌的宝石放在这里"
+    confirm: "&a确认镶嵌"
+    confirm_lore: "&7点击确认将宝石镶嵌到装备上"
+    confirm_warning: "&c警告: 此操作不可逆!"
+    cancel: "&c取消"
+    cancel_lore: "&7点击取消并关闭界面"
+  extract:
+    title: "&5宝石提取"
+    socket_slot: "&7宝石槽位"
+    placeholder_lore: "&7请先将装备放入左侧格子"
+    empty: "&7(空)"
+    no_slot: "&c暂无此槽位"
+    prev: "&e上一页"
+    prev_lore: "&7点击查看上一页槽位"
+    next: "&e下一页"
+    next_lore: "&7点击查看下一页槽位"
+    slot_no: "&7第 {0} 槽位"
+    unknown_type_empty: "&7未知类型(空)"
+    type_empty: "{0}&7类型(空)"
+
+# ==================== 宝石物品 ====================
+gem:
+  unknown_name: "&c未知宝石"
+  unknown_id: "&7宝石ID: {0}"
+  unknown_lore: "&c该宝石的配置已不存在, 点击将直接移除(不会返还)"

@@ -2,7 +2,6 @@ package me.qscbm.inlayx.command.sub;
 
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.command.GemCommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -20,15 +19,20 @@ public class CmdHelp extends SubCommand {
 
     @Override
     public String description() {
-        return "显示帮助信息";
+        return i18n("command.help.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.help.usage");
     }
 
     @Override
     protected void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(ChatColor.GOLD + "===== InlayX 帮助 =====");
+        sender.sendMessage(i18n("command.help.title"));
         for (SubCommand cmd : GemCommand.COMMANDS.values()) {
             if (cmd.permission() != null && noneOf(sender, cmd.permission())) continue;
-            sender.sendMessage(ChatColor.YELLOW + cmd.usage() + " " + ChatColor.WHITE + "- " + cmd.description());
+            sender.sendMessage(i18n("command.help.line", cmd.usage(), cmd.description()));
         }
     }
 }

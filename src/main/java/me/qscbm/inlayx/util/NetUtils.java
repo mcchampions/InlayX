@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
 import lombok.NonNull;
 
 public class NetUtils {
@@ -20,6 +21,30 @@ public class NetUtils {
         connection.setConnectTimeout(15000);
         connection.setDoOutput(false);
         connection.setInstanceFollowRedirects(true);
+        connection.setUseCaches(false);
+        connection.connect();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
+    }
+
+    /**
+     * 发送普通的Get请求(带Header)
+     */
+    public static String sendGetRequest(@NonNull String stringUrl, @NonNull Map<String, String> header)
+            throws IOException {
+        URL url = new URL(stringUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(15000);
+        connection.setDoOutput(false);
+        connection.setInstanceFollowRedirects(true);
+        header.forEach(connection::setRequestProperty);
         connection.setUseCaches(false);
         connection.connect();
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));

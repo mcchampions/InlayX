@@ -1,0 +1,145 @@
+# InlayX 語言檔案 - 繁體中文 (zh_tw)
+# 顏色代碼使用 & 前綴, 佔位符使用 {0} {1} {2} ...
+# 缺失的鍵會回退到 zh_cn
+
+common:
+  no_permission: "&c你沒有權限執行此命令"
+  player_only: "&c此命令只能由玩家執行"
+  usage: "&c用法: {0}"
+
+command:
+  unknown: "&c未知命令, 輸入 /gem help 查看幫助"
+  help:
+    description: "顯示說明資訊"
+    usage: "/gem help"
+    title: "&6===== InlayX 說明 ====="
+    line: "&e{0} &f- {1}"
+  list:
+    description: "列出所有寶石"
+    usage: "/gem list"
+    title: "&6===== 可用寶石列表 ====="
+    entry: "&e{0}&f - &a{1}&f (等級: {2})"
+  give:
+    description: "給予寶石"
+    usage: "/gem give <玩家名> <寶石ID> [數量]"
+    player_not_found: "&c找不到玩家: {0}"
+    gem_not_found: "&c找不到寶石: {0}"
+    create_failed: "&c建立寶石失敗: {0}"
+    given_to_sender: "&a已將 {0} 個 {1}&a 給予 {2}"
+    given_to_target: "&a你收到了 {0} 個 {1}!"
+    full_drop_target: "&e你的背包已滿, {0} 個 {1}&e 已掉落在你旁邊!"
+    full_drop_sender: "&e{0} 的背包已滿, {1} 個 {2}&e 已掉落在其旁邊"
+    full_deny_target: "&e你的背包已滿, {0} 個 {1}&e 未能發放!"
+    full_deny_sender: "&e{0} 的背包已滿, {1} 個 {2}&e 未發放"
+  addgem:
+    description: "直接向裝備新增指定寶石"
+    usage: "/gem addgem <寶石ID>"
+    must_hold_equipment: "&c你必須手持一件裝備!"
+    success: "&a已直接將寶石「{0}」鑲嵌到裝備上!"
+  socket:
+    description: "開啟寶石鑲嵌介面"
+    usage: "/gem socket"
+  extract:
+    description: "從手持裝備提取指定寶石"
+    usage: "/gem extract [寶石ID]"
+    not_socketed: "&c你手中的裝備沒有鑲嵌寶石!"
+    inventory_full_drop: "&e你的物品欄已滿, 物品已掉落在地上!"
+  removegem:
+    description: "直接移除裝備上的指定寶石"
+    usage: "/gem removegem <寶石ID>"
+    success: "&a已從裝備上移除寶石「{0}」"
+    failed: "&c寶石移除失敗!"
+  info:
+    description: "查看手持寶石或裝備資訊"
+    usage: "/gem info"
+    must_hold: "&c請手持寶石或已鑲嵌寶石的裝備!"
+    invalid_gem: "&c無效的寶石!"
+    gem_title: "&6===== 寶石資訊 ====="
+    equip_title: "&6===== 裝備寶石資訊 ====="
+    id: "&eID: &f{0}"
+    name: "&e名稱: &f{0}"
+    type: "&e類型: &f{0}"
+    level: "&e等級: &f{0}"
+    attributes: "&6屬性加成:"
+    equipment: "&e裝備: &f{0}"
+    no_socket_slot: "&7  該裝備沒有寶石槽位"
+    no_socketed_gem: "&7  該裝備沒有鑲嵌寶石"
+    slot_empty: "&e  槽位{0}: &7(空)"
+    slot_unknown: "&e  槽位{0}: &c未知寶石"
+    slot_filled: "&e  槽位{0}: &a{1}&f [{2} Lv.{3}]"
+  addslot:
+    description: "為手持裝備新增空槽位"
+    usage: "/gem addslot <類型> [數量]"
+    must_hold_equipment: "&c你必須手持一件裝備"
+    invalid_type: "&c無效的寶石類型: {0}"
+    no_type_configured: "&c未配置任何寶石類型, 請先在 config.yml 的 settings.gem_types 中配置"
+    reached_max: "&c該裝備的寶石槽位已達上限({0} 個)!"
+    added: "&a已為裝備新增 {0} 個 {1} 寶石槽位"
+    added_partial: "&a已為裝備新增 {0} 個 {1} 寶石槽位&e(已達上限 {2} 個)"
+  removeslot:
+    description: "為手持裝備移除空槽位"
+    usage: "/gem removeslot <類型> [數量]"
+    must_hold_equipment: "&c你必須手持一件裝備"
+    invalid_type: "&c無效的寶石類型: {0}"
+    no_type_configured: "&c未配置任何寶石類型, 請先在 config.yml 的 settings.gem_types 中配置"
+    none_removable: "&c該裝備沒有可移除的「{0}」空寶石槽位!(只有空槽位可以被移除)"
+    removed_partial: "&a已為裝備移除 {0} 個 {1} 寶石槽位&e (僅空槽位被移除, 已鑲嵌寶石的槽位不受影響)"
+    removed: "&a已為裝備移除 {0} 個 {1} 寶石槽位"
+  reload:
+    description: "重載插件配置"
+    usage: "/gem reload"
+    success: "&aInlayX 插件配置已重載"
+
+feedback:
+  socket:
+    success: "&a寶石鑲嵌成功!"
+    failed_destroyed: "&c鑲嵌失敗!寶石已碎裂."
+    failed_intact: "&c鑲嵌失敗!寶石完好無損, 可再次嘗試."
+    not_a_gem: "&c這不是一個有效的寶石!"
+    unknown_gem: "&c無法識別該寶石, 可能已被刪除或配置已變更!"
+    no_socket_full: "&c該裝備的寶石槽位已滿!"
+    no_socket_empty: "&c該裝備沒有寶石槽位!"
+    type_mismatch: "&c該裝備沒有「{0}」類型的空槽位!"
+    type_mismatch_unknown: "&c該裝備沒有「對應」類型的空槽位!"
+    material_mismatch: "&c該寶石不能鑲嵌到這種裝備上!"
+    over_cap: "&c該裝備的寶石槽位數量異常, 無法鑲嵌!"
+    cancelled: "&c鑲嵌已被取消!"
+    default: "&c無法鑲嵌, 請檢查裝備與寶石!"
+  extract:
+    success: "&a寶石提取成功!"
+    failed: "&c提取失敗!寶石已碎裂."
+    cancelled: "&c提取已被取消!"
+    not_found: "&c該裝備上沒有鑲嵌「{0}」寶石!"
+    remove_unknown_failed: "&c移除未知寶石失敗!"
+    removed_unknown: "&a已移除未知寶石「{0}」(不會返還)"
+
+gui:
+  socket:
+    need_both: "&c請放入裝備和寶石!"
+    place_equipment: "&6放置裝備"
+    place_equipment_lore: "&7請將需要鑲嵌寶石的裝備放在這裡"
+    place_gem: "&b放置寶石"
+    place_gem_lore: "&7請將要鑲嵌的寶石放在這裡"
+    confirm: "&a確認鑲嵌"
+    confirm_lore: "&7點擊確認將寶石鑲嵌到裝備上"
+    confirm_warning: "&c警告: 此操作不可逆!"
+    cancel: "&c取消"
+    cancel_lore: "&7點擊取消並關閉介面"
+  extract:
+    title: "&5寶石提取"
+    socket_slot: "&7寶石槽位"
+    placeholder_lore: "&7請先將裝備放入左側格子"
+    empty: "&7(空)"
+    no_slot: "&c暫無此槽位"
+    prev: "&e上一頁"
+    prev_lore: "&7點擊查看上一頁槽位"
+    next: "&e下一頁"
+    next_lore: "&7點擊查看下一頁槽位"
+    slot_no: "&7第 {0} 槽位"
+    unknown_type_empty: "&7未知類型(空)"
+    type_empty: "{0}&7類型(空)"
+
+gem:
+  unknown_name: "&c未知寶石"
+  unknown_id: "&7寶石ID: {0}"
+  unknown_lore: "&c該寶石的配置已不存在, 點擊將直接移除(不會返還)"

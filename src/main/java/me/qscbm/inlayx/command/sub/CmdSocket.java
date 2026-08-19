@@ -19,7 +19,12 @@ public class CmdSocket extends SubCommand {
 
     @Override
     public String description() {
-        return "打开宝石镶嵌界面";
+        return i18n("command.socket.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.socket.usage");
     }
 
     @Override

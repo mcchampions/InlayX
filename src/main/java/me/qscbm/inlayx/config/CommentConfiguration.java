@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 /**
  * 保存时保留配置文件注释的Yaml实例
  * 会以KV的形式存储
- * ”'__comment__ # 注释内容': comment“的格式存储
+ * ”'__comment__ # 注释内容': comment"的格式存储
  */
 public class CommentConfiguration extends YamlConfiguration {
     protected static final String COMMENT_PREFIX_SYMBOL = "'__comment__";

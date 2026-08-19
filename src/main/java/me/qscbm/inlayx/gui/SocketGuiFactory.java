@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import me.qscbm.inlayx.InlayX;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -17,25 +16,34 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class SocketGuiFactory {
     private final InlayX plugin;
 
-    private final ItemStack equipSlotItem;
-    private final ItemStack gemSlotItem;
-    private final ItemStack confirmItem;
-    private final ItemStack cancelItem;
+    private ItemStack equipSlotItem;
+    private ItemStack gemSlotItem;
+    private ItemStack confirmItem;
+    private ItemStack cancelItem;
     private final ItemStack backgroundItem;
 
     public SocketGuiFactory(InlayX plugin) {
         this.plugin = plugin;
-        this.equipSlotItem =
-                guiItem(Material.RED_STAINED_GLASS_PANE, ChatColor.GOLD + "放置装备", ChatColor.GRAY + "请将需要镶嵌宝石的装备放在这里");
-        this.gemSlotItem =
-                guiItem(Material.BLUE_STAINED_GLASS_PANE, ChatColor.AQUA + "放置宝石", ChatColor.GRAY + "请将要镶嵌的宝石放在这里");
+        this.backgroundItem = guiItem(Material.BLACK_STAINED_GLASS_PANE, " ");
+        rebuildItems();
+    }
+
+    public void rebuildItems() {
+        var i18n = plugin.getLanguageService();
+        this.equipSlotItem = guiItem(
+                Material.RED_STAINED_GLASS_PANE,
+                i18n.get("gui.socket.place_equipment"),
+                i18n.get("gui.socket.place_equipment_lore"));
+        this.gemSlotItem = guiItem(
+                Material.BLUE_STAINED_GLASS_PANE,
+                i18n.get("gui.socket.place_gem"),
+                i18n.get("gui.socket.place_gem_lore"));
         this.confirmItem = guiItem(
                 Material.LIME_WOOL,
-                ChatColor.GREEN + "确认镶嵌",
-                ChatColor.GRAY + "点击确认将宝石镶嵌到装备上",
-                ChatColor.RED + "警告: 此操作不可逆!");
-        this.cancelItem = guiItem(Material.RED_WOOL, ChatColor.RED + "取消", ChatColor.GRAY + "点击取消并关闭界面");
-        this.backgroundItem = guiItem(Material.BLACK_STAINED_GLASS_PANE, " ");
+                i18n.get("gui.socket.confirm"),
+                i18n.get("gui.socket.confirm_lore"),
+                i18n.get("gui.socket.confirm_warning"));
+        this.cancelItem = guiItem(Material.RED_WOOL, i18n.get("gui.socket.cancel"), i18n.get("gui.socket.cancel_lore"));
     }
 
     public Inventory createSocketGUI() {

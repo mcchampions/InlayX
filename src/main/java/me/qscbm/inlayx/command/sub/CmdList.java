@@ -2,7 +2,6 @@ package me.qscbm.inlayx.command.sub;
 
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.Gem;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -20,7 +19,12 @@ public class CmdList extends SubCommand {
 
     @Override
     public String description() {
-        return "列出所有宝石";
+        return i18n("command.list.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.list.usage");
     }
 
     @Override
@@ -30,11 +34,9 @@ public class CmdList extends SubCommand {
 
     @Override
     protected void execute(CommandSender sender, String[] args) {
-        sender.sendMessage(ChatColor.GOLD + "===== 可用宝石列表 =====");
+        sender.sendMessage(i18n("command.list.title"));
         for (Gem gem : plugin.getGemManager().getAllGems()) {
-            sender.sendMessage(ChatColor.YELLOW + gem.getId()
-                    + ChatColor.WHITE + " - " + ChatColor.GREEN + gem.getName()
-                    + ChatColor.WHITE + " (等级: " + gem.getLevel() + ")");
+            sender.sendMessage(i18n("command.list.entry", gem.getId(), gem.getName(), gem.getLevel()));
         }
     }
 }

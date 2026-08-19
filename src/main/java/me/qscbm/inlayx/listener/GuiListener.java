@@ -5,7 +5,6 @@ import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gui.GemSocketHolder;
 import me.qscbm.inlayx.socket.SocketResult;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -69,7 +68,7 @@ public class GuiListener implements Listener {
                 || gemItem == null
                 || equipment.getType().isAir()
                 || gemItem.getType().isAir()) {
-            player.sendMessage(ChatColor.RED + "请放入装备和宝石!");
+            player.sendMessage(plugin.getLanguageService().get("gui.socket.need_both"));
             return;
         }
 

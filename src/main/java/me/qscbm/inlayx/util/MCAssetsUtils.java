@@ -63,6 +63,20 @@ public class MCAssetsUtils {
     public static JSONObject getLanguage(String version, String language, String cacheDir) {
         File cacheFile = new File(new File(new File(cacheDir, "lang"), version), language + ".json");
 
+        if (language.equals("en_us")) {
+            // 无法从 Asset Index 获取 en_us.json 从 https://github.com/misode/mcmeta/tree/assets 上获取
+            return getCachedOrFetch(cacheFile, () -> {
+                String url = "https://raw.githubusercontent.com/misode/mcmeta/" + version
+                        + "-assets/assets/minecraft/lang/en_us.json";
+                try {
+                    return new JSONObject(NetUtils.sendGetRequest(url));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
+        }
+
         return getCachedOrFetch(cacheFile, () -> {
             JSONObject assetIndex = getVersionAssetIndex(version, cacheDir);
             if (assetIndex == null) return null;

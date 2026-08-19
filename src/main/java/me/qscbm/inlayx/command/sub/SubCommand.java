@@ -3,7 +3,6 @@ package me.qscbm.inlayx.command.sub;
 import java.util.Collections;
 import java.util.List;
 import me.qscbm.inlayx.InlayX;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -45,15 +44,15 @@ public abstract class SubCommand {
 
     public boolean canExecute(CommandSender sender, String[] args) {
         if (permission() != null && noneOf(sender, permission())) {
-            sender.sendMessage(ChatColor.RED + "你没有权限执行此命令");
+            sender.sendMessage(i18n("common.no_permission"));
             return false;
         }
         if (playerOnly() && !(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "此命令只能由玩家执行");
+            sender.sendMessage(i18n("common.player_only"));
             return false;
         }
         if (args.length < minArgs()) {
-            sender.sendMessage(ChatColor.RED + "用法: " + usage());
+            sender.sendMessage(i18n("common.usage", usage()));
             return false;
         }
         return true;
@@ -76,6 +75,20 @@ public abstract class SubCommand {
 
     public static boolean hasAny(CommandSender sender, String perm) {
         return sender.hasPermission("inlayx.admin") || perm == null || sender.hasPermission(perm);
+    }
+
+    /**
+     * 获取当前语言的本地化消息(无占位符).
+     */
+    protected String i18n(String key) {
+        return plugin.getLanguageService().get(key);
+    }
+
+    /**
+     * 获取当前语言的本地化消息并替换占位符.
+     */
+    protected String i18n(String key, Object... args) {
+        return plugin.getLanguageService().get(key, args);
     }
 
     protected static int argInt(String[] args, int idx, int min, int max) {

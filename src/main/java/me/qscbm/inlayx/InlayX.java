@@ -20,7 +20,7 @@ import me.qscbm.inlayx.listener.ExtractGuiListener;
 import me.qscbm.inlayx.listener.GuiListener;
 import me.qscbm.inlayx.listener.MobListener;
 import me.qscbm.inlayx.listener.PlayerListener;
-import me.qscbm.inlayx.service.TranslationService;
+import me.qscbm.inlayx.service.LanguageService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -48,7 +48,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
 
     private InteractionFeedback interactionFeedback;
 
-    private TranslationService translationService;
+    private LanguageService languageService;
 
     private ItemGroupConfigManager itemGroupConfigManager;
 
@@ -75,7 +75,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         this.configManager = new ConfigManager(this);
         this.foliaLib = new FoliaLib(this);
 
-        this.translationService = new TranslationService(this);
+        this.languageService = new LanguageService(this);
         this.getLogger().info("加载物品组中......");
         this.itemGroupConfigManager = new ItemGroupConfigManager(this);
         itemGroupConfigManager.load();

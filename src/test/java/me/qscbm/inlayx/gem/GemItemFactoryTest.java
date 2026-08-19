@@ -2,6 +2,7 @@ package me.qscbm.inlayx.gem;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,14 +70,14 @@ class GemItemFactoryTest extends InlayXTestBase {
         leather.setLeatherColor(Color.fromRGB(255, 0, 0));
         plugin.getGemManager().registerGem(leather);
         ItemStack leatherItem = plugin.getGemManager().createGemItem("item_leather");
-        assertTrue(leatherItem.getItemMeta() instanceof LeatherArmorMeta);
+        assertInstanceOf(LeatherArmorMeta.class, leatherItem.getItemMeta());
         assertEquals(Color.fromRGB(255, 0, 0), ((LeatherArmorMeta) leatherItem.getItemMeta()).getColor());
 
         Gem potion = itemGem("item_potion", Material.LINGERING_POTION);
         potion.addPotionEffect(Registry.EFFECT.get(NamespacedKey.minecraft("speed")), 200, 1, false, true, false);
         plugin.getGemManager().registerGem(potion);
         ItemStack potionItem = plugin.getGemManager().createGemItem("item_potion");
-        assertTrue(potionItem.getItemMeta() instanceof PotionMeta);
+        assertInstanceOf(PotionMeta.class, potionItem.getItemMeta());
         PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
         assertEquals(1, potionMeta.getCustomEffects().size());
         assertEquals(

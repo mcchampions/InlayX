@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.command.sub.*;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -72,7 +71,7 @@ public class GemCommand implements CommandExecutor {
 
         SubCommand cmd = COMMANDS.get(sub);
         if (cmd == null) {
-            sender.sendMessage(ChatColor.RED + "未知命令, 输入 /gem help 查看帮助");
+            sender.sendMessage(InlayX.INSTANCE.getLanguageService().get("command.unknown"));
             return true;
         }
         cmd.tryExecute(sender, rest);

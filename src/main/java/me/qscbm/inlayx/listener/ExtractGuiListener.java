@@ -6,7 +6,6 @@ import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gui.ExtractGuiFactory;
 import me.qscbm.inlayx.gui.GemExtractHolder;
 import me.qscbm.inlayx.socket.ExtractResult;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -81,11 +80,11 @@ public class ExtractGuiListener implements Listener {
 
         if (gm.getGem(gemId) == null) {
             if (!gm.removeGem(equipment, gemId)) {
-                player.sendMessage(ChatColor.RED + "移除未知宝石失败!");
+                player.sendMessage(plugin.getLanguageService().get("feedback.extract.remove_unknown_failed"));
                 return;
             }
             inv.setItem(ExtractGuiFactory.EQUIP_SLOT, equipment);
-            player.sendMessage(ChatColor.GREEN + "已移除未知宝石「" + gemId + "」(不会返还)");
+            player.sendMessage(plugin.getLanguageService().get("feedback.extract.removed_unknown", gemId));
             plugin.getInteractionFeedback().playExtractSound(player, true);
             refresh(inv, holder);
             return;
@@ -96,16 +95,16 @@ public class ExtractGuiListener implements Listener {
             case SUCCESS -> {
                 inv.setItem(ExtractGuiFactory.EQUIP_SLOT, equipment);
                 giveToResultArea(player, inv, gm.createGemItem(gemId));
-                player.sendMessage(ChatColor.GREEN + "宝石提取成功!");
+                player.sendMessage(plugin.getLanguageService().get("feedback.extract.success"));
                 plugin.getInteractionFeedback().playExtractSound(player, true);
             }
             case FAILED -> {
                 inv.setItem(ExtractGuiFactory.EQUIP_SLOT, equipment);
-                player.sendMessage(ChatColor.RED + "提取失败!宝石已碎裂.");
+                player.sendMessage(plugin.getLanguageService().get("feedback.extract.failed"));
                 plugin.getInteractionFeedback().playExtractSound(player, false);
             }
-            case CANCELLED -> player.sendMessage(ChatColor.RED + "提取已被取消!");
-            case NOT_FOUND -> player.sendMessage(ChatColor.RED + "该装备上没有镶嵌「" + gemId + "」宝石!");
+            case CANCELLED -> player.sendMessage(plugin.getLanguageService().get("feedback.extract.cancelled"));
+            case NOT_FOUND -> player.sendMessage(plugin.getLanguageService().get("feedback.extract.not_found", gemId));
         }
         refresh(inv, holder);
     }

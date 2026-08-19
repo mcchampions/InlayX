@@ -25,10 +25,10 @@ import org.jspecify.annotations.Nullable;
  * 宝石管理.
  */
 public class GemManager {
-    private final InlayX plugin;
 
     private final Map<String, Gem> loadingGems;
 
+    @Getter
     private final AtomicReference<GemRegistry> registry;
 
     private final GemLoader loader;
@@ -46,7 +46,6 @@ public class GemManager {
     private final ExtractGuiFactory extractGuiFactory;
 
     public GemManager(InlayX plugin) {
-        this.plugin = plugin;
         this.loadingGems = new HashMap<>();
         this.registry = new AtomicReference<>(new GemRegistry(Collections.emptyMap(), Collections.emptyMap()));
         this.itemFactory = new GemItemFactory(plugin, registry);

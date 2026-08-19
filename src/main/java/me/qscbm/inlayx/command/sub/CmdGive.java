@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemManager;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +26,12 @@ public class CmdGive extends SubCommand {
 
     @Override
     public String description() {
-        return "给予宝石";
+        return i18n("command.give.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.give.usage");
     }
 
     @Override
@@ -41,29 +45,24 @@ public class CmdGive extends SubCommand {
     }
 
     @Override
-    protected String usage() {
-        return "/gem give <玩家名> <宝石ID> [数量]";
-    }
-
-    @Override
     protected void execute(CommandSender sender, String[] args) {
         String playerName = args[0];
         String gemId = args[1];
         int amount = argInt(args, 2, 1, 64);
         Player target = plugin.getServer().getPlayer(playerName);
         if (target == null) {
-            sender.sendMessage(ChatColor.RED + "找不到玩家: " + playerName);
+            sender.sendMessage(i18n("command.give.player_not_found", playerName));
             return;
         }
         GemManager gm = plugin.getGemManager();
         Gem gem = gm.getGem(gemId);
         if (gem == null) {
-            sender.sendMessage(ChatColor.RED + "找不到宝石: " + gemId);
+            sender.sendMessage(i18n("command.give.gem_not_found", gemId));
             return;
         }
         ItemStack item = gm.createGemItem(gemId);
         if (item == null) {
-            sender.sendMessage(ChatColor.RED + "创建宝石失败: " + gemId);
+            sender.sendMessage(i18n("command.give.create_failed", gemId));
             return;
         }
         item.setAmount(amount);
@@ -71,24 +70,19 @@ public class CmdGive extends SubCommand {
         int rest = leftover.values().stream().mapToInt(ItemStack::getAmount).sum();
         int given = amount - rest;
         if (given > 0) {
-            sender.sendMessage(ChatColor.GREEN + "已将 " + given + " 个 " + gem.getName() + ChatColor.GREEN + " 给予 "
-                    + target.getName());
-            target.sendMessage(ChatColor.GREEN + "你收到了 " + given + " 个 " + gem.getName() + "!");
+            sender.sendMessage(i18n("command.give.given_to_sender", given, gem.getName(), target.getName()));
+            target.sendMessage(i18n("command.give.given_to_target", given, gem.getName()));
         }
         if (rest > 0) {
             if (plugin.getConfigManager().isDropGemOnFullInventory()) {
                 for (ItemStack left : leftover.values()) {
                     target.getWorld().dropItemNaturally(target.getLocation(), left);
                 }
-                target.sendMessage(
-                        ChatColor.YELLOW + "你的背包已满, " + rest + " 个 " + gem.getName() + ChatColor.YELLOW + " 已掉落在你旁边!");
-                sender.sendMessage(ChatColor.YELLOW + target.getName() + " 的背包已满, " + rest + " 个 " + gem.getName()
-                        + ChatColor.YELLOW + " 已掉落在其旁边");
+                target.sendMessage(i18n("command.give.full_drop_target", rest, gem.getName()));
+                sender.sendMessage(i18n("command.give.full_drop_sender", target.getName(), rest, gem.getName()));
             } else {
-                target.sendMessage(
-                        ChatColor.YELLOW + "你的背包已满, " + rest + " 个 " + gem.getName() + ChatColor.YELLOW + " 未能发放!");
-                sender.sendMessage(ChatColor.YELLOW + target.getName() + " 的背包已满, " + rest + " 个 " + gem.getName()
-                        + ChatColor.YELLOW + " 未发放");
+                target.sendMessage(i18n("command.give.full_deny_target", rest, gem.getName()));
+                sender.sendMessage(i18n("command.give.full_deny_sender", target.getName(), rest, gem.getName()));
             }
         }
     }

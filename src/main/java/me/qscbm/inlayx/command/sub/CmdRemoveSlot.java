@@ -7,7 +7,6 @@ import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.command.GemTabCompleter;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gem.GemType;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,7 +27,12 @@ public class CmdRemoveSlot extends SubCommand {
 
     @Override
     public String description() {
-        return "为手持装备移除空槽位";
+        return i18n("command.removeslot.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.removeslot.usage");
     }
 
     @Override
@@ -42,25 +46,23 @@ public class CmdRemoveSlot extends SubCommand {
     }
 
     @Override
-    protected String usage() {
-        return "/gem removeslot <类型> [数量]";
-    }
-
-    @Override
     protected void execute(CommandSender sender, String[] args) {
         Player player = asPlayer(sender);
         ItemStack item = player.getInventory().getItemInMainHand();
         GemManager gm = plugin.getGemManager();
         if (item == null || item.getType() == Material.AIR) {
-            player.sendMessage(ChatColor.RED + "你必须手持一件装备");
+            player.sendMessage(i18n("command.removeslot.must_hold_equipment"));
             return;
         }
         GemType type = args.length > 0
                 ? plugin.getConfigManager().getGemType(args[0])
                 : plugin.getConfigManager().getDefaultGemType();
         if (type == null) {
-            player.sendMessage(ChatColor.RED
-                    + (args.length > 0 ? "无效的宝石类型: " + args[0] : "未配置任何宝石类型, 请先在 config.yml 的 settings.gem_types 中配置"));
+            if (args.length > 0) {
+                player.sendMessage(i18n("command.removeslot.invalid_type", args[0]));
+            } else {
+                player.sendMessage(i18n("command.removeslot.no_type_configured"));
+            }
             return;
         }
         int count = argInt(args, 1, 1, plugin.getConfigManager().getMaxSockets());
@@ -68,15 +70,14 @@ public class CmdRemoveSlot extends SubCommand {
         player.getInventory().setItemInMainHand(gm.removeSlotFromItem(item, count, type));
         int removed = before - gm.getSocketCount(player.getInventory().getItemInMainHand());
         if (removed == 0) {
-            player.sendMessage(ChatColor.RED + "该装备没有可移除的「" + type.name() + "」空宝石槽位!(只有空槽位可以被移除)");
+            player.sendMessage(i18n("command.removeslot.none_removable", type.name()));
             return;
         }
         if (removed < count) {
-            player.sendMessage(ChatColor.GREEN + "已为装备移除 " + removed + " 个 " + type.name() + " 宝石槽位" + ChatColor.YELLOW
-                    + " (仅空槽位被移除, 已镶嵌宝石的槽位不受影响)");
+            player.sendMessage(i18n("command.removeslot.removed_partial", removed, type.name()));
             return;
         }
-        player.sendMessage(ChatColor.GREEN + "已为装备移除 " + removed + " 个 " + type.name() + " 宝石槽位");
+        player.sendMessage(i18n("command.removeslot.removed", removed, type.name()));
     }
 
     @Override

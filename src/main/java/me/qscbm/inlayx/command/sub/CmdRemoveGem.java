@@ -3,7 +3,6 @@ package me.qscbm.inlayx.command.sub;
 import java.util.List;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.GemManager;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,7 +23,12 @@ public class CmdRemoveGem extends SubCommand {
 
     @Override
     public String description() {
-        return "直接移除装备上的指定宝石";
+        return i18n("command.removegem.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.removegem.usage");
     }
 
     @Override
@@ -43,11 +47,6 @@ public class CmdRemoveGem extends SubCommand {
     }
 
     @Override
-    protected String usage() {
-        return "/gem removegem <宝石ID>";
-    }
-
-    @Override
     protected void execute(CommandSender sender, String[] args) {
         Player player = asPlayer(sender);
         String gemId = args[0];
@@ -55,20 +54,20 @@ public class CmdRemoveGem extends SubCommand {
         GemManager gm = plugin.getGemManager();
 
         if (item == null || item.getType() == Material.AIR || !gm.hasSocketedGems(item)) {
-            player.sendMessage(ChatColor.RED + "你手中的装备没有镶嵌宝石!");
+            player.sendMessage(i18n("command.extract.not_socketed"));
             return;
         }
         if (!gm.getSocketedGems(item).contains(gemId)) {
-            player.sendMessage(ChatColor.RED + "该装备上没有镶嵌「" + gemId + "」宝石!");
+            player.sendMessage(i18n("feedback.extract.not_found", gemId));
             return;
         }
 
         if (!gm.removeGem(item, gemId)) {
-            player.sendMessage(ChatColor.RED + "宝石移除失败!");
+            player.sendMessage(i18n("command.removegem.failed"));
             return;
         }
         player.getInventory().setItemInMainHand(item);
-        player.sendMessage(ChatColor.GREEN + "已从装备上移除宝石「" + gemId + "」");
+        player.sendMessage(i18n("command.removegem.success", gemId));
         plugin.getInteractionFeedback().playSocketSound(player, true);
     }
 

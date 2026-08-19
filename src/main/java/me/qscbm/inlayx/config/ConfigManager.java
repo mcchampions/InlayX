@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 public class ConfigManager {
     private final InlayX plugin;
 
+    private String language;
     private String guiTitle;
     private String socketHeader;
     private String socketFooter;
@@ -64,6 +65,7 @@ public class ConfigManager {
 
     public void loadSettings() {
         var cfg = plugin.getConfig();
+        language = normalizeLanguage(cfg.getString("settings.language", "zh_cn"));
         guiTitle = TextUtils.translateAlternateColorCodes(cfg.getString("settings.gui_title", "&5宝石镶嵌"));
         socketHeader = TextUtils.translateAlternateColorCodes(
                 cfg.getString("settings.socket.header", "&7------- 宝石槽位 -------"));
@@ -160,6 +162,28 @@ public class ConfigManager {
         } catch (IllegalArgumentException e) {
             return DropSourceMode.FIRST;
         }
+    }
+
+    private static String normalizeLanguage(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return "zh_cn";
+        }
+        String trimmed = raw.trim().toLowerCase();
+        String normalized = trimmed.replace('-', '_');
+        if (normalized.contains("_")) {
+            String[] parts = normalized.split("_", 2);
+            String lang = parts[0].replaceAll("[^a-z]", "");
+            String region = parts[1].replaceAll("[^a-z0-9]", "");
+            if (lang.isEmpty() || region.isEmpty()) {
+                return "zh_cn";
+            }
+            return lang + "_" + region;
+        }
+        return switch (normalized) {
+            case "zh" -> "zh_cn";
+            case "en" -> "en_us";
+            default -> normalized.matches("[a-z]{2,3}") ? normalized : "zh_cn";
+        };
     }
 
     private static ChatColor parseColor(String name, ChatColor def) {

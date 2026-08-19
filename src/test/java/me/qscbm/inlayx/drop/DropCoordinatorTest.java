@@ -27,12 +27,11 @@ import org.mockbukkit.mockbukkit.entity.ZombieMock;
 
 class DropCoordinatorTest extends InlayXTestBase {
 
-    private PlayerMock player;
     private ZombieMock zombie;
 
     @BeforeEach
     void init() {
-        player = server.addPlayer("Steve");
+        PlayerMock player = server.addPlayer("Steve");
         zombie = new ZombieMock(server, UUID.randomUUID());
         zombie.setKiller(player);
         plugin.getConfig().set("settings.gem.drop.enable", true);

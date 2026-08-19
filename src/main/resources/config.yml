@@ -4,6 +4,10 @@
 
 # 插件通用设置
 settings:
+  # 默认为 zh_cn
+  # 可使用的语言为 mc 原版支持的语言列表, 语言代码也须与之对应(用于获取原版物品名)
+  # 当前可用语言: zh_cn  zh_tw  en_us
+  language: zh_cn
   gui_title: "宝石镶嵌"
   # 宝石槽位有关设置
   socket:
@@ -153,7 +157,7 @@ settings:
         volume: 1.0
         pitch: 1.0
 
-config-version: 2
+config-version: 3
 # 自定义宝石(不建议在此处配置除非只有几种宝石, 或许更方便)
 # gems:
 #   example_gem:

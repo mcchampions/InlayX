@@ -7,7 +7,6 @@ import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.command.GemTabCompleter;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gem.GemType;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,7 +27,12 @@ public class CmdAddSlot extends SubCommand {
 
     @Override
     public String description() {
-        return "为手持装备添加空槽位";
+        return i18n("command.addslot.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.addslot.usage");
     }
 
     @Override
@@ -42,25 +46,23 @@ public class CmdAddSlot extends SubCommand {
     }
 
     @Override
-    protected String usage() {
-        return "/gem addslot <类型> [数量]";
-    }
-
-    @Override
     protected void execute(CommandSender sender, String[] args) {
         Player player = asPlayer(sender);
         ItemStack item = player.getInventory().getItemInMainHand();
         GemManager gm = plugin.getGemManager();
         if (item == null || item.getType() == Material.AIR) {
-            player.sendMessage(ChatColor.RED + "你必须手持一件装备");
+            player.sendMessage(i18n("command.addslot.must_hold_equipment"));
             return;
         }
         GemType type = args.length > 0
                 ? plugin.getConfigManager().getGemType(args[0])
                 : plugin.getConfigManager().getDefaultGemType();
         if (type == null) {
-            player.sendMessage(ChatColor.RED
-                    + (args.length > 0 ? "无效的宝石类型: " + args[0] : "未配置任何宝石类型, 请先在 config.yml 的 settings.gem_types 中配置"));
+            if (args.length > 0) {
+                player.sendMessage(i18n("command.addslot.invalid_type", args[0]));
+            } else {
+                player.sendMessage(i18n("command.addslot.no_type_configured"));
+            }
             return;
         }
         int requested = argInt(args, 1, 1, plugin.getConfigManager().getMaxSockets());
@@ -68,15 +70,15 @@ public class CmdAddSlot extends SubCommand {
         int current = gm.getSocketCount(item);
         int added = Math.max(0, Math.min(requested, maxSockets - current));
         if (added == 0) {
-            player.sendMessage(ChatColor.RED + "该装备的宝石槽位已达上限(" + maxSockets + " 个)!");
+            player.sendMessage(i18n("command.addslot.reached_max", maxSockets));
             return;
         }
         player.getInventory().setItemInMainHand(gm.addSlotToItem(item, added, type));
-        String message = ChatColor.GREEN + "已为装备添加 " + added + " 个 " + type.name() + " 宝石槽位";
         if (added < requested) {
-            message += ChatColor.YELLOW + "(已达上限 " + maxSockets + " 个)";
+            player.sendMessage(i18n("command.addslot.added_partial", added, type.name(), maxSockets));
+        } else {
+            player.sendMessage(i18n("command.addslot.added", added, type.name()));
         }
-        player.sendMessage(message);
     }
 
     @Override

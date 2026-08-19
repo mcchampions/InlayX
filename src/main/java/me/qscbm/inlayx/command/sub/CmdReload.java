@@ -1,7 +1,6 @@
 package me.qscbm.inlayx.command.sub;
 
 import me.qscbm.inlayx.InlayX;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -19,7 +18,7 @@ public class CmdReload extends SubCommand {
 
     @Override
     public String description() {
-        return "重载插件配置";
+        return i18n("command.reload.description");
     }
 
     @Override
@@ -31,8 +30,12 @@ public class CmdReload extends SubCommand {
     protected void execute(CommandSender sender, String[] args) {
         plugin.reloadConfig();
         plugin.getConfigManager().loadSettings();
+        plugin.getLanguageService().reload();
+        plugin.getGemManager().getGuiFactory().rebuildItems();
+        plugin.getGemManager().getExtractGuiFactory().rebuildItems();
+        plugin.getItemGroupConfigManager().load();
         plugin.getDropSourceConfigManager().load();
         plugin.getGemManager().loadGems();
-        sender.sendMessage(ChatColor.GREEN + "InlayX 插件配置已重载");
+        sender.sendMessage(i18n("command.reload.success"));
     }
 }

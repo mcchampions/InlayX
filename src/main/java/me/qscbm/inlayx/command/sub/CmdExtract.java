@@ -8,7 +8,6 @@ import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.socket.ExtractResult;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +28,12 @@ public class CmdExtract extends SubCommand {
 
     @Override
     public String description() {
-        return "从手持装备提取指定宝石";
+        return i18n("command.extract.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.extract.usage");
     }
 
     @Override
@@ -40,11 +44,6 @@ public class CmdExtract extends SubCommand {
     @Override
     protected boolean playerOnly() {
         return true;
-    }
-
-    @Override
-    protected String usage() {
-        return "/gem extract [宝石ID]";
     }
 
     @Override
@@ -59,20 +58,20 @@ public class CmdExtract extends SubCommand {
         GemManager gm = plugin.getGemManager();
 
         if (item == null || item.getType() == Material.AIR || !gm.hasSocketedGems(item)) {
-            player.sendMessage(ChatColor.RED + "你手中的装备没有镶嵌宝石!");
+            player.sendMessage(i18n("command.extract.not_socketed"));
             return;
         }
         if (gm.getGem(gemId) == null) {
             if (!gm.getSocketedGems(item).contains(gemId)) {
-                player.sendMessage(ChatColor.RED + "该装备上没有镶嵌「" + gemId + "」宝石!");
+                player.sendMessage(i18n("feedback.extract.not_found", gemId));
                 return;
             }
             if (!gm.removeGem(item, gemId)) {
-                player.sendMessage(ChatColor.RED + "移除未知宝石失败!");
+                player.sendMessage(i18n("feedback.extract.remove_unknown_failed"));
                 return;
             }
             player.getInventory().setItemInMainHand(item);
-            player.sendMessage(ChatColor.GREEN + "已移除未知宝石「" + gemId + "」(不会返还)");
+            player.sendMessage(i18n("feedback.extract.removed_unknown", gemId));
             plugin.getInteractionFeedback().playExtractSound(player, true);
             return;
         }
@@ -82,16 +81,16 @@ public class CmdExtract extends SubCommand {
             case SUCCESS -> {
                 player.getInventory().setItemInMainHand(item);
                 giveOrDrop(player, gm.createGemItem(result.getGemId()));
-                player.sendMessage(ChatColor.GREEN + "宝石提取成功!");
+                player.sendMessage(i18n("feedback.extract.success"));
                 plugin.getInteractionFeedback().playExtractSound(player, true);
             }
             case FAILED -> {
                 player.getInventory().setItemInMainHand(item);
-                player.sendMessage(ChatColor.RED + "提取失败!宝石已碎裂.");
+                player.sendMessage(i18n("feedback.extract.failed"));
                 plugin.getInteractionFeedback().playExtractSound(player, false);
             }
-            case CANCELLED -> player.sendMessage(ChatColor.RED + "提取已被取消!");
-            case NOT_FOUND -> player.sendMessage(ChatColor.RED + "该装备上没有镶嵌「" + gemId + "」宝石!");
+            case CANCELLED -> player.sendMessage(i18n("feedback.extract.cancelled"));
+            case NOT_FOUND -> player.sendMessage(i18n("feedback.extract.not_found", gemId));
         }
     }
 
@@ -119,12 +118,12 @@ public class CmdExtract extends SubCommand {
         return List.of();
     }
 
-    private static void giveOrDrop(Player player, ItemStack item) {
+    private void giveOrDrop(Player player, ItemStack item) {
         if (item == null) return;
         if (player.getInventory().firstEmpty() != -1) player.getInventory().addItem(item);
         else {
             player.getWorld().dropItemNaturally(player.getLocation(), item);
-            player.sendMessage(ChatColor.YELLOW + "你的物品栏已满, 物品已掉落在地上!");
+            player.sendMessage(i18n("command.extract.inventory_full_drop"));
         }
     }
 }

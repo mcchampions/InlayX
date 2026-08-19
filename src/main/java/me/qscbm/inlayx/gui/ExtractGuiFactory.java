@@ -10,7 +10,6 @@ import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gem.GemType;
 import me.qscbm.inlayx.socket.SocketSlot;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -37,12 +36,12 @@ public class ExtractGuiFactory {
     private final ItemStack backgroundItem;
     private final ItemStack dividerColItem;
     private final ItemStack dividerRowItem;
-    private final ItemStack placeholderItem;
-    private final ItemStack emptySlotBase;
-    private final ItemStack noSlotItem;
-    private final ItemMeta emptySlotBaseMeta;
-    private final ItemStack prevButton;
-    private final ItemStack nextButton;
+    private ItemStack placeholderItem;
+    private ItemStack emptySlotBase;
+    private ItemMeta emptySlotBaseMeta;
+    private ItemStack noSlotItem;
+    private ItemStack prevButton;
+    private ItemStack nextButton;
 
     private final Map<String, ItemStack> gemItemCache = new ConcurrentHashMap<>();
 
@@ -52,19 +51,28 @@ public class ExtractGuiFactory {
         this.backgroundItem = guiItem(Material.BLACK_STAINED_GLASS_PANE, " ");
         this.dividerColItem = guiItem(Material.BLUE_STAINED_GLASS_PANE, " ");
         this.dividerRowItem = guiItem(Material.BROWN_STAINED_GLASS_PANE, " ");
-        this.placeholderItem =
-                guiItem(Material.GRAY_STAINED_GLASS_PANE, ChatColor.GRAY + "宝石槽位", ChatColor.GRAY + "请先将装备放入左侧格子");
-        this.emptySlotBase =
-                guiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GRAY + "宝石槽位", ChatColor.GRAY + "（空）");
-        this.noSlotItem = guiItem(Material.RED_STAINED_GLASS_PANE, ChatColor.GRAY + "宝石槽位", ChatColor.RED + "暂无此槽位");
+        rebuildItems();
+    }
+
+    public void rebuildItems() {
+        var i18n = plugin.getLanguageService();
+        this.placeholderItem = guiItem(
+                Material.GRAY_STAINED_GLASS_PANE,
+                i18n.get("gui.extract.socket_slot"),
+                i18n.get("gui.extract.placeholder_lore"));
+        this.emptySlotBase = guiItem(
+                Material.GREEN_STAINED_GLASS_PANE, i18n.get("gui.extract.socket_slot"), i18n.get("gui.extract.empty"));
         this.emptySlotBaseMeta = emptySlotBase.getItemMeta();
-        this.prevButton = guiItem(Material.ARROW, ChatColor.YELLOW + "上一页", ChatColor.GRAY + "点击查看上一页槽位");
-        this.nextButton = guiItem(Material.ARROW, ChatColor.YELLOW + "下一页", ChatColor.GRAY + "点击查看下一页槽位");
+        this.noSlotItem = guiItem(
+                Material.RED_STAINED_GLASS_PANE, i18n.get("gui.extract.socket_slot"), i18n.get("gui.extract.no_slot"));
+        this.prevButton = guiItem(Material.ARROW, i18n.get("gui.extract.prev"), i18n.get("gui.extract.prev_lore"));
+        this.nextButton = guiItem(Material.ARROW, i18n.get("gui.extract.next"), i18n.get("gui.extract.next_lore"));
     }
 
     public Inventory createGUI() {
         GemExtractHolder holder = new GemExtractHolder(0);
-        Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.DARK_PURPLE + "宝石提取");
+        Inventory inv =
+                Bukkit.createInventory(holder, 54, plugin.getLanguageService().get("gui.extract.title"));
         fillDecoration(inv);
         inv.setItem(EQUIP_SLOT, null);
         refresh(inv, holder);
@@ -119,10 +127,14 @@ public class ExtractGuiFactory {
 
     private ItemStack emptySlotItem(int slotNo, String typeId) {
         ItemMeta meta = emptySlotBaseMeta.clone();
+        var i18n = plugin.getLanguageService();
         List<String> lore = new ArrayList<>(2);
-        lore.add(ChatColor.GRAY + "第 " + slotNo + " 槽位");
+        lore.add(i18n.get("gui.extract.slot_no", slotNo));
         GemType type = plugin.getConfigManager().getGemType(typeId);
-        lore.add(type == null ? ChatColor.GRAY + "未知类型（空）" : type.color() + type.name() + ChatColor.GRAY + "类型（空）");
+        lore.add(
+                type == null
+                        ? i18n.get("gui.extract.unknown_type_empty")
+                        : i18n.get("gui.extract.type_empty", type.color() + type.name()));
         meta.setLore(lore);
         ItemStack item = emptySlotBase.clone();
         item.setItemMeta(meta);

@@ -102,7 +102,7 @@ public class ItemGroupConfigManager {
             if (material == null) {
                 throw new IllegalArgumentException("无效的物品 / 物品组: " + id);
             }
-            String name = plugin.getTranslationService().getMaterialI18nName(material);
+            String name = plugin.getLanguageService().getMaterialI18nName(material);
             return ItemGroupOrItem.createItem(id, name, material);
         }
         return group;

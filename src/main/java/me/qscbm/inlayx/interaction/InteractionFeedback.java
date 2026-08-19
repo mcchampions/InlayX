@@ -3,7 +3,6 @@ package me.qscbm.inlayx.interaction;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.socket.SocketResult;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
@@ -22,7 +21,7 @@ public final class InteractionFeedback {
      * 提示玩家镶嵌成功并播放成功声音.
      */
     public void sendSocketSuccess(Player player) {
-        player.sendMessage(ChatColor.GREEN + "宝石镶嵌成功!");
+        player.sendMessage(plugin.getLanguageService().get("feedback.socket.success"));
         playSocketSound(player, true);
     }
 
@@ -35,30 +34,36 @@ public final class InteractionFeedback {
         switch (result.getStatus()) {
             case FAILED -> {
                 if (gem != null && gem.isDestroyOnFailure()) {
-                    player.sendMessage(ChatColor.RED + "镶嵌失败!宝石已碎裂.");
+                    player.sendMessage(plugin.getLanguageService().get("feedback.socket.failed_destroyed"));
                     playSocketSound(player, false);
                     return true;
                 }
-                player.sendMessage(ChatColor.RED + "镶嵌失败!宝石完好无损, 可再次尝试.");
+                player.sendMessage(plugin.getLanguageService().get("feedback.socket.failed_intact"));
                 playSocketSound(player, false);
             }
-            case NOT_A_GEM -> player.sendMessage(ChatColor.RED + "这不是一个有效的宝石!");
-            case UNKNOWN_GEM -> player.sendMessage(ChatColor.RED + "无法识别该宝石, 可能已被删除或配置已变更!");
+            case NOT_A_GEM -> player.sendMessage(plugin.getLanguageService().get("feedback.socket.not_a_gem"));
+            case UNKNOWN_GEM -> player.sendMessage(plugin.getLanguageService().get("feedback.socket.unknown_gem"));
             case NO_SOCKET -> {
                 if (hadSocketLore) {
-                    player.sendMessage(ChatColor.RED + "该装备的宝石槽位已满!");
+                    player.sendMessage(plugin.getLanguageService().get("feedback.socket.no_socket_full"));
                 } else {
-                    player.sendMessage(ChatColor.RED + "该装备没有宝石槽位!");
+                    player.sendMessage(plugin.getLanguageService().get("feedback.socket.no_socket_empty"));
                 }
             }
             case TYPE_MISMATCH -> {
-                String typeName = gem == null ? "对应" : gem.getType().name();
-                player.sendMessage(ChatColor.RED + "该装备没有「" + typeName + "」类型的空槽位!");
+                if (gem == null) {
+                    player.sendMessage(plugin.getLanguageService().get("feedback.socket.type_mismatch_unknown"));
+                } else {
+                    player.sendMessage(plugin.getLanguageService()
+                            .get("feedback.socket.type_mismatch", gem.getType().name()));
+                }
             }
-            case MATERIAL_MISMATCH -> player.sendMessage(ChatColor.RED + "该宝石不能镶嵌到这种装备上!");
-            case OVER_CAP_LIMIT -> player.sendMessage(ChatColor.RED + "该装备的宝石槽位数量异常, 无法镶嵌!");
-            case CANCELLED -> player.sendMessage(ChatColor.RED + "镶嵌已被取消!");
-            default -> player.sendMessage(ChatColor.RED + "无法镶嵌, 请检查装备与宝石!");
+            case MATERIAL_MISMATCH ->
+                player.sendMessage(plugin.getLanguageService().get("feedback.socket.material_mismatch"));
+            case OVER_CAP_LIMIT ->
+                player.sendMessage(plugin.getLanguageService().get("feedback.socket.over_cap"));
+            case CANCELLED -> player.sendMessage(plugin.getLanguageService().get("feedback.socket.cancelled"));
+            default -> player.sendMessage(plugin.getLanguageService().get("feedback.socket.default"));
         }
         return false;
     }

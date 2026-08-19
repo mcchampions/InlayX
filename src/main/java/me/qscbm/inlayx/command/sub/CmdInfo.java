@@ -27,7 +27,12 @@ public class CmdInfo extends SubCommand {
 
     @Override
     public String description() {
-        return "查看手持宝石或装备信息";
+        return i18n("command.info.description");
+    }
+
+    @Override
+    protected String usage() {
+        return i18n("command.info.usage");
     }
 
     @Override
@@ -45,12 +50,12 @@ public class CmdInfo extends SubCommand {
         Player player = asPlayer(sender);
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null) {
-            player.sendMessage(ChatColor.RED + "请手持宝石或已镶嵌宝石的装备!");
+            player.sendMessage(i18n("command.info.must_hold"));
             return;
         }
         Material itemType = item.getType();
         if (itemType == Material.AIR) {
-            player.sendMessage(ChatColor.RED + "请手持宝石或已镶嵌宝石的装备!");
+            player.sendMessage(i18n("command.info.must_hold"));
             return;
         }
         GemManager gm = plugin.getGemManager();
@@ -62,30 +67,29 @@ public class CmdInfo extends SubCommand {
         GemManager gm = plugin.getGemManager();
         Gem gem = gm.getGem(gm.getGemId(item));
         if (gem == null) {
-            player.sendMessage(ChatColor.RED + "无效的宝石!");
+            player.sendMessage(i18n("command.info.invalid_gem"));
             return;
         }
-        player.sendMessage(ChatColor.GOLD + "===== 宝石信息 =====");
-        player.sendMessage(ChatColor.YELLOW + "ID: " + ChatColor.WHITE + gem.getId());
-        player.sendMessage(ChatColor.YELLOW + "名称: " + ChatColor.WHITE + gem.getName());
-        player.sendMessage(
-                ChatColor.YELLOW + "类型: " + ChatColor.WHITE + gem.getType().name());
-        player.sendMessage(ChatColor.YELLOW + "等级: " + ChatColor.WHITE + gem.getLevel());
+        player.sendMessage(i18n("command.info.gem_title"));
+        player.sendMessage(i18n("command.info.id", gem.getId()));
+        player.sendMessage(i18n("command.info.name", gem.getName()));
+        player.sendMessage(i18n("command.info.type", gem.getType().name()));
+        player.sendMessage(i18n("command.info.level", gem.getLevel()));
         player.sendMessage("");
-        player.sendMessage(ChatColor.GOLD + "属性加成:");
+        player.sendMessage(i18n("command.info.attributes"));
         gem.getAttributeLore()
                 .forEach(line ->
-                        player.sendMessage(ChatColor.GREEN + "  " + TextUtils.translateAlternateColorCodes(line)));
+                        player.sendMessage(ChatColor.GREEN + TextUtils.translateAlternateColorCodes("  " + line)));
     }
 
     private void showEquipmentInfo(Player player, ItemStack item, Material itemType) {
-        player.sendMessage(ChatColor.GOLD + "===== 装备宝石信息 =====");
-        player.sendMessage(ChatColor.YELLOW + "装备: " + ChatColor.WHITE + itemType.name());
+        player.sendMessage(i18n("command.info.equip_title"));
+        player.sendMessage(i18n("command.info.equipment", itemType.name()));
 
         GemManager gm = plugin.getGemManager();
         List<SocketSlot> slots = gm.getSocketSlots(item);
         if (slots.isEmpty()) {
-            player.sendMessage(ChatColor.GRAY + "  该装备没有宝石槽位");
+            player.sendMessage(i18n("command.info.no_socket_slot"));
             return;
         }
         int slotNo = 0;
@@ -93,24 +97,27 @@ public class CmdInfo extends SubCommand {
         for (SocketSlot slot : slots) {
             slotNo++;
             if (slot.getGemId() == null) {
-                player.sendMessage(ChatColor.YELLOW + "  槽位" + slotNo + ": " + ChatColor.GRAY + "(空)");
+                player.sendMessage(i18n("command.info.slot_empty", slotNo));
                 continue;
             }
             Gem gem = gm.getGem(slot.getGemId());
             if (gem != null) {
                 hasGem = true;
-                player.sendMessage(ChatColor.YELLOW + "  槽位" + slotNo + ": "
-                        + ChatColor.GREEN + gem.getName()
-                        + ChatColor.WHITE + " [" + gem.getType().name() + " Lv." + gem.getLevel() + "]");
+                player.sendMessage(i18n(
+                        "command.info.slot_filled",
+                        slotNo,
+                        gem.getName(),
+                        gem.getType().name(),
+                        gem.getLevel()));
                 gem.getAttributeLore()
                         .forEach(attr -> player.sendMessage(
-                                ChatColor.GRAY + "    " + TextUtils.translateAlternateColorCodes(attr)));
+                                ChatColor.GRAY + TextUtils.translateAlternateColorCodes("    " + attr)));
             } else {
-                player.sendMessage(ChatColor.YELLOW + "  槽位" + slotNo + ": " + ChatColor.RED + "未知宝石");
+                player.sendMessage(i18n("command.info.slot_unknown", slotNo));
             }
         }
         if (!hasGem) {
-            player.sendMessage(ChatColor.GRAY + "  该装备没有镶嵌宝石");
+            player.sendMessage(i18n("command.info.no_socketed_gem"));
         }
     }
 }
