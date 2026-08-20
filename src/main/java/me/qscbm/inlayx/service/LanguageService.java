@@ -6,20 +6,12 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import me.qscbm.inlayx.InlayX;
-import me.qscbm.inlayx.message.QsTextComponentImpl;
 import me.qscbm.inlayx.util.MCAssetsUtils;
 import me.qscbm.inlayx.util.TextUtils;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.TranslatableComponent;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import net.kyori.adventure.translation.TranslationStore;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.json.JSONObject;
@@ -46,7 +38,7 @@ public class LanguageService {
 
     private String effectiveLanguage;
 
-    private TranslationStore<Component> store;
+    private Map<String, String> vanillaTranslations;
 
     public LanguageService(InlayX plugin) {
         this.plugin = plugin;
@@ -90,15 +82,7 @@ public class LanguageService {
     // ==================== 原版物品名 ====================
 
     public String getMaterialI18nName(Material material) {
-        TranslatableComponent component = Component.translatable(material);
-        Component com = store.translate(component, Locale.of(effectiveLanguage));
-        if (com == null) {
-            return material.name();
-        }
-        if (com instanceof TextComponent c) {
-            return c.content();
-        }
-        return PlainTextComponentSerializer.plainText().serialize(com);
+        return vanillaTranslations.getOrDefault(material.getItemTranslationKey(), material.name());
     }
 
     private void loadVanillaTranslations() {
@@ -119,17 +103,16 @@ public class LanguageService {
             return;
         }
 
-        store = TranslationStore.component(Key.key("inlayx", "vanilla_translation"));
-        store.registerAll(Locale.of(loadedLang), getTranslationMap(data));
+        vanillaTranslations = getTranslationMap(data);
         effectiveLanguage = loadedLang;
     }
 
-    private Map<String, Component> getTranslationMap(JSONObject jsonObject) {
+    private Map<String, String> getTranslationMap(JSONObject jsonObject) {
         Set<String> keys = jsonObject.keySet();
-        Map<String, Component> translationMap = new HashMap<>(jsonObject.length());
+        Map<String, String> translationMap = new HashMap<>(jsonObject.length());
         for (String key : keys) {
             String value = jsonObject.getString(key);
-            translationMap.put(key, new QsTextComponentImpl(value));
+            translationMap.put(key, value);
         }
         return translationMap;
     }
