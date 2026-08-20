@@ -209,3 +209,29 @@ mvn test
 ## 相关链接
 
 Minebbs: [https://www.minebbs.com/resources/inlayx.17877/](https://www.minebbs.com/resources/inlayx.17877/)
+
+## 常见问题
+
+### 如何手动设置宝石槽位
+
+给物品添加形如以下的 lore:
+```yaml
+lore:
+  - "其他"
+  # 以上为其他乱七八糟的 lore
+  - "&7------- 宝石槽位 -------" # 对应 config.yml 中的 settings.socket.header
+  - "&*◇ **宝石槽位 " # 对应 config.yml 中的 settings.socket.display_pattern.empty
+  - "&7◇ 实用宝石槽位" # 同上
+  - "&7======================" # 对应 config.yml 中的 settings.socket.footer
+  # 以下为其他乱七八糟的 lore
+```
+
+注意, 如果你将 `settings.socket.allow_unknown_lore` 设置为 `false`, 那么你的宝石槽位区域只能出现宝石槽位, 不能出现其他格式的 lore, 包括空行, 必须要跟以上展示的 lore 相似
+
+如果你将其设为 `true`, 你可以在每个槽位之间添加其他的字符串
+
+### 修改配置后使用 reload 子命令会生效吗
+
+本插件绝大部分配置都支持通过 `/gem reload` 重载
+
+如果你发现有的配置项修改后使用 `/gem reload` 指令没有生效, 可以反馈

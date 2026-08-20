@@ -35,6 +35,7 @@ public class ConfigManager {
     private String socketEmptyPattern;
     private List<String> socketFilledPattern;
     private String socketAttributeLorePattern;
+    private boolean allowUnknownLore;
 
     @Getter(AccessLevel.NONE)
     private final Map<String, GemType> gemTypes = new LinkedHashMap<>();
@@ -78,6 +79,7 @@ public class ConfigManager {
         } else {
             maxSockets = configuredMaxSockets;
         }
+        allowUnknownLore = cfg.getBoolean("settings.socket.allow_unknown_lore", true);
         rightClickSocketEnabled = cfg.getBoolean("settings.socket.quick_socket.right_click", true);
         dragSocketEnabled = cfg.getBoolean("settings.socket.quick_socket.drag", true);
         socketEmptyPattern =

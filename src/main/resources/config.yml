@@ -14,6 +14,13 @@ settings:
     header: "&7------- 宝石槽位 -------"
     footer: "&7======================"
     max_sockets: 8
+    # 允许宝石区域中出现未知的字符串
+    # 如果设置为 true, 解析 lore 时若遇到未知字符串会跳过解析
+    #   这会允许你在宝石区域内添加自定义修饰 lore, 这适用于你使用其他插件批量生成带有自定义 lore 提高宝石槽位的物品同时又向加点自己的修饰 lore 的情况
+    #   但是重建时不会遵循该设置
+    # 如果设置为 false, 解析 lore 时若遇到未知字符串会直接结束解析并触发重建
+    #   触发重建时可能会导致部分空槽位丢失
+    allow_unknown_lore: true
     # 快捷镶嵌开关
     quick_socket:
       # 右键快捷镶嵌(主手持宝石, 副手持装备, 右键镶嵌)
@@ -105,30 +112,39 @@ settings:
   gem_types:
     ATTACK:
       name: "攻击"
+      # &c
       color: RED
     DEFENSE:
       name: "防御"
+      # &9
       color: BLUE
     HEALTH:
       name: "生命"
+      # &a
       color: GREEN
     SPEED:
       name: "速度"
+      # &b
       color: AQUA
     LUCK:
       name: "幸运"
+      # &6
       color: GOLD
     MAGIC:
       name: "魔法"
+      # &d
       color: LIGHT_PURPLE
     ELEMENTAL:
       name: "元素"
+      # &e
       color: YELLOW
     UTILITY:
       name: "实用"
+      # &7
       color: GRAY
     SPECIAL:
       name: "特殊"
+      # &5
       color: DARK_PURPLE
   # 播放声音设置
   sounds:
@@ -157,7 +173,7 @@ settings:
         volume: 1.0
         pitch: 1.0
 
-config-version: 3
+config-version: 4
 # 自定义宝石(不建议在此处配置除非只有几种宝石, 或许更方便)
 # gems:
 #   example_gem:

@@ -114,7 +114,12 @@ public class SocketService {
             }
             GemType type = matchEmptyType(lore.get(headerIdx + 1 + offset));
             if (type == null) {
-                break;
+                if (plugin.getConfigManager().isAllowUnknownLore()) {
+                    offset++;
+                    continue;
+                } else {
+                    break;
+                }
             }
             slots.add(new SocketSlot(index, type.id(), null, offset, offset));
             offset++;
