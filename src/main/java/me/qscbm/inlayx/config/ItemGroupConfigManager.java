@@ -64,6 +64,7 @@ public class ItemGroupConfigManager {
             try {
                 loadItemGroup(itemGroupConfig);
             } catch (IllegalArgumentException e) {
+                // 忽略无效的物品组
                 plugin.getLogger().warning("加载物品组 " + itemGroupConfig.id() + " 失败: " + e.getMessage());
             }
         }
