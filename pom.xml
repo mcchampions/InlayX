@@ -6,7 +6,7 @@
 
     <groupId>me.qscbm</groupId>
     <artifactId>InlayX</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-fixed</version>
     <packaging>jar</packaging>
 
     <name>InlayX</name>
