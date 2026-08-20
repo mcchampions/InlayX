@@ -10,7 +10,6 @@ me.qscbm.inlayx.gui
 me.qscbm.inlayx.integration
 me.qscbm.inlayx.interaction
 me.qscbm.inlayx.listener
-me.qscbm.inlayx.message
 me.qscbm.inlayx.service
 me.qscbm.inlayx.socket
 me.qscbm.inlayx.util
