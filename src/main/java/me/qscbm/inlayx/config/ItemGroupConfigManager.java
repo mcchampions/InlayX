@@ -61,7 +61,11 @@ public class ItemGroupConfigManager {
     public void loadItemGroups() {
         itemGroups = new ConcurrentHashMap<>();
         for (ItemGroupConfig itemGroupConfig : itemGroupConfigs.values()) {
-            loadItemGroup(itemGroupConfig);
+            try {
+                loadItemGroup(itemGroupConfig);
+            } catch (IllegalArgumentException e) {
+                plugin.getLogger().warning("加载物品组 " + itemGroupConfig.id() + " 失败: " + e.getMessage());
+            }
         }
     }
 
