@@ -34,6 +34,7 @@ public class CmdReload extends SubCommand {
         plugin.getGemManager().getGuiFactory().rebuildItems();
         plugin.getGemManager().getExtractGuiFactory().rebuildItems();
         plugin.getItemGroupConfigManager().load();
+        plugin.getAttachmentHandlerConfigManager().load();
         plugin.getDropSourceConfigManager().load();
         plugin.getGemManager().loadGems();
         sender.sendMessage(i18n("command.reload.success"));

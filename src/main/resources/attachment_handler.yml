@@ -1,0 +1,41 @@
+# 对于镶嵌宝石时, 对宝石的附魔福建的处理
+enchantments:
+  # 是否忽略原版等级限制
+  # 即对被镶嵌装备添加附魔时是否忽略原版附魔的等级上限
+  ignore_level_restriction: false
+  # 等级处理
+  # 支持数学公式
+  #   数学公式参考: https://www.objecthunter.net/exp4j/
+  #   若计算出来的结果小于0会等效于0, 计算结果为浮点数时将会四舍五入
+  handler:
+    # 镶嵌时的处理逻辑
+    # 支持变量: {level} 宝石附带附魔等级  {old_level} 原有附魔等级
+    socket:
+      # 如果装备上没有附魔时
+      non_exist: "{level}"
+      # 如果装备上存在附魔时
+      exist:
+        # 如果宝石附带的附魔比装备附魔等级低
+        lower: "{old_level}"
+        # 如果宝石附带的附魔比装备附魔等级高
+        higher: "{level}"
+        # 相同
+        same: "{level} + 1"
+    # 提取时的处理逻辑
+    # 支持变量: {level} 宝石附带附魔等级  {old_level} 镶嵌前的附魔等级  {now_level} 现存的附魔等级
+    # 对于 {old_level} 的说明: 若多个宝石修改了同一物品的附魔等级, {old_level} 为对应宝石镶嵌前的附魔等级
+    extract:
+      # 如果宝石附带的附魔比镶嵌前的附魔等级低
+      before_lower:
+        # 如果宝石附带的附魔比现存的附魔等级低
+        after_lower: "{now_level}"
+        after_higher: "{now_level}"
+        after_same: "{now_level}"
+      before_higher:
+        after_lower: "{now_level} - 1"
+        after_higher: "{now_level} - {level} + {old_level}"
+        after_same: "{old_level}"
+      before_same:
+        after_lower: "{now_level} - 1"
+        after_higher: "{now_level} - 1"
+        after_same: "{now_level} - 1"

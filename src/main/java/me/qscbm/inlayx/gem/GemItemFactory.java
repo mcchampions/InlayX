@@ -132,7 +132,7 @@ public class GemItemFactory {
             }
         }
         int attributeIndex = 0;
-        for (Gem.AttributeEntry attribute : gem.getAttributes()) {
+        for (AttributeEntry attribute : gem.getAttributes()) {
             NamespacedKey modifierKey = new NamespacedKey(plugin, "attribute_" + attributeIndex++);
             AttributeModifier modifier = attribute.slot() == null
                     ? new AttributeModifier(modifierKey, attribute.amount(), attribute.operation())

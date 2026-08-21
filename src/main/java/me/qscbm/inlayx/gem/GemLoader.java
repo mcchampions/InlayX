@@ -28,7 +28,7 @@ import org.bukkit.potion.PotionEffectType;
 /**
  * 宝石加载器
  */
-class GemLoader {
+public class GemLoader {
     private final InlayX plugin;
     private final GemItemFactory itemFactory;
     private final Runnable onGemsChanged;
@@ -283,6 +283,11 @@ class GemLoader {
             if (!loading) {
                 onGemsChanged.run();
             }
+            ConfigurationSection attachmentSec = section.getConfigurationSection("attachment");
+            if (attachmentSec != null) {
+                GemAttachment gemAttachment = GemAttachment.parse(attachmentSec, gem, this);
+                gem.setGemAttachment(gemAttachment);
+            }
             return true;
         } catch (Exception e) {
             plugin.getLogger().warning("解析宝石 " + gemId + " 时出错: " + e.getMessage());
@@ -481,12 +486,12 @@ class GemLoader {
         }
     }
 
-    private Enchantment parseEnchantment(String name) {
+    protected Enchantment parseEnchantment(String name) {
         NamespacedKey key = parseNamespacedKey(name);
         return key == null ? null : Registry.ENCHANTMENT.get(key);
     }
 
-    private Attribute parseAttribute(String name) {
+    protected Attribute parseAttribute(String name) {
         NamespacedKey key = parseNamespacedKey(name);
         if (key == null) {
             return null;
@@ -524,7 +529,7 @@ class GemLoader {
         }
     }
 
-    private AttributeModifier.Operation parseOperation(String name) {
+    protected AttributeModifier.Operation parseOperation(String name) {
         if (name != null) {
             switch (name.trim()) {
                 case "0" -> {
@@ -547,7 +552,7 @@ class GemLoader {
         }
     }
 
-    private EquipmentSlot parseEquipmentSlot(String name) {
+    protected EquipmentSlot parseEquipmentSlot(String name) {
         if (name == null || name.isBlank() || "null".equalsIgnoreCase(name)) {
             return null;
         }

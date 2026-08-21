@@ -6,7 +6,7 @@
 
     <groupId>me.qscbm</groupId>
     <artifactId>InlayX</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>InlayX</name>
@@ -79,6 +79,10 @@
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
                             <shadedPattern>me.qscbm.inlayx.libs.folialib</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.objecthunter.exp4j</pattern>
+                            <shadedPattern>me.qscbm.inlayx.libs.exp4j</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
@@ -166,14 +170,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20240303</version>
+            <groupId>com.github.mcchampions</groupId>
+            <artifactId>JSON-java</artifactId>
+            <version>2787129836</version>
         </dependency>
         <dependency>
             <groupId>com.tcoded</groupId>
             <artifactId>FoliaLib</artifactId>
             <version>0.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.objecthunter</groupId>
+            <artifactId>exp4j</artifactId>
+            <version>0.4.8</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

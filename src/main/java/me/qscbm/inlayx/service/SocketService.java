@@ -16,6 +16,7 @@ import me.qscbm.inlayx.api.event.GemExtractedEvent;
 import me.qscbm.inlayx.api.event.GemSocketEvent;
 import me.qscbm.inlayx.api.event.GemSocketedEvent;
 import me.qscbm.inlayx.gem.Gem;
+import me.qscbm.inlayx.gem.GemAttachment;
 import me.qscbm.inlayx.gem.GemItemFactory;
 import me.qscbm.inlayx.gem.GemManager;
 import me.qscbm.inlayx.gem.GemTemplate;
@@ -114,12 +115,8 @@ public class SocketService {
             }
             GemType type = matchEmptyType(lore.get(headerIdx + 1 + offset));
             if (type == null) {
-                if (plugin.getConfigManager().isAllowUnknownLore()) {
-                    offset++;
-                    continue;
-                } else {
-                    break;
-                }
+                offset++;
+                continue;
             }
             slots.add(new SocketSlot(index, type.id(), null, offset, offset));
             offset++;
@@ -389,7 +386,10 @@ public class SocketService {
         for (int i = 0; i < sockets; i++) {
             slots.add(new SocketSlot(nextIndex + i, socketType.id(), null, 0, 0));
         }
-        return rebuildSocketArea(item, slots);
+
+        meta = rebuildSocketArea(meta, slots);
+        item.setItemMeta(meta);
+        return item;
     }
 
     public ItemStack removeSlotFromItem(ItemStack item, int sockets, GemType socketType) {
@@ -413,7 +413,9 @@ public class SocketService {
         if (removed == 0) {
             return item;
         }
-        return rebuildSocketArea(item, keep);
+        meta = rebuildSocketArea(meta, keep);
+        item.setItemMeta(meta);
+        return item;
     }
 
     public SocketResult socketGem(ItemStack equipment, ItemStack gemItem) {
@@ -495,8 +497,14 @@ public class SocketService {
             return SocketResult.failure(SocketResult.Status.FAILED);
         }
         slots.get(idx).setGemId(gem.getId());
-        ItemStack result = rebuildSocketArea(equipment, slots);
-        return SocketResult.success(result);
+        ItemMeta resultMeta = rebuildSocketArea(equipMeta, slots);
+
+        GemAttachment gemAttachment = gem.getGemAttachment();
+        if (gemAttachment != null) {
+            resultMeta = gemAttachment.socketToItemMeta(resultMeta);
+        }
+        equipment.setItemMeta(resultMeta);
+        return SocketResult.success(equipment);
     }
 
     public ExtractResult extractGem(ItemStack item, String gemId) {
@@ -559,24 +567,28 @@ public class SocketService {
         if (idx < 0) {
             return false;
         }
+        Gem gem = registry.get().gems().get(gemId);
         SocketSlot slot = slots.get(idx);
-        if (slot.getType() == null) {
-            Gem gem = registry.get().gems().get(gemId);
-            if (gem != null) {
+        if (gem != null) {
+            if (slot.getType() == null) {
                 slot.setType(gem.getType().id());
+            }
+            GemAttachment gemAttachment = gem.getGemAttachment();
+            if (gemAttachment != null) {
+                meta = gemAttachment.extractToItemMeta(meta);
             }
         }
         slot.setGemId(null);
-        rebuildSocketArea(item, slots);
+        meta = rebuildSocketArea(meta, slots);
+        item.setItemMeta(meta);
         return true;
     }
 
     // ==================== 区域重建 ====================
 
-    private ItemStack rebuildSocketArea(ItemStack item, List<SocketSlot> slots) {
-        ItemMeta meta = item.getItemMeta();
+    private ItemMeta rebuildSocketArea(ItemMeta meta, List<SocketSlot> slots) {
         if (meta == null) {
-            return item;
+            return meta;
         }
         List<String> lore = meta.getLore();
         if (lore == null) {
@@ -600,8 +612,7 @@ public class SocketService {
             }
             writeSlots(meta, slots);
             meta.setLore(newLore);
-            item.setItemMeta(meta);
-            return item;
+            return meta;
         }
 
         if (headerIdx >= 0) {
@@ -632,8 +643,7 @@ public class SocketService {
         }
         writeSlots(meta, slots);
         meta.setLore(newLore);
-        item.setItemMeta(meta);
-        return item;
+        return meta;
     }
 
     private int recoverFooterInsertionIndex(List<String> lore, int headerIdx, List<SocketSlot> filledSlots) {

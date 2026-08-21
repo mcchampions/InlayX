@@ -103,6 +103,8 @@ public class Gem {
     @Setter(AccessLevel.NONE)
     private ItemMeta itemMetaTemplate;
 
+    private GemAttachment gemAttachment;
+
     public Gem(String id, String name, GemType type, int level, Material material) {
         this.id = id;
         this.name = name;
@@ -242,12 +244,6 @@ public class Gem {
             PotionEffectType effect, int duration, int amplifier, boolean ambient, boolean particles, boolean icon) {
         potionEffects.add(new PotionEntry(effect, duration, amplifier, ambient, particles, icon));
     }
-
-    /**
-     * 一个原版属性修饰符的配置值
-     */
-    public record AttributeEntry(
-            Attribute attribute, double amount, AttributeModifier.Operation operation, EquipmentSlot slot) {}
 
     /**
      * 药水效果的配置值

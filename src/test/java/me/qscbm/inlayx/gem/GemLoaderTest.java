@@ -213,7 +213,7 @@ class GemLoaderTest extends InlayXTestBase {
         assertTrue(gem.getItemFlags().contains(ItemFlag.HIDE_ENCHANTS));
         assertEquals(Color.fromRGB(255, 0, 0), gem.getLeatherColor());
         assertEquals(1, gem.getAttributes().size());
-        Gem.AttributeEntry attribute = gem.getAttributes().getFirst();
+        AttributeEntry attribute = gem.getAttributes().getFirst();
         assertEquals(Attribute.ATTACK_DAMAGE, attribute.attribute());
         assertEquals(10, attribute.amount());
         assertEquals(AttributeModifier.Operation.ADD_NUMBER, attribute.operation());

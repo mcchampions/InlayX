@@ -7,6 +7,7 @@ import me.qscbm.inlayx.api.DropSource;
 import me.qscbm.inlayx.api.InlayXApi;
 import me.qscbm.inlayx.command.GemCommand;
 import me.qscbm.inlayx.command.sub.SubCommand;
+import me.qscbm.inlayx.config.AttachmentHandlerConfigManager;
 import me.qscbm.inlayx.config.ConfigManager;
 import me.qscbm.inlayx.config.ConfigUpdater;
 import me.qscbm.inlayx.config.DropSourceConfigManager;
@@ -52,6 +53,8 @@ public class InlayX extends JavaPlugin implements InlayXApi {
 
     private ItemGroupConfigManager itemGroupConfigManager;
 
+    private AttachmentHandlerConfigManager attachmentHandlerConfigManager;
+
     @Override
     public void onEnable() {
         INSTANCE = this;
@@ -79,6 +82,8 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         this.getLogger().info("加载物品组中......");
         this.itemGroupConfigManager = new ItemGroupConfigManager(this);
         itemGroupConfigManager.load();
+        this.attachmentHandlerConfigManager = new AttachmentHandlerConfigManager(this);
+        attachmentHandlerConfigManager.load();
         this.getLogger().info("配置文件已加载");
 
         this.getLogger().info("加载掉落来源中......");

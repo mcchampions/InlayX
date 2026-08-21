@@ -73,10 +73,19 @@ gem_id_3:
       # 专有变量:
       #  {attributeLores} 属性 lore(只在一行中单独存在该变量时解析)
       lore:
-        - "&7不过1个普普通通的小宝石罢了"
+        - "&7类型: {gemTypeName} 宝石"
+        - "&7等级: {gemLevel}"
+        - "&7成功率: {successRate}"
+        - "&7失败时损坏: {destroyOnFailure}"
         - ""
-        - "&e可提供增幅:"
         - "{attributeLores}"
+        - ""
+        - "可增加附魔: 锋利3"
+        - "可增加属性: "
+        - "  攻击伤害 +10"
+        - "  幸运 +10"
+        - ""
+        - "{equipmentFilterLores}"
         - ""
         - "&e右键点击装备可直接镶嵌"
         - "&e或使用 /gem socket 打开镶嵌界面"
@@ -92,7 +101,6 @@ gem_id_3:
       # 格式-3: 20%   百分比耐久, 与耐久条相同
       # (可选)
       Durability: "20"
-      #
       # 附魔列表
       # 格式:
       # - "附魔名称:等级"
@@ -160,6 +168,13 @@ gem_id_3:
           particles: true
           # (可选)
           icon: true
+  attachment:
+    attributes:
+      - "ATTACK_DAMAGE:10:0:OFF_HAND"
+      - "LUCK:10:0"
+    enchantments:
+      - "SHARPNESS:3"
+
 
 gem_id_4:
   name: "Name 4"
@@ -168,10 +183,56 @@ gem_id_4:
   material: BONE
   attributes:
     - "物品掉落率 +5%"
+  # 附带参数
+  # 镶嵌宝石时将以下参数添加到被镶嵌的物品
+  # 比如镶嵌宝石时, 添加附魔和原版属性
+  # 对镶嵌物品的附加属性处理见 attachment_handler.yml 文件
+  # (可选)
+  attachment:
+    # 物品属性
+    # 格式:
+    # - "属性名:数字:模式:生效位置"    # 生效当前位置
+    # - "属性名:数字:模式"           # 生效所有位置
+    # 模式:
+    #   0   ADD_NUMBER          属性增量
+    #   1   ADD_SCALAR          倍率增量
+    #   2   MULTIPLY_SCALAR_1   最终倍乘
+    # 生效位置: 不填写生效位置则生效在所有部位上
+    #   HAND      主手
+    #   OFF_HAND  副手
+    #   HEAD      头
+    #   CHEST     身
+    #   LEGS      腿
+    #   FEET      脚
+    # 参考WIKI: https://minecraft.fandom.com/zh/wiki/%E5%B1%9E%E6%80%A7
+    # 参考: https://jd.papermc.io/paper/1.21.11/org/bukkit/attribute/Attribute.html
+    # (可选)
+    attributes:
+      - "ATTACK_DAMAGE:10:0:HAND"
+    # 附魔列表
+    # 格式:
+    # - "附魔名称:等级"
+    # 参考: https://jd.papermc.io/paper/1.21.11/org/bukkit/enchantments/Enchantment.html
+    # (可选)
+    enchantments:
+      - "SHARPNESS:2"
+
   # (可选)
   overrides:
     display_pattern:
-      lore: []
+      lore:
+        - "&7一个小宝石"
+        - "可提供以下增益"
+        - "{attributeLores}"
+        - ""
+        - "可增加附魔: 锋利2"
+        - "可增加属性: "
+        - "  攻击伤害 +10"
+        - ""
+        - "{equipmentFilterLores}"
+        - ""
+        - "&e右键点击装备可直接镶嵌"
+        - "&e或使用 /gem socket 打开镶嵌界面"
       per_line_attribute_lore: "&7  - &b{attributeLore}"
 
 gem_id_5:

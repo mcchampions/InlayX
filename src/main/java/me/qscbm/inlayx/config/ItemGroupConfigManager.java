@@ -43,7 +43,7 @@ public class ItemGroupConfigManager {
         try {
             config.load(file);
         } catch (Exception e) {
-            plugin.getLogger().warning("加载 item_group.yml 失败: " + e.getMessage());
+            plugin.getLogger().warning("加载 item.yml 失败: " + e.getMessage());
             config = new YamlConfiguration();
         }
         itemGroupConfigs = new HashMap<>();
