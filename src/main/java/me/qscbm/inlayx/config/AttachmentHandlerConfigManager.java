@@ -186,7 +186,11 @@ public class AttachmentHandlerConfigManager {
         }
         expr.setVariable("_var_level", level);
         expr.setVariable("_var_old_level", old_level);
-        return Math.toIntExact(Math.round(expr.evaluate()));
+        int result = Math.toIntExact(Math.round(expr.evaluate()));
+        if (result < 0) {
+            result = 0;
+        }
+        return result;
     }
 
     private int parseExprWhenExtract(int level, int old_level, int now_level) {
@@ -219,7 +223,11 @@ public class AttachmentHandlerConfigManager {
         expr.setVariable("_var_level", level);
         expr.setVariable("_var_old_level", old_level);
         expr.setVariable("_var_now_level", now_level);
-        return Math.toIntExact(Math.round(expr.evaluate()));
+        int result = Math.toIntExact(Math.round(expr.evaluate()));
+        if (result < 0) {
+            result = 0;
+        }
+        return result;
     }
 
     @Getter
