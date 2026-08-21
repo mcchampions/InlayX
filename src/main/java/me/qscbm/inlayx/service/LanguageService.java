@@ -36,6 +36,7 @@ public class LanguageService {
 
     private YamlConfiguration defaultMessages;
 
+    @Getter
     private String effectiveLanguage;
 
     private Map<String, String> vanillaTranslations;
