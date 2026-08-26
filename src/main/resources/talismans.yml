@@ -1,0 +1,83 @@
+# InlayX 保护符配置文件
+#
+# 保护符: 应用到宝石上, 镶嵌时生效
+#
+#   name              内部名称(用于指令提示)
+#   material          物品材质
+#   display_name      显示名称(支持 & 颜色代码)
+#   lore              物品 lore(支持 & 颜色代码)
+#   custom_model_data 自定义模型 ID
+#   enchantments      附魔列表, 格式: - "附魔名:等级"
+#   item_flags        隐藏选项
+#   attributes        原版属性, 格式: - "属性名:数字:模式[:生效位置]"
+#                     模式: 0 ADD_NUMBER / 1 ADD_SCALAR / 2 MULTIPLY_SCALAR_1
+#                     生效位置: HAND / OFF_HAND / HEAD / CHEST / LEGS / FEET (不填则所有位置)
+#   color             皮革染色 RRGGBB (仅皮革装备生效)
+#   durability        物品耐久, 格式同宝石: "20" / "<20" / "20%"
+#   potion            药水效果, 格式同宝石: "JUMP_BOOST" 或带参数的子节点
+#   max_uses          应用到宝石后效果的可用次数(每次镶嵌尝试消耗 1 次, 归零后效果消失)
+#
+# 功能配置 function (至少配置一种):
+#   success_rate_bonus   镶嵌成功率加成 (0~1)
+#   prevent_destroy      镶嵌失败时保护宝石不碎裂 (触发保护时消耗 1 次)
+#                         加成前成功率已达 100% 时不消耗次数
+#
+# 叠加上限 settings:
+#   allow_different_effects  是否允许一个宝石同时拥有 成功率加成 与 防碎裂 两种效果 (默认 true)
+#                            设为 false 时, 新应用的保护符会覆盖宝石上已有的全部效果
+#   allow_same_restack       是否允许对已有效果的宝石重复应用同一种保护符 (默认 false)
+#                            允许时重新应用会刷新次数
+#
+# 使用方式:
+#   1. 主手持保护符, 副手持宝石, 右键 → 应用
+#   2. 背包中光标持保护符, 点击宝石 → 应用
+#   3. /gem talisman 打开应用界面
+
+settings:
+  allow_different_effects: true
+  allow_same_restack: false
+
+socket_guard:
+  name: "镶嵌守护符"
+  material: PAPER
+  display_name: "&b镶嵌守护符"
+  lore:
+    - "&7镶嵌失败时保护宝石不碎裂"
+    - "&7右键宝石使用, 每次触发消耗 1 次"
+  custom_model_data: 10001
+  max_uses: 3
+  function:
+    success_rate_bonus: 0.0
+    prevent_destroy: true
+
+lucky_charm:
+  name: "幸运符"
+  material: GOLD_NUGGET
+  display_name: "&e幸运符"
+  lore:
+    - "&7镶嵌成功率 &a+10%"
+    - "&7右键宝石使用, 每次镶嵌尝试消耗 1 次"
+  custom_model_data: 10002
+  max_uses: 5
+  function:
+    success_rate_bonus: 0.1
+    prevent_destroy: false
+
+all_in_one:
+  name: "全能护符"
+  material: NETHER_STAR
+  display_name: "&6全能护符"
+  lore:
+    - "&7镶嵌成功率 &a+15%"
+    - "&7失败时保护宝石不碎裂"
+  custom_model_data: 10003
+  enchantments:
+    - "UNBREAKING:1"
+  item_flags:
+    - "HIDE_ENCHANTS"
+  attributes:
+    - "LUCK:5:0"
+  max_uses: 2
+  function:
+    success_rate_bonus: 0.15
+    prevent_destroy: true

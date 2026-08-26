@@ -90,12 +90,38 @@ command:
     description: "重载插件配置"
     usage: "/gem reload"
     success: "&aInlayX 插件配置已重载"
+  talisman:
+    description: "保护符管理"
+    usage: "/gem talisman [give|list|info]"
+    unknown_sub: "&c未知的保护符子指令: {0}"
+    give_usage: "/gem talisman give <玩家> <保护符ID> [数量]"
+    player_not_found: "&c找不到玩家: {0}"
+    talisman_not_found: "&c找不到保护符: {0}"
+    create_failed: "&c创建保护符失败: {0}"
+    given_to_sender: "&a已将 {0} 个 {1}&a 给予 {2}"
+    given_to_target: "&a你收到了 {0} 个 {1}!"
+    full_drop_target: "&e你的背包已满, {0} 个 {1}&e 已掉落在你旁边!"
+    full_drop_sender: "&e{0} 的背包已满, {1} 个 {2}&e 已掉落在其旁边"
+    full_deny_target: "&e你的背包已满, {0} 个 {1}&e 未能发放!"
+    full_deny_sender: "&e{0} 的背包已满, {1} 个 {2}&e 未发放"
+    list_title: "&6===== 保护符列表 ====="
+    list_entry: "&e{0}&f - &a{1}&f (次数: {2}, 加成: {3}, 防碎裂: {4})"
+    list_empty: "&c尚未配置任何保护符!"
+    none: "无"
+    yes: "是"
+    no: "否"
+    info_must_hold_gem: "&c请手持一颗宝石查看保护效果!"
+    info_none: "&7该宝石没有保护效果"
+    info_title: "&6===== 宝石保护效果 ====="
+    info_bonus: "&e成功率加成: &a+{0}%&f (剩余 {1} 次)"
+    info_prevent: "&e失败防碎裂: &a是&f (剩余 {0} 次)"
 
 # ==================== 镶嵌 / 提取反馈 ====================
 feedback:
   socket:
     success: "&a宝石镶嵌成功!"
     failed_destroyed: "&c镶嵌失败!宝石已碎裂."
+    failed_protected: "&a镶嵌失败!但保护符生效, 宝石完好无损!"
     failed_intact: "&c镶嵌失败!宝石完好无损, 可再次尝试."
     not_a_gem: "&c这不是一个有效的宝石!"
     unknown_gem: "&c无法识别该宝石, 可能已被删除或配置已变更!"
@@ -141,9 +167,34 @@ gui:
     slot_no: "&7第 {0} 槽位"
     unknown_type_empty: "&7未知类型(空)"
     type_empty: "{0}&7类型(空)"
+  talisman:
+    title: "&6保护符应用"
+    place_talisman: "&d放置保护符"
+    place_talisman_lore: "&7请将需要使用的保护符放在这里"
+    place_gem: "&b放置宝石"
+    place_gem_lore: "&7请将要应用保护符的宝石放在这里"
+    confirm: "&a确认应用"
+    confirm_lore: "&7点击确认将保护符应用到宝石上"
+    confirm_warning: "&c警告: 此操作不可逆!"
+    cancel: "&c取消"
+    cancel_lore: "&7点击取消并关闭界面"
+    need_both: "&c请放入保护符和宝石!"
 
 # ==================== 宝石物品 ====================
 gem:
   unknown_name: "&c未知宝石"
   unknown_id: "&7宝石ID: {0}"
   unknown_lore: "&c该宝石的配置已不存在, 点击将直接移除(不会返还)"
+
+# ==================== 保护符 ====================
+talisman:
+  socket:
+    prevent_remaining: "&7防碎裂剩余次数: {0}"
+  apply:
+    success: "&a保护符已刻印到宝石上!"
+    refreshed: "&a保护符效果已刷新, 次数已重置!"
+    replaced: "&a保护符已应用, 覆盖了原有的效果!"
+    duplicate: "&c该宝石已拥有此保护符的效果!"
+    no_effect: "&c该保护符未配置任何功能!"
+    not_a_gem: "&c这不是一颗宝石!"
+    unknown_talisman: "&c无法识别该保护符!"

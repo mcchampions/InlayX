@@ -25,6 +25,9 @@ permissions:
       inlayx.socket: true
       inlayx.extract: true
       inlayx.info: true
+      inlayx.talisman.use: true
+      inlayx.talisman.list: true
+      inlayx.talisman.info: true
   inlayx.list:
     description: 允许查看宝石列表
     default: true
@@ -51,6 +54,22 @@ permissions:
       inlayx.addslot: true
       inlayx.removeslot: true
       inlayx.removegem: true
+      inlayx.talisman.give: true
+      inlayx.talisman.use: true
+      inlayx.talisman.list: true
+      inlayx.talisman.info: true
+  inlayx.talisman.use:
+    description: 允许使用保护符(应用到宝石)
+    default: true
+  inlayx.talisman.list:
+    description: 允许查看保护符列表
+    default: true
+  inlayx.talisman.info:
+    description: 允许查看保护符信息
+    default: true
+  inlayx.talisman.give:
+    description: 允许给予保护符
+    default: op
   inlayx.give:
     description: 允许给予宝石
     default: op

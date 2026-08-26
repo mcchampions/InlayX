@@ -87,11 +87,37 @@ command:
     description: "重載插件配置"
     usage: "/gem reload"
     success: "&aInlayX 插件配置已重載"
+  talisman:
+    description: "保護符管理"
+    usage: "/gem talisman [give|list|info]"
+    unknown_sub: "&c未知的保護符子指令: {0}"
+    give_usage: "/gem talisman give <玩家> <保護符ID>  [數量]"
+    player_not_found: "&c找不到玩家: {0}"
+    talisman_not_found: "&c找不到保護符: {0}"
+    create_failed: "&c建立保護符失敗: {0}"
+    given_to_sender: "&a已將 {0} 個 {1}&a 給予 {2}"
+    given_to_target: "&a你收到了 {0} 個 {1}!"
+    full_drop_target: "&e你的背包已滿, {0} 個 {1}&e 已掉落在你旁邊!"
+    full_drop_sender: "&e{0} 的背包已滿, {1} 個 {2}&e 已掉落在其旁邊"
+    full_deny_target: "&e你的背包已滿, {0} 個 {1}&e 未能發放!"
+    full_deny_sender: "&e{0} 的背包已滿, {1} 個 {2}&e 未發放"
+    list_title: "&6===== 保護符列表 ====="
+    list_entry: "&e{0}&f - &a{1}&f (次數: {2}, 加成: {3}, 防碎裂: {4})"
+    list_empty: "&c尚未配置任何保護符!"
+    none: "無"
+    yes: "是"
+    no: "否"
+    info_must_hold_gem: "&c請手持一顆寶石查看保護效果!"
+    info_none: "&7該寶石沒有保護效果"
+    info_title: "&6===== 寶石保護效果 ====="
+    info_bonus: "&e成功率加成: &a+{0}%&f (剩餘 {1} 次)"
+    info_prevent: "&e失敗防碎裂: &a是&f (剩餘 {0} 次)"
 
 feedback:
   socket:
     success: "&a寶石鑲嵌成功!"
     failed_destroyed: "&c鑲嵌失敗!寶石已碎裂."
+    failed_protected: "&a鑲嵌失敗!但保護符生效, 寶石完好無損!"
     failed_intact: "&c鑲嵌失敗!寶石完好無損, 可再次嘗試."
     not_a_gem: "&c這不是一個有效的寶石!"
     unknown_gem: "&c無法識別該寶石, 可能已被刪除或配置已變更!"
@@ -136,8 +162,33 @@ gui:
     slot_no: "&7第 {0} 槽位"
     unknown_type_empty: "&7未知類型(空)"
     type_empty: "{0}&7類型(空)"
+  talisman:
+    title: "&6保護符應用"
+    place_talisman: "&d放置保護符"
+    place_talisman_lore: "&7請將需要使用的保護符放在這裡"
+    place_gem: "&b放置寶石"
+    place_gem_lore: "&7請將要應用保護符的寶石放在這裡"
+    confirm: "&a確認應用"
+    confirm_lore: "&7點擊確認將保護符應用到寶石上"
+    confirm_warning: "&c警告: 此操作不可逆!"
+    cancel: "&c取消"
+    cancel_lore: "&7點擊取消並關閉介面"
+    need_both: "&c請放入保護符和寶石!"
 
 gem:
   unknown_name: "&c未知寶石"
   unknown_id: "&7寶石ID: {0}"
   unknown_lore: "&c該寶石的配置已不存在, 點擊將直接移除(不會返還)"
+
+# ==================== 保護符 ====================
+talisman:
+  socket:
+    prevent_remaining: "&7防碎裂剩餘次數: {0}"
+  apply:
+    success: "&a保護符已刻印到寶石上!"
+    refreshed: "&a保護符效果已刷新, 次數已重置!"
+    replaced: "&a保護符已應用, 覆蓋了原有的效果!"
+    duplicate: "&c該寶石已擁有此保護符的效果!"
+    no_effect: "&c該保護符未配置任何功能!"
+    not_a_gem: "&c這不是一顆寶石!"
+    unknown_talisman: "&c無法識別該保護符!"

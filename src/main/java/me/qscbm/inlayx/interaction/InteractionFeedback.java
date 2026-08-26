@@ -3,6 +3,7 @@ package me.qscbm.inlayx.interaction;
 import me.qscbm.inlayx.InlayX;
 import me.qscbm.inlayx.gem.Gem;
 import me.qscbm.inlayx.socket.SocketResult;
+import me.qscbm.inlayx.talisman.TalismanManager;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 
@@ -28,12 +29,23 @@ public final class InteractionFeedback {
     /**
      * 把失败的镶嵌结果转成玩家提示并播放失败声音.
      *
-     * @return true 表示宝石按配置已碎裂, 调用方需要从对应位置扣除一颗宝石
+     * @return true 表示宝石按配置已碎裂
      */
     public boolean sendSocketFailure(Player player, SocketResult result, @Nullable Gem gem, boolean hadSocketLore) {
         switch (result.getStatus()) {
             case FAILED -> {
                 if (gem != null && gem.isDestroyOnFailure()) {
+                    if (result.isTalismanProtected()) {
+                        player.sendMessage(plugin.getLanguageService().get("feedback.socket.failed_protected"));
+                        if (result.getTalismanPreventUsesRemaining() > 0) {
+                            player.sendMessage(plugin.getLanguageService()
+                                    .get(
+                                            "talisman.socket.prevent_remaining",
+                                            result.getTalismanPreventUsesRemaining()));
+                        }
+                        playSocketSound(player, false);
+                        return false;
+                    }
                     player.sendMessage(plugin.getLanguageService().get("feedback.socket.failed_destroyed"));
                     playSocketSound(player, false);
                     return true;
@@ -66,6 +78,30 @@ public final class InteractionFeedback {
             default -> player.sendMessage(plugin.getLanguageService().get("feedback.socket.default"));
         }
         return false;
+    }
+
+    /**
+     * 反馈保护符应用到宝石的结果.
+     *
+     * @return true 表示保护符已消耗(成功/刷新/覆盖)
+     */
+    public boolean sendTalismanApplyFeedback(Player player, TalismanManager.ApplyStatus status) {
+        boolean consumed = status == TalismanManager.ApplyStatus.SUCCESS
+                || status == TalismanManager.ApplyStatus.REFRESHED
+                || status == TalismanManager.ApplyStatus.REPLACED;
+        String key =
+                switch (status) {
+                    case SUCCESS -> "talisman.apply.success";
+                    case REFRESHED -> "talisman.apply.refreshed";
+                    case REPLACED -> "talisman.apply.replaced";
+                    case DUPLICATE -> "talisman.apply.duplicate";
+                    case NO_EFFECT -> "talisman.apply.no_effect";
+                    case NOT_A_GEM -> "talisman.apply.not_a_gem";
+                    case UNKNOWN_TALISMAN -> "talisman.apply.unknown_talisman";
+                };
+        player.sendMessage(plugin.getLanguageService().get(key));
+        playSocketSound(player, consumed);
+        return consumed;
     }
 
     /**

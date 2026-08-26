@@ -24,6 +24,7 @@ import me.qscbm.inlayx.gem.GemType;
 import me.qscbm.inlayx.socket.ExtractResult;
 import me.qscbm.inlayx.socket.SocketResult;
 import me.qscbm.inlayx.socket.SocketSlot;
+import me.qscbm.inlayx.talisman.TalismanEffect;
 import me.qscbm.inlayx.util.TextUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -53,6 +54,7 @@ public class SocketService {
     }
 
     // ==================== PDC 槽位列表读写 ====================
+
     public List<SocketSlot> getSocketSlots(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) {
             return List.of();
@@ -467,14 +469,14 @@ public class SocketService {
         if (!event.callEvent()) {
             return SocketResult.failure(SocketResult.Status.CANCELLED);
         }
-        SocketResult result = socketGem(equipment, gem, roll);
+        SocketResult result = socketGem(equipment, gem, roll, gemItem);
         if (result.isSuccess()) {
             new GemSocketedEvent(actor, result.getItem(), gem).callEvent();
         }
         return result;
     }
 
-    private SocketResult socketGem(ItemStack equipment, Gem gem, boolean roll) {
+    private SocketResult socketGem(ItemStack equipment, Gem gem, boolean roll, @Nullable ItemStack gemItem) {
         ItemMeta equipMeta = equipment.getItemMeta();
         if (equipMeta == null) {
             return SocketResult.failure(SocketResult.Status.INVALID_INPUT);
@@ -493,8 +495,32 @@ public class SocketService {
         if (idx < 0) {
             return SocketResult.failure(SocketResult.Status.TYPE_MISMATCH);
         }
-        if (roll && ThreadLocalRandom.current().nextDouble() >= gem.getSocketSuccessRate()) {
-            return SocketResult.failure(SocketResult.Status.FAILED);
+        if (roll) {
+            TalismanEffect.State state =
+                    gemItem == null ? null : plugin.getTalismanManager().readEffects(gemItem);
+            double baseRate = gem.getSocketSuccessRate();
+            if (baseRate < 1.0) {
+                double effectiveRate = state != null && state.bonus() != null
+                        ? Math.min(1.0, baseRate + state.bonus().bonus())
+                        : baseRate;
+                boolean failed = ThreadLocalRandom.current().nextDouble() >= effectiveRate;
+                TalismanEffect.State currentState = state;
+                if (currentState != null && currentState.bonus() != null) {
+                    currentState = TalismanEffect.consumeBonusUse(currentState);
+                    plugin.getTalismanManager().writeEffects(gemItem, currentState);
+                }
+                if (failed) {
+                    if (currentState != null && currentState.prevent() != null && gem.isDestroyOnFailure()) {
+                        currentState = TalismanEffect.consumePreventUse(currentState);
+                        plugin.getTalismanManager().writeEffects(gemItem, currentState);
+                        int remaining = currentState.prevent() == null
+                                ? 0
+                                : currentState.prevent().uses();
+                        return SocketResult.failure(SocketResult.Status.FAILED, remaining);
+                    }
+                    return SocketResult.failure(SocketResult.Status.FAILED);
+                }
+            }
         }
         slots.get(idx).setGemId(gem.getId());
         ItemMeta resultMeta = rebuildSocketArea(equipMeta, slots);

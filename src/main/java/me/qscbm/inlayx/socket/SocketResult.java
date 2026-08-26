@@ -35,17 +35,38 @@ public final class SocketResult {
     private final Status status;
     private final ItemStack item;
 
-    private SocketResult(Status status, ItemStack item) {
+    /**
+     * 镶嵌失败时是否被保护符的防碎裂效果保护(宝石未碎裂).
+     */
+    private final boolean talismanProtected;
+
+    /**
+     * 防碎裂效果触发后剩余的次数(0 表示效果已耗尽移除).
+     */
+    private final int talismanPreventUsesRemaining;
+
+    private SocketResult(Status status, ItemStack item, boolean talismanProtected, int talismanPreventUsesRemaining) {
         this.status = status;
         this.item = item;
+        this.talismanProtected = talismanProtected;
+        this.talismanPreventUsesRemaining = talismanPreventUsesRemaining;
     }
 
     public static SocketResult success(ItemStack item) {
-        return new SocketResult(Status.SUCCESS, item);
+        return new SocketResult(Status.SUCCESS, item, false, 0);
     }
 
     public static SocketResult failure(Status status) {
-        return new SocketResult(status, null);
+        return new SocketResult(status, null, false, 0);
+    }
+
+    /**
+     * 创建失败结果, 并标记防碎裂保护触发情况.
+     *
+     * @param preventUsesRemaining 触发后剩余的防碎裂次数
+     */
+    public static SocketResult failure(Status status, int preventUsesRemaining) {
+        return new SocketResult(status, null, true, preventUsesRemaining);
     }
 
     public boolean isSuccess() {

@@ -87,11 +87,36 @@ command:
     description: "Reload the plugin config"
     usage: "/gem reload"
     success: "&aInlayX plugin config reloaded"
-
+  talisman:
+    description: "Manage talismans"
+    usage: "/gem talisman [give|list|info]"
+    unknown_sub: "&cUnknown talisman subcommand: {0}"
+    give_usage: "/gem talisman give <player> <talismanId> [amount]"
+    player_not_found: "&cPlayer not found: {0}"
+    talisman_not_found: "&cTalisman not found: {0}"
+    create_failed: "&cFailed to create talisman: {0}"
+    given_to_sender: "&aGave {0}x {1}&a to {2}"
+    given_to_target: "&aYou received {0}x {1}!"
+    full_drop_target: "&eYour inventory is full, {0}x {1}&e dropped beside you!"
+    full_drop_sender: "&e{0}'s inventory is full, {1}x {2}&e dropped beside them"
+    full_deny_target: "&eYour inventory is full, {0}x {1}&e could not be given!"
+    full_deny_sender: "&e{0}'s inventory is full, {1}x {2}&e not given"
+    list_title: "&6===== Talisman List ====="
+    list_entry: "&e{0}&f - &a{1}&f (uses: {2}, bonus: {3}, prevent-destroy: {4})"
+    list_empty: "&cNo talismans configured!"
+    none: "none"
+    yes: "yes"
+    no: "no"
+    info_must_hold_gem: "&cPlease hold a gem to view its protection effects!"
+    info_none: "&7This gem has no protection effects"
+    info_title: "&6===== Gem Protection Effects ====="
+    info_bonus: "&eSuccess rate bonus: &a+{0}%&f ({1} uses remaining)"
+    info_prevent: "&ePrevent destroy on failure: &ayes&f ({0} uses remaining)"
 feedback:
   socket:
     success: "&aGem socketed successfully!"
     failed_destroyed: "&cSocketing failed! The gem shattered."
+    failed_protected: "&aSocketing failed! But a talisman protected the gem, it is intact!"
     failed_intact: "&cSocketing failed! The gem is intact, you may try again."
     not_a_gem: "&cThis is not a valid gem!"
     unknown_gem: "&cCannot recognize this gem, it may have been deleted or reconfigured!"
@@ -136,8 +161,33 @@ gui:
     slot_no: "&7Socket {0}"
     unknown_type_empty: "&7Unknown type (empty)"
     type_empty: "{0}&7 type (empty)"
+  talisman:
+    title: "&6Talisman Application"
+    place_talisman: "&dPlace Talisman"
+    place_talisman_lore: "&7Put the talisman to use here"
+    place_gem: "&bPlace Gem"
+    place_gem_lore: "&7Put the gem to apply the talisman on here"
+    confirm: "&aConfirm Apply"
+    confirm_lore: "&7Click to apply the talisman to the gem"
+    confirm_warning: "&cWarning: this action is irreversible!"
+    cancel: "&cCancel"
+    cancel_lore: "&7Click to cancel and close"
+    need_both: "&cPlease place a talisman and a gem!"
 
 gem:
   unknown_name: "&cUnknown gem"
   unknown_id: "&7Gem ID: {0}"
   unknown_lore: "&cThis gem's config no longer exists, click to remove it directly (not returned)"
+
+# ==================== Talisman ====================
+talisman:
+  socket:
+    prevent_remaining: "&7Prevent-destroy uses remaining: {0}"
+  apply:
+    success: "&aTalisman applied to the gem!"
+    refreshed: "&aTalisman effect refreshed, uses reset!"
+    replaced: "&aTalisman applied, replaced the existing effect!"
+    duplicate: "&cThis gem already has this talisman's effect!"
+    no_effect: "&cThis talisman has no configured effect!"
+    not_a_gem: "&cThis is not a gem!"
+    unknown_talisman: "&cCannot recognize this talisman!"

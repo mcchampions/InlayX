@@ -37,6 +37,8 @@ public class CmdReload extends SubCommand {
         plugin.getAttachmentHandlerConfigManager().load();
         plugin.getDropSourceConfigManager().load();
         plugin.getGemManager().loadGems();
+        plugin.getTalismanManager().load();
+        plugin.getTalismanManager().rebuildGuiItems();
         sender.sendMessage(i18n("command.reload.success"));
     }
 }

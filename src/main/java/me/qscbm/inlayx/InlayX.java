@@ -22,6 +22,7 @@ import me.qscbm.inlayx.listener.GuiListener;
 import me.qscbm.inlayx.listener.MobListener;
 import me.qscbm.inlayx.listener.PlayerListener;
 import me.qscbm.inlayx.service.LanguageService;
+import me.qscbm.inlayx.talisman.TalismanManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,6 +55,8 @@ public class InlayX extends JavaPlugin implements InlayXApi {
     private ItemGroupConfigManager itemGroupConfigManager;
 
     private AttachmentHandlerConfigManager attachmentHandlerConfigManager;
+
+    private TalismanManager talismanManager;
 
     @Override
     public void onEnable() {
@@ -93,6 +96,9 @@ public class InlayX extends JavaPlugin implements InlayXApi {
 
         this.getLogger().info("加载宝石中......");
         this.gemManager = new GemManager(this);
+        this.getLogger().info("加载保护符中......");
+        this.talismanManager = new TalismanManager(this);
+        this.talismanManager.load();
         this.interactionFeedback = new InteractionFeedback(this);
         this.dropCoordinator = new DropCoordinator(this);
         this.getCommand("gem").setExecutor(new GemCommand(this));

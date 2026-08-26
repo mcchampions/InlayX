@@ -74,7 +74,6 @@ class PlayerListenerTest extends InlayXTestBase {
         gemItem.setAmount(3);
         player.getInventory().setItemInMainHand(gemItem.clone());
         player.getInventory().setItemInOffHand(socketableSword(attack, 1));
-        // 事件暴露的可能是手持物品的副本, 消耗后必须显式写回玩家背包
         PlayerInteractEvent event = rightClick(gemItem.clone());
         server.getPluginManager().callEvent(event);
         ItemStack hand = player.getInventory().getItemInMainHand();

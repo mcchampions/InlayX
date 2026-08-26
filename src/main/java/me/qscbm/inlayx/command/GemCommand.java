@@ -45,7 +45,8 @@ public class GemCommand implements CommandExecutor {
                 new CmdInfo(plugin),
                 new CmdAddSlot(plugin),
                 new CmdRemoveSlot(plugin),
-                new CmdReload(plugin));
+                new CmdReload(plugin),
+                new CmdTalisman(plugin));
         List<SubCommand> all = new ArrayList<>(others);
         all.addFirst(new CmdHelp(plugin));
         COMMANDS = all.stream()
