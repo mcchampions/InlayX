@@ -1,6 +1,8 @@
 package me.qscbm.inlayx.command.sub;
 
 import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.api.event.GemExtractedEvent;
+import me.qscbm.inlayx.api.event.InlayXReloadedEvent;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -40,5 +42,7 @@ public class CmdReload extends SubCommand {
         plugin.getTalismanManager().load();
         plugin.getTalismanManager().rebuildGuiItems();
         sender.sendMessage(i18n("command.reload.success"));
+
+        new InlayXReloadedEvent().callEvent();
     }
 }
