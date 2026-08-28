@@ -122,7 +122,7 @@ public class GemAttachment {
             InlayX.INSTANCE.getLogger().warning("无法获取物品元数据:" + itemStack.getType());
             return itemStack;
         }
-        itemStack.setItemMeta(socketToItemMeta(itemMeta));
+        itemStack.setItemMeta(extractToItemMeta(itemMeta));
         return itemStack;
     }
 
