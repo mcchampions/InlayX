@@ -110,6 +110,8 @@ public class Gem {
      * <p>
      * 对于外部插件来说, 应该自定义一个标识,
      * 以用于辨别宝石注册来源, 并且防止插件重载时失效
+     * <p>
+     * 本插件默认为 inlayx
      */
     private final String identifier;
 

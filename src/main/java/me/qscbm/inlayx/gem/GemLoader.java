@@ -48,7 +48,7 @@ public class GemLoader {
     void loadAll() {
         loading = true;
         try {
-            gems.clear();
+            gems.entrySet().removeIf(entry -> "inlayx".equals(entry.getValue().getIdentifier()));
             int fromConfig = loadFromConfigSection();
             if (fromConfig > 0) {
                 plugin.getLogger().info("从 config.yml 加载了 " + fromConfig + " 个宝石");
