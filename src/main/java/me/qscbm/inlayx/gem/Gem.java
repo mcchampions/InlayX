@@ -105,6 +105,14 @@ public class Gem {
 
     private GemAttachment gemAttachment;
 
+    /**
+     * 宝石注册来源
+     * <p>
+     * 对于外部插件来说, 应该自定义一个标识,
+     * 以用于辨别宝石注册来源, 并且防止插件重载时失效
+     */
+    private final String identifier;
+
     public Gem(String id, String name, GemType type, int level, Material material) {
         this.id = id;
         this.name = name;
@@ -112,6 +120,17 @@ public class Gem {
         this.level = level;
         this.material = material;
         this.attributeLore = new ArrayList<>();
+        this.identifier = "inlayx";
+    }
+
+    public Gem(String id, String name, GemType type, int level, Material material, String identifier) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.level = level;
+        this.material = material;
+        this.attributeLore = new ArrayList<>();
+        this.identifier = identifier;
     }
 
     // ==================== 属性 Lore ====================
