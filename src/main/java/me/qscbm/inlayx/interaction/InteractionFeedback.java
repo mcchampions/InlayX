@@ -11,7 +11,6 @@ import org.jspecify.annotations.Nullable;
  * 集中处理镶嵌与提取交互中重复出现的提示和声音.
  */
 public final class InteractionFeedback {
-
     private final InlayX plugin;
 
     public InteractionFeedback(InlayX plugin) {

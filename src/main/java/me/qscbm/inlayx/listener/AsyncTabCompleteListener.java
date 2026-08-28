@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class AsyncTabCompleteListener implements Listener {
-
     @EventHandler(ignoreCancelled = true)
     public void onAsyncTabCompleteEvent(AsyncTabCompleteEvent e) {
         if (!e.isCommand()) {

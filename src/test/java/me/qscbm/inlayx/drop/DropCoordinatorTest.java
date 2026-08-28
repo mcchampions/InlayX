@@ -26,7 +26,6 @@ import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.entity.ZombieMock;
 
 class DropCoordinatorTest extends InlayXTestBase {
-
     private ZombieMock zombie;
 
     @BeforeEach

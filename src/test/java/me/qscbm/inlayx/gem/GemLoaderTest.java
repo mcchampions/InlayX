@@ -24,7 +24,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.junit.jupiter.api.Test;
 
 class GemLoaderTest extends InlayXTestBase {
-
     private void registerFromText(String id, String text) {
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(new StringReader(text));
         ConfigurationSection section = yaml.getConfigurationSection(id);

@@ -26,7 +26,6 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.junit.jupiter.api.Test;
 
 class GemItemFactoryTest extends InlayXTestBase {
-
     private Gem itemGem(String id, Material material) {
         Gem gem = new Gem(id, "物品宝石", plugin.getConfigManager().getGemType("ATTACK"), 1, material);
         gem.setDisplayName("物品宝石");

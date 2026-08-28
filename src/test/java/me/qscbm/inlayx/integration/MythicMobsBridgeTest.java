@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 
 class MythicMobsBridgeTest extends InlayXTestBase {
-
     @Test
     void fallsBackToVanillaWithoutMythicMobs() {
         MythicMobsBridge bridge = new MythicMobsBridge(plugin);

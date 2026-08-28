@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import me.qscbm.inlayx.InlayX;
+import me.qscbm.inlayx.api.event.GemRegisterEvent;
+import me.qscbm.inlayx.api.event.GemUnregisterEvent;
 import me.qscbm.inlayx.gui.ExtractGuiFactory;
 import me.qscbm.inlayx.gui.SocketGuiFactory;
 import me.qscbm.inlayx.service.SocketService;
@@ -25,7 +27,6 @@ import org.jspecify.annotations.Nullable;
  * 宝石管理.
  */
 public class GemManager {
-
     private final Map<String, Gem> loadingGems;
 
     @Getter
@@ -105,6 +106,8 @@ public class GemManager {
 
     /**
      * 注册一个宝石(供外部 API 使用), 重复 ID 时覆盖旧定义, 并刷新掉落索引.
+     * <p>
+     * 注册前触发 {@link me.qscbm.inlayx.api.event.GemRegisterEvent}, 事件被取消时跳过本次注册.
      */
     public void registerGem(Gem gem) {
         if (gem == null) {
@@ -112,6 +115,10 @@ public class GemManager {
         }
         if (!itemFactory.initializeItemMetaTemplate(gem)) {
             throw new IllegalArgumentException("无法初始化宝石 " + gem.getId() + " 的 ItemMeta");
+        }
+        GemRegisterEvent event = new GemRegisterEvent(gem);
+        if (!event.callEvent()) {
+            return;
         }
         registry.updateAndGet(current -> {
             Map<String, Gem> updated = new HashMap<>(current.gems());
@@ -123,8 +130,18 @@ public class GemManager {
 
     /**
      * 注销一个宝石, 返回被移除的宝石定义, 并刷新掉落索引.
+     * <p>
+     * 注销前触发 {@link me.qscbm.inlayx.api.event.GemUnregisterEvent}, 事件被取消时不移除, 返回 null.
      */
     public Gem unregisterGem(String gemId) {
+        Gem gem = registry.get().gems().get(gemId);
+        if (gem == null) {
+            return null;
+        }
+        GemUnregisterEvent event = new GemUnregisterEvent(gem);
+        if (!event.callEvent()) {
+            return null;
+        }
         Gem[] removed = new Gem[1];
         registry.updateAndGet(current -> {
             Map<String, Gem> updated = new HashMap<>(current.gems());

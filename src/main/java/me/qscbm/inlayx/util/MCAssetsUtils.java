@@ -5,7 +5,6 @@ import java.nio.file.*;
 import org.json.JSONObject;
 
 public class MCAssetsUtils {
-
     public static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 
     public static JSONObject getVersionManifest() {

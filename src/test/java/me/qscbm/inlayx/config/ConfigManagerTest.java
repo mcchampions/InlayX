@@ -10,7 +10,6 @@ import org.bukkit.Sound;
 import org.junit.jupiter.api.Test;
 
 class ConfigManagerTest extends InlayXTestBase {
-
     @Test
     void loadsDefaultsFromBundledConfig() {
         ConfigManager cm = plugin.getConfigManager();

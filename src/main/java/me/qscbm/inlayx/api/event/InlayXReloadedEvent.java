@@ -8,7 +8,6 @@ import org.bukkit.event.HandlerList;
  * 插件重载后触发
  */
 public class InlayXReloadedEvent extends Event {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     public InlayXReloadedEvent() {}
@@ -22,4 +21,3 @@ public class InlayXReloadedEvent extends Event {
         return HANDLERS;
     }
 }
-

@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 
 class ExtractGuiListenerTest extends InlayXTestBase {
-
     private PlayerMock player;
     private ExtractGuiListener listener;
 

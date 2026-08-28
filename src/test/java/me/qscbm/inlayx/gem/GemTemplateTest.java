@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
 
 class GemTemplateTest extends InlayXTestBase {
-
     @Test
     void parsesAllVariables() {
         Gem gem = new Gem("g1", "红宝石", new GemType("ATTACK", "攻击", ChatColor.RED), 3, Material.EMERALD);

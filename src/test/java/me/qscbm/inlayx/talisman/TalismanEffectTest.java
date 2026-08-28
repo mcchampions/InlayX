@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.junit.jupiter.api.Test;
 
 class TalismanEffectTest extends InlayXTestBase {
-
     private TalismanEffect effect() {
         return plugin.getTalismanManager().getEffect();
     }

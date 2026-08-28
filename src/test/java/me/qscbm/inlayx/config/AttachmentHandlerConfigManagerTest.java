@@ -21,7 +21,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.junit.jupiter.api.Test;
 
 class AttachmentHandlerConfigManagerTest extends InlayXTestBase {
-
     private Gem testGem() {
         return new Gem("attach_test", "测试", plugin.getConfigManager().getGemType("ATTACK"), 1, Material.EMERALD);
     }

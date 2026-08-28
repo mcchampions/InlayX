@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 
 class PlayerListenerTest extends InlayXTestBase {
-
     private PlayerMock player;
     private GemType attack;
 

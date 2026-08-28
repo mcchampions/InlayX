@@ -14,7 +14,6 @@ import me.qscbm.inlayx.api.DropSourceContext;
 import org.junit.jupiter.api.Test;
 
 class DropSourceRegistryTest extends InlayXTestBase {
-
     @Test
     void builtInSourcesAreRegisteredInOrder() {
         assertEquals(

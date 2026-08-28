@@ -14,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.junit.jupiter.api.Test;
 
 class InlayXApiTest extends InlayXTestBase {
-
     @Test
     void apiIsAvailableFromServicesManagerAndStaticAccessor() {
         InlayXApi fromService = Bukkit.getServicesManager().load(InlayXApi.class);

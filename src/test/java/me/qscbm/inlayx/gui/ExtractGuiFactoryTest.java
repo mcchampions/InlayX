@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.Test;
 
 class ExtractGuiFactoryTest extends InlayXTestBase {
-
     private Inventory newGui() {
         return plugin.getGemManager().getExtractGuiFactory().createGUI();
     }

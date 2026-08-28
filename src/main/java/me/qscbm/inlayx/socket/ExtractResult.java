@@ -7,7 +7,6 @@ import lombok.Getter;
  */
 @Getter
 public final class ExtractResult {
-
     public enum Status {
         SUCCESS,
 

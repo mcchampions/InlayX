@@ -15,7 +15,6 @@ import org.jspecify.annotations.Nullable;
  * 在插件为怪物选定掉落宝石之后, 把宝石加进掉落物之前触发.
  */
 public final class GemDropEvent extends Event implements Cancellable {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final @NonNull LivingEntity entity;

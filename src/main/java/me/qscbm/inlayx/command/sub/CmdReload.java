@@ -1,7 +1,6 @@
 package me.qscbm.inlayx.command.sub;
 
 import me.qscbm.inlayx.InlayX;
-import me.qscbm.inlayx.api.event.GemExtractedEvent;
 import me.qscbm.inlayx.api.event.InlayXReloadedEvent;
 import org.bukkit.command.CommandSender;
 

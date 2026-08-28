@@ -13,7 +13,6 @@ import org.jspecify.annotations.Nullable;
  * 在宝石即将镶嵌到装备上时触发.
  */
 public final class GemSocketEvent extends Event implements Cancellable {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final @Nullable Player actor;

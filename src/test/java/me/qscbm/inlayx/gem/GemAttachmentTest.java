@@ -24,7 +24,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.junit.jupiter.api.Test;
 
 class GemAttachmentTest extends InlayXTestBase {
-
     private Gem registerAttachmentGem(String id, String configText) {
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(new StringReader(configText));
         ConfigurationSection section = yaml.getConfigurationSection(id);

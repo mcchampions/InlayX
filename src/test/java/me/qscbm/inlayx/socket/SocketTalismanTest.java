@@ -17,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.Test;
 
 class SocketTalismanTest extends InlayXTestBase {
-
     private GemType attackType() {
         return plugin.getConfigManager().getGemType("ATTACK");
     }

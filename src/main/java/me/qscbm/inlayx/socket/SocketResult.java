@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
  */
 @Getter
 public final class SocketResult {
-
     public enum Status {
         /** 镶嵌成功 */
         SUCCESS,

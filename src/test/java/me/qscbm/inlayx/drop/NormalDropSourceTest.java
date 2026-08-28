@@ -19,7 +19,6 @@ import org.mockbukkit.mockbukkit.entity.SkeletonMock;
 import org.mockbukkit.mockbukkit.entity.ZombieMock;
 
 class NormalDropSourceTest extends InlayXTestBase {
-
     private PlayerMock player;
     private NormalDropSource source;
 

@@ -17,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.Test;
 
 class TalismanManagerTest extends InlayXTestBase {
-
     private void writeTalismansConfig(String content) {
         try {
             Files.writeString(plugin.getDataFolder().toPath().resolve("talismans.yml"), content);

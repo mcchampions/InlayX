@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
 
 class GemManagerDropTest extends InlayXTestBase {
-
     private void writeGemFile(String name, String content) throws IOException {
         File dir = new File(plugin.getDataFolder(), "gems");
         dir.mkdirs();

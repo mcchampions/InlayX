@@ -14,7 +14,6 @@ import org.jspecify.annotations.Nullable;
  * <p>事件触发时宝石仍然镶嵌在装备上, 取消事件即可阻止提取, 装备和宝石都不会变化.
  */
 public final class GemExtractEvent extends Event implements Cancellable {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final @Nullable Player actor;

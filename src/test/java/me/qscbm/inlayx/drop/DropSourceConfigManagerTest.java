@@ -17,7 +17,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.junit.jupiter.api.Test;
 
 class DropSourceConfigManagerTest extends InlayXTestBase {
-
     @Test
     void createsFileWithBuiltInDefaults() throws Exception {
         File file = new File(plugin.getDataFolder(), "drop_source.yml");

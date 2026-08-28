@@ -11,7 +11,6 @@ import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockbukkit.mockbukkit.ServerMock;
 
 public abstract class InlayXTestBase {
-
     protected ServerMock server;
     protected InlayX plugin;
 

@@ -11,7 +11,6 @@ import org.json.JSONObject;
  * 保护符效果
  */
 public class TalismanEffect {
-
     /**
      * 成功率加成效果.
      */

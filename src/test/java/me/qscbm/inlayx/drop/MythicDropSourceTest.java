@@ -21,7 +21,6 @@ import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.entity.ZombieMock;
 
 class MythicDropSourceTest extends InlayXTestBase {
-
     private PlayerMock player;
     private ZombieMock zombie;
 

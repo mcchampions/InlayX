@@ -12,7 +12,6 @@ import org.bukkit.plugin.Plugin;
  * 配置更新
  */
 public final class ConfigUpdater {
-
     private ConfigUpdater() {}
 
     /**

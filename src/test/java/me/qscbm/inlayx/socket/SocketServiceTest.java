@@ -20,7 +20,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.junit.jupiter.api.Test;
 
 class SocketServiceTest extends InlayXTestBase {
-
     private GemType attackType() {
         return plugin.getConfigManager().getGemType("ATTACK");
     }

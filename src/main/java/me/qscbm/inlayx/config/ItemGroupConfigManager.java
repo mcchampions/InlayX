@@ -18,7 +18,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ItemGroupConfigManager {
-
     private final InlayX plugin;
     private YamlConfiguration config;
 

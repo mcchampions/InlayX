@@ -14,7 +14,6 @@ import org.jspecify.annotations.Nullable;
  * 镶嵌失败不会触发这个事件.
  */
 public final class GemSocketedEvent extends Event {
-
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final @Nullable Player actor;

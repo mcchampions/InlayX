@@ -7,7 +7,6 @@ import me.qscbm.inlayx.command.sub.SubCommand;
 import org.bukkit.command.CommandSender;
 
 public class GemTabCompleter {
-
     public static List<String> onTabComplete(CommandSender sender, List<String> args) {
         if (args.size() <= 1) {
             String prefix = args.isEmpty() ? "" : args.getFirst().toLowerCase();

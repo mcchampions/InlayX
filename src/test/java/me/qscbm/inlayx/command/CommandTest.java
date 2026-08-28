@@ -26,7 +26,6 @@ import org.mockbukkit.mockbukkit.command.ConsoleCommandSenderMock;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 
 class CommandTest extends InlayXTestBase {
-
     private PlayerMock player;
 
     @BeforeEach
