@@ -159,10 +159,6 @@ public class ExtractGuiListener implements Listener {
         return slotGridIndex(raw) >= 0;
     }
 
-    public void cancelTasks() {
-        foliaLib.getScheduler().cancelAllTasks();
-    }
-
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         if (!(event.getInventory().getHolder() instanceof GemExtractHolder)) {

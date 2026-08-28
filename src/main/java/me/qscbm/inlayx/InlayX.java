@@ -138,9 +138,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
     }
 
     public void onDisable() {
-        if (this.extractGuiListener != null) {
-            this.extractGuiListener.cancelTasks();
-        }
+        foliaLib.getScheduler().cancelAllTasks();
         this.getServer().getServicesManager().unregister(this);
         INSTANCE = null;
         this.getLogger().info("InlayX 已禁用");
