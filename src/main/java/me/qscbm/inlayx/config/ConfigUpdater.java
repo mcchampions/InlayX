@@ -1,6 +1,7 @@
 package me.qscbm.inlayx.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -19,7 +20,13 @@ public final class ConfigUpdater {
      */
     public static void update(Plugin plugin, String fileName) {
         File file = new File(plugin.getDataFolder(), fileName);
-        if (!file.exists()) return;
+        if (!file.exists()) {
+            try {
+                plugin.getLogger().warning("更新文件时失败, 没有对应的文件: " + file.getCanonicalPath());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
 
         CommentConfiguration existing = new CommentConfiguration();
         try {

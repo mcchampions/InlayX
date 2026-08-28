@@ -79,6 +79,7 @@ public class InlayX extends JavaPlugin implements InlayXApi {
         this.getLogger().info("加载配置文件中......");
         reloadConfig();
         this.configManager = new ConfigManager(this);
+        ConfigUpdater.update(this, "languages/" + configManager.getLanguage() + ".yml");
         this.foliaLib = new FoliaLib(this);
 
         this.languageService = new LanguageService(this);

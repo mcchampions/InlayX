@@ -1,4 +1,5 @@
 # InlayX 語言檔案 - 繁體中文 (zh_tw)
+config-version: 1
 
 common:
   no_permission: "&c你沒有權限執行此命令"
